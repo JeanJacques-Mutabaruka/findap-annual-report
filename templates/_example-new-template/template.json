@@ -1,0 +1,11 @@
+{
+  "alias": "Annual report — <firm or client name>",
+  "description": "One or two sentences shown to users: who the template is for, main differences with the standard one.",
+  "version": "V01",
+  "language": "en",
+  "file": "template.docx",
+  "notes_file": null,
+  "default_font": null,
+  "order": 10,
+  "active": false
+}

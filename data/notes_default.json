@@ -1,0 +1,26 @@
+{
+ "_about": "Default explanatory notes injected at bookmark var_Pnlrelatednotessection. Ids MUST be consecutive: Word numbers Heading 3 automatically and the template already holds notes 1-3 plus one empty numbered Heading 3 (=4), so the first injected note is 5. 'way' D => (debit - credit), C => (credit - debit). 'tables' sources: tb (TB accounts of this note), income_tax, ppe, inventory. {period_end} is replaced by the formatted period end date.",
+ "notes": [
+  {"id": "05", "title": "Revenues", "way": "C", "tables": ["tb"]},
+  {"id": "06", "title": "Cost of goods sold", "way": "D", "tables": ["tb"]},
+  {"id": "07", "title": "Operating and administrative expenses", "way": "D", "tables": ["tb"]},
+  {"id": "08", "title": "Employment expenses", "way": "D", "tables": ["tb"]},
+  {"id": "09", "title": "Finance costs", "way": "D", "tables": ["tb"]},
+  {"id": "10", "title": "Income tax", "way": "D", "tables": ["income_tax"]},
+  {"id": "11", "title": "Property and equipment", "way": "D", "tables": ["ppe", "tb"], "ppe_subtitle": "Movement schedule", "tb_subtitle": "Balances by account"},
+  {"id": "12", "title": "Inventories", "way": "D", "tables": ["tb", "inventory"], "tb_subtitle": "Balances by account", "inventory_subtitle": "Inventory movement"},
+  {"id": "13", "title": "Trade and other receivables", "way": "D", "tables": ["tb"]},
+  {"id": "14", "title": "Loans and advances", "way": "D", "tables": ["tb"]},
+  {"id": "15", "title": "Tax receivables", "way": "D", "tables": ["tb"]},
+  {"id": "16", "title": "Cash and cash equivalents", "way": "D", "tables": ["tb"]},
+  {"id": "17", "title": "Non-current liabilities", "way": "C", "tables": ["tb"]},
+  {"id": "18", "title": "Trade and other payables", "way": "C", "tables": ["tb"]},
+  {"id": "19", "title": "Provisions", "way": "C", "tables": ["tb"], "text": "The provision for income tax is the tax charge for the year computed in note 10."},
+  {"id": "20", "title": "Short-term tax liabilities", "way": "C", "tables": ["tb"]},
+  {"id": "21", "title": "Related party transactions", "text": "The company's relationship with its related parties is through common shareholding and directorship."},
+  {"id": "22", "title": "Incorporation", "text": "The company is incorporated and domiciled in Rwanda under the companies' law N°007/2021 of 05/02/2021 as a private company limited by shares."},
+  {"id": "23", "title": "Commitments", "text": "There were no capital or operating commitments as at {period_end}."},
+  {"id": "24", "title": "Contingent liabilities", "text": "There were no contingent liabilities as at {period_end}. All known liabilities as at {period_end} have been provided for in these financial statements."},
+  {"id": "25", "title": "Events after the end of the reporting period", "text": "No material event to report which occurred after the reporting period."}
+ ]
+}

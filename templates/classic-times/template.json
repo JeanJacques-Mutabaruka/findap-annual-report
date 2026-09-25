@@ -1,0 +1,11 @@
+{
+  "alias": "Annual report — Classic (Times New Roman)",
+  "description": "Classic presentation in Times New Roman: 'Audited financial statements' on the cover, 'General information' instead of 'Corporate information', 'Statutory auditor', longer registered-office label.",
+  "version": "V01",
+  "language": "en",
+  "file": "template.docx",
+  "notes_file": null,
+  "default_font": "Times New Roman",
+  "order": 2,
+  "active": true
+}

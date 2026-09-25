@@ -1,0 +1,165 @@
+{
+ "_about": "SME simplified template: shorter standard texts for notes 21-25 (same ids and tables as the default notes).",
+ "notes": [
+  {
+   "id": "05",
+   "title": "Revenues",
+   "way": "C",
+   "tables": [
+    "tb"
+   ]
+  },
+  {
+   "id": "06",
+   "title": "Cost of goods sold",
+   "way": "D",
+   "tables": [
+    "tb"
+   ]
+  },
+  {
+   "id": "07",
+   "title": "Operating and administrative expenses",
+   "way": "D",
+   "tables": [
+    "tb"
+   ]
+  },
+  {
+   "id": "08",
+   "title": "Employment expenses",
+   "way": "D",
+   "tables": [
+    "tb"
+   ]
+  },
+  {
+   "id": "09",
+   "title": "Finance costs",
+   "way": "D",
+   "tables": [
+    "tb"
+   ]
+  },
+  {
+   "id": "10",
+   "title": "Income tax",
+   "way": "D",
+   "tables": [
+    "income_tax"
+   ]
+  },
+  {
+   "id": "11",
+   "title": "Property and equipment",
+   "way": "D",
+   "tables": [
+    "ppe",
+    "tb"
+   ],
+   "ppe_subtitle": "Movement schedule",
+   "tb_subtitle": "Balances by account"
+  },
+  {
+   "id": "12",
+   "title": "Inventories",
+   "way": "D",
+   "tables": [
+    "tb",
+    "inventory"
+   ],
+   "tb_subtitle": "Balances by account",
+   "inventory_subtitle": "Inventory movement"
+  },
+  {
+   "id": "13",
+   "title": "Trade and other receivables",
+   "way": "D",
+   "tables": [
+    "tb"
+   ]
+  },
+  {
+   "id": "14",
+   "title": "Loans and advances",
+   "way": "D",
+   "tables": [
+    "tb"
+   ]
+  },
+  {
+   "id": "15",
+   "title": "Tax receivables",
+   "way": "D",
+   "tables": [
+    "tb"
+   ]
+  },
+  {
+   "id": "16",
+   "title": "Cash and cash equivalents",
+   "way": "D",
+   "tables": [
+    "tb"
+   ]
+  },
+  {
+   "id": "17",
+   "title": "Non-current liabilities",
+   "way": "C",
+   "tables": [
+    "tb"
+   ]
+  },
+  {
+   "id": "18",
+   "title": "Trade and other payables",
+   "way": "C",
+   "tables": [
+    "tb"
+   ]
+  },
+  {
+   "id": "19",
+   "title": "Provisions",
+   "way": "C",
+   "tables": [
+    "tb"
+   ],
+   "text": "The provision for income tax is the tax charge for the year computed in note 10."
+  },
+  {
+   "id": "20",
+   "title": "Short-term tax liabilities",
+   "way": "C",
+   "tables": [
+    "tb"
+   ]
+  },
+  {
+   "id": "21",
+   "title": "Related party transactions",
+   "text": "Related parties are the shareholders and directors of the company and the entities they control."
+  },
+  {
+   "id": "22",
+   "title": "Legal form",
+   "text": "The company is a private company limited by shares, incorporated and domiciled in Rwanda."
+  },
+  {
+   "id": "23",
+   "title": "Commitments",
+   "text": "No capital or operating commitment existed at {period_end}."
+  },
+  {
+   "id": "24",
+   "title": "Contingent liabilities",
+   "text": "No contingent liability existed at {period_end}."
+  },
+  {
+   "id": "25",
+   "title": "Events after the reporting date",
+   "text": "No event requiring adjustment or disclosure occurred after the reporting date."
+  }
+ ]
+}

@@ -1,0 +1,11 @@
+{
+  "alias": "Annual report — Formal (Garamond)",
+  "description": "Formal wording in Garamond: 'Annual report and financial statements' on the cover, approval 'authorised for issue by the Board of Directors', auditor's section on 'those charged with governance'.",
+  "version": "V01",
+  "language": "en",
+  "file": "template.docx",
+  "notes_file": null,
+  "default_font": "Garamond",
+  "order": 5,
+  "active": true
+}

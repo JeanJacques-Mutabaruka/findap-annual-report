@@ -1,0 +1,1020 @@
+{
+ "_about": "CIT codes (RRA Rwanda CIT declaration codes) -> statement layout. Extracted from Template__Tool_Annualreport_Generator_COMPANY_Ltd__V11.xlsm (sheets PnL, BalanceSheet). sign CR => amount = credit - debit ; DR => amount = debit - credit.",
+ "pnl": [
+  {
+   "id": "rev",
+   "title": "Revenues",
+   "note": "05",
+   "total_label": "Revenues",
+   "groups": [
+    {
+     "id": "rev_ord",
+     "label": "Ordinary income",
+     "sign": "CR",
+     "lines": [
+      {
+       "code": "PL 1.1",
+       "label": "Revenue from general trading manufactured goods"
+      },
+      {
+       "code": "PL 1.2",
+       "label": "Revenue from Services other than Rent"
+      },
+      {
+       "code": "PL 1.3",
+       "label": "Revenue from rent"
+      }
+     ]
+    },
+    {
+     "id": "rev_extra",
+     "label": "Extra ordinary income",
+     "sign": "CR",
+     "lines": [
+      {
+       "code": "PL 8.01",
+       "label": "Interest income"
+      },
+      {
+       "code": "PL 8.02",
+       "label": "Farming above 12,000,000"
+      },
+      {
+       "code": "PL 8.03",
+       "label": "Rental Income"
+      },
+      {
+       "code": "PL 8.04",
+       "label": "Realised exchange gain"
+      },
+      {
+       "code": "PL 8.05",
+       "label": "Unrealised exchange gain"
+      },
+      {
+       "code": "PL 8.06",
+       "label": "Provision on bad and doubtiful debts"
+      },
+      {
+       "code": "PL 8.07",
+       "label": "Royalty income"
+      },
+      {
+       "code": "PL 8.08",
+       "label": "Natural resource revenue"
+      },
+      {
+       "code": "PL 8.09",
+       "label": "Fees from rent of property or asset"
+      },
+      {
+       "code": "PL 8.10",
+       "label": "Dividends"
+      },
+      {
+       "code": "PL 8.11",
+       "label": "Commissions"
+      },
+      {
+       "code": "PL 8.12",
+       "label": "Profit from disposal of an asset"
+      },
+      {
+       "code": "PL 8.13",
+       "label": "Insurance compensation"
+      },
+      {
+       "code": "PL 8.14",
+       "label": "Other income"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "cogs",
+   "title": "Cost of Goods Sold",
+   "note": "06",
+   "total_label": "Cost of Goods Sold",
+   "groups": [
+    {
+     "id": "stock_open",
+     "label": "Opening Stock",
+     "sign": "CR",
+     "lines": [
+      {
+       "code": "PL 2.1.1",
+       "label": "Raw materials"
+      },
+      {
+       "code": "PL 2.1.2",
+       "label": "Work in progress"
+      },
+      {
+       "code": "PL 2.1.3",
+       "label": "Trading/manufactured goods"
+      }
+     ],
+     "in_total": false
+    },
+    {
+     "id": "purch",
+     "label": "Purchases",
+     "sign": "CR",
+     "lines": [
+      {
+       "code": "PL 2.2.1",
+       "label": "Cost of sales (Local purchases)"
+      },
+      {
+       "code": "PL 2.2.2",
+       "label": "Other direct costs (Import)"
+      }
+     ]
+    },
+    {
+     "id": "odc",
+     "label": "Other direct costs",
+     "sign": "CR",
+     "lines": [
+      {
+       "code": "PL 2.3.1",
+       "label": "Direct wages"
+      },
+      {
+       "code": "PL 2.3.2",
+       "label": "Direct local transport on imports"
+      }
+     ]
+    },
+    {
+     "id": "fo",
+     "label": "Factory overheads",
+     "sign": "CR",
+     "lines": [
+      {
+       "code": "PL 2.4.1",
+       "label": "Factory rent"
+      },
+      {
+       "code": "PL 2.4.2",
+       "label": "Factory water"
+      },
+      {
+       "code": "PL 2.4.3",
+       "label": "Factory fuel and Electricity"
+      },
+      {
+       "code": "PL 2.4.4",
+       "label": "Factory indirect wages"
+      },
+      {
+       "code": "PL 2.4.5",
+       "label": "Consumables"
+      },
+      {
+       "code": "PL 2.4.6",
+       "label": "Factory Depreciation"
+      },
+      {
+       "code": "PL 2.4.7",
+       "label": "Other direct costs"
+      }
+     ]
+    },
+    {
+     "id": "stock_close",
+     "label": "Closing Stock",
+     "sign": "CR",
+     "lines": [
+      {
+       "code": "PL 2.5.1",
+       "label": "Raw materials"
+      },
+      {
+       "code": "PL 2.5.2",
+       "label": "Work in progress"
+      },
+      {
+       "code": "PL 2.5.3",
+       "label": "Trading/manufactured goods"
+      }
+     ],
+     "in_total": false
+    }
+   ],
+   "stock_variation": {
+    "label": "Stock variation",
+    "pairs": [
+     [
+      "PL 2.1.1",
+      "PL 2.5.1",
+      "Raw materials"
+     ],
+     [
+      "PL 2.1.2",
+      "PL 2.5.2",
+      "Work in progress"
+     ],
+     [
+      "PL 2.1.3",
+      "PL 2.5.3",
+      "Trading/manufactured goods"
+     ]
+    ]
+   }
+  },
+  {
+   "id": "gp",
+   "subtotal": "Gross Profit",
+   "of": [
+    "rev",
+    "cogs"
+   ]
+  },
+  {
+   "id": "opex",
+   "title": "Operating expenses",
+   "note": "07",
+   "total_label": "Total Operating expenses",
+   "total_note": "7 & 8",
+   "groups": [
+    {
+     "id": "gen",
+     "label": "General expenses",
+     "note": "07",
+     "sign": "CR",
+     "lines": [
+      {
+       "code": "PL 4.01",
+       "label": "Travel \u00a0expense including foreign travels"
+      },
+      {
+       "code": "PL 4.02",
+       "label": "Advertisement & Marketing"
+      },
+      {
+       "code": "PL 4.03",
+       "label": "Audit expenses"
+      },
+      {
+       "code": "PL 4.04",
+       "label": "Legal expense"
+      },
+      {
+       "code": "PL 4.05",
+       "label": "Bad debts writtenoff"
+      },
+      {
+       "code": "PL 4.06",
+       "label": "Commissions paid"
+      },
+      {
+       "code": "PL 4.07",
+       "label": "Consultancy expense"
+      },
+      {
+       "code": "PL 4.08",
+       "label": "Communication/ telephone expense"
+      },
+      {
+       "code": "PL 4.09",
+       "label": "Entertainment"
+      },
+      {
+       "code": "PL 4.10",
+       "label": "Donations"
+      },
+      {
+       "code": "PL 4.11",
+       "label": "Consumption from store"
+      },
+      {
+       "code": "PL 4.12",
+       "label": "Rent"
+      },
+      {
+       "code": "PL 4.13",
+       "label": "Hotel expenses"
+      },
+      {
+       "code": "PL 4.14",
+       "label": "Electricity"
+      },
+      {
+       "code": "PL 4.15",
+       "label": "Water"
+      },
+      {
+       "code": "PL 4.16",
+       "label": "Other utilities"
+      },
+      {
+       "code": "PL 4.17",
+       "label": "Fuel"
+      },
+      {
+       "code": "PL 4.18",
+       "label": "Provision for bad and doubtful debts"
+      },
+      {
+       "code": "PL 4.19",
+       "label": "Repaires for building"
+      },
+      {
+       "code": "PL 4.20",
+       "label": "Repaires for machinery"
+      },
+      {
+       "code": "PL 4.21",
+       "label": "Sales promotions other than advertisement"
+      },
+      {
+       "code": "PL 4.22",
+       "label": "Pre operating expenses or start up expenses"
+      },
+      {
+       "code": "PL 4.23",
+       "label": "Training expenses"
+      },
+      {
+       "code": "PL 4.24",
+       "label": "Printing  Stationary"
+      },
+      {
+       "code": "PL 4.25",
+       "label": "Cleaning expenses"
+      },
+      {
+       "code": "PL 4.26",
+       "label": "Security expenses"
+      },
+      {
+       "code": "PL 4.27",
+       "label": "Other operating expenses"
+      },
+      {
+       "code": "PL 4.28",
+       "label": "Payments to subcontrators"
+      }
+     ]
+    },
+    {
+     "id": "adm",
+     "label": "Administrative expenses",
+     "note": "07",
+     "sign": "CR",
+     "lines": [
+      {
+       "code": "PL 5.01",
+       "label": "Depreciation"
+      },
+      {
+       "code": "PL 5.02",
+       "label": "Loss on disposal of an asset"
+      },
+      {
+       "code": "PL 5.03",
+       "label": "Management fees"
+      },
+      {
+       "code": "PL 5.04",
+       "label": "Research expenses"
+      },
+      {
+       "code": "PL 5.05",
+       "label": "Decentralised taxes"
+      },
+      {
+       "code": "PL 5.06",
+       "label": "Royalties"
+      },
+      {
+       "code": "PL 5.07",
+       "label": "Licence fees"
+      },
+      {
+       "code": "PL 5.08",
+       "label": "Other administration expenses"
+      },
+      {
+       "code": "PL 5.09",
+       "label": "Other expenses"
+      },
+      {
+       "code": "PL 5.10",
+       "label": "Fines and Penalities"
+      },
+      {
+       "code": "PL 5.11",
+       "label": "Personal consumption"
+      },
+      {
+       "code": "PL 5.12",
+       "label": "Non supported expenses"
+      },
+      {
+       "code": "PL 5.13",
+       "label": "Management fees paid"
+      }
+     ]
+    },
+    {
+     "id": "emp",
+     "label": "Employment expenses",
+     "note": "08",
+     "sign": "CR",
+     "lines": [
+      {
+       "code": "PL 6.01",
+       "label": "Staff salaries including medical, transport and housing"
+      },
+      {
+       "code": "PL 6.02",
+       "label": "Bonus"
+      },
+      {
+       "code": "PL 6.03",
+       "label": "Reimbursement of medical expenses"
+      },
+      {
+       "code": "PL 6.04",
+       "label": "Leave pay"
+      },
+      {
+       "code": "PL 6.05",
+       "label": "Wages of non permanent employees"
+      },
+      {
+       "code": "PL 6.06",
+       "label": "Contribution to retirement fund"
+      },
+      {
+       "code": "PL 6.07",
+       "label": "Contribution to any other fund"
+      },
+      {
+       "code": "PL 6.08",
+       "label": "Staff life insurance contribution"
+      },
+      {
+       "code": "PL 6.09",
+       "label": "Staff welfare expenses( refreshments and restaurant)"
+      },
+      {
+       "code": "PL 6.10",
+       "label": "other staff costs"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "fin",
+   "title": "Finance Costs",
+   "note": "09",
+   "total_label": "Total Finance Costs",
+   "groups": [
+    {
+     "id": "fin_c",
+     "label": null,
+     "note": "09",
+     "sign": "CR",
+     "lines": [
+      {
+       "code": "PL 7.01",
+       "label": "Interest expense"
+      },
+      {
+       "code": "PL 7.02",
+       "label": "Bank charges"
+      },
+      {
+       "code": "PL 7.03",
+       "label": "Insurance cost"
+      },
+      {
+       "code": "PL 7.04",
+       "label": "Commitment fees"
+      },
+      {
+       "code": "PL 7.05",
+       "label": "Realised exchange loss"
+      },
+      {
+       "code": "PL 7.06",
+       "label": "Unrealised exchange loss"
+      },
+      {
+       "code": "PL 7.07",
+       "label": "Any other charges"
+      },
+      {
+       "code": "PL 7.08",
+       "label": "Interests from related parties"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "pbt",
+   "subtotal": "Profit before Tax for the year",
+   "of": [
+    "gp",
+    "opex",
+    "fin"
+   ]
+  },
+  {
+   "id": "tax",
+   "special": "income_tax",
+   "label": "Income tax expense",
+   "note": "10",
+   "code": "PL CIT"
+  },
+  {
+   "id": "np",
+   "subtotal": "Net profit for the year",
+   "of": [
+    "pbt",
+    "tax"
+   ]
+  }
+ ],
+ "bs": [
+  {
+   "id": "nca",
+   "side": "assets",
+   "title": "Non Current Assets",
+   "total_label": "Total Non Current Assets",
+   "groups": [
+    {
+     "id": "ppe",
+     "label": "Tangible & intangible Assets",
+     "note": "11",
+     "sign": "DR",
+     "lines": [
+      {
+       "code": "BS 1.01",
+       "label": "Land"
+      },
+      {
+       "code": "BS 1.02",
+       "label": "Building"
+      },
+      {
+       "code": "BS 1.03",
+       "label": "Motor vehicles"
+      },
+      {
+       "code": "BS 1.04",
+       "label": "Machinery"
+      },
+      {
+       "code": "BS 1.05",
+       "label": "Leased property"
+      },
+      {
+       "code": "BS 1.06",
+       "label": "Intangible assets"
+      },
+      {
+       "code": "BS 1.07",
+       "label": "Furniture and fittings"
+      },
+      {
+       "code": "BS 1.08",
+       "label": "Other assets"
+      },
+      {
+       "code": "BS 1.09",
+       "label": "Accumulated depreciation/amortisation"
+      },
+      {
+       "code": "BS 1.10",
+       "label": "Freehold property"
+      }
+     ]
+    },
+    {
+     "id": "invst",
+     "label": "Investments",
+     "note": "11",
+     "sign": "DR",
+     "lines": [
+      {
+       "code": "BS 2.01",
+       "label": "Shares"
+      },
+      {
+       "code": "BS 2.02",
+       "label": "Debentures"
+      },
+      {
+       "code": "BS 2.03",
+       "label": "Fixed deposits"
+      },
+      {
+       "code": "BS 2.04",
+       "label": "Government securities"
+      },
+      {
+       "code": "BS 2.05",
+       "label": "Other investments"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "ca",
+   "side": "assets",
+   "title": "Current Assets",
+   "total_label": "Total Current Assets",
+   "groups": [
+    {
+     "id": "stock",
+     "label": "Inventories",
+     "note": "12",
+     "sign": "DR",
+     "lines": [
+      {
+       "code": "BS 3.1.1.1",
+       "label": "Consumables including packaging materials"
+      },
+      {
+       "code": "BS 3.1.1.2",
+       "label": "Raw materials other than stock"
+      },
+      {
+       "code": "BS 3.1.1.3",
+       "label": "Work in progress"
+      },
+      {
+       "code": "BS 3.1.1.4",
+       "label": "Trading/ manufactured goods(finished)"
+      }
+     ]
+    },
+    {
+     "id": "ar",
+     "label": "Accounts Receivables",
+     "note": "13",
+     "sign": "DR",
+     "lines": [
+      {
+       "code": "BS 3.1.2.1",
+       "label": "Trade receivables/debtors"
+      },
+      {
+       "code": "BS 3.1.2.2",
+       "label": "Prepayments"
+      },
+      {
+       "code": "BS 3.1.2.3",
+       "label": "Other recievables/ other debtors"
+      }
+     ]
+    },
+    {
+     "id": "loans",
+     "label": "Loans & Advances",
+     "note": "14",
+     "sign": "DR",
+     "lines": [
+      {
+       "code": "BS 3.2.1",
+       "label": "Foreign loans to related parties"
+      },
+      {
+       "code": "BS 3.2.2",
+       "label": "Foreign loans to unrelated parties"
+      },
+      {
+       "code": "BS 3.2.3",
+       "label": "Local loans"
+      },
+      {
+       "code": "BS 3.2.4",
+       "label": "Loans and advances to staff"
+      },
+      {
+       "code": "BS 3.2.5",
+       "label": "Deposits (other than fixed deposits)"
+      },
+      {
+       "code": "BS 3.2.6",
+       "label": "Loans and advances to others"
+      },
+      {
+       "code": "BS 3.1.4",
+       "label": "Other Current Assets"
+      }
+     ]
+    },
+    {
+     "id": "taxrec",
+     "label": "Deferred Tax Assets",
+     "note": "15",
+     "sign": "DR",
+     "lines": [
+      {
+       "code": "BS 3.3.1",
+       "label": "VAT Receivables"
+      },
+      {
+       "code": "BS 3.3.2",
+       "label": "WHT Receivables"
+      },
+      {
+       "code": "BS 3.3.3",
+       "label": "Other Tax Receivables"
+      }
+     ]
+    },
+    {
+     "id": "cash",
+     "label": "Cash and Cash equivalents",
+     "note": "16",
+     "sign": "DR",
+     "lines": [
+      {
+       "code": "BS 3.1.3.1",
+       "label": "Cash in hand & equivalents"
+      },
+      {
+       "code": "BS 3.1.3.2",
+       "label": "Bank balances"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "eq",
+   "side": "equity_liabilities",
+   "title": "Equity",
+   "total_label": "Total Equity",
+   "groups": [
+    {
+     "id": "equity",
+     "label": null,
+     "note": null,
+     "sign": "CR",
+     "lines": [
+      {
+       "code": "BS 5.01",
+       "label": "Issued subscribed & paid up Share Capital"
+      },
+      {
+       "code": "BS 5.02",
+       "label": "Share Premium"
+      },
+      {
+       "code": "BS 5.03",
+       "label": "Reevaluation reserves"
+      },
+      {
+       "code": "BS 5.04",
+       "label": "Translation reserves"
+      },
+      {
+       "code": "BS 5.05",
+       "label": "General reserves"
+      },
+      {
+       "code": "BS 5.06",
+       "label": "Other reserves"
+      },
+      {
+       "code": "BS 5.07",
+       "label": "Retained earnings"
+      },
+      {
+       "code": "BS 5.08",
+       "label": "Profit (Loss) of the year"
+      },
+      {
+       "code": "BS 5.09",
+       "label": "Grants"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "ncl",
+   "side": "equity_liabilities",
+   "title": "Non Current Liabilities",
+   "total_label": "Total Non Current Liabilities",
+   "groups": [
+    {
+     "id": "secured",
+     "label": "Secured Liabilities",
+     "note": "17",
+     "sign": "CR",
+     "lines": [
+      {
+       "code": "BS 6.1.1",
+       "label": "Foreign loans from related parties"
+      },
+      {
+       "code": "BS 6.1.2",
+       "label": "Froreign loans from unrelated parties"
+      },
+      {
+       "code": "BS 6.1.3",
+       "label": "Local loans"
+      },
+      {
+       "code": "BS 6.1.4",
+       "label": "Other loans"
+      },
+      {
+       "code": "BS 6.1.5",
+       "label": "Other securities issued"
+      }
+     ]
+    },
+    {
+     "id": "unsecured",
+     "label": "Unsecured Liabilities",
+     "note": "17",
+     "sign": "CR",
+     "lines": [
+      {
+       "code": "BS 6.2.1",
+       "label": "Foreign loans from related parties"
+      },
+      {
+       "code": "BS 6.2.2",
+       "label": "Froreign loans from unrelated parties"
+      },
+      {
+       "code": "BS 6.2.3",
+       "label": "Local loans"
+      },
+      {
+       "code": "BS 6.2.4",
+       "label": "Other loans"
+      },
+      {
+       "code": "BS 6.2.5",
+       "label": "Payables/Creditors for 1+ year"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "cl",
+   "side": "equity_liabilities",
+   "title": "Current Liabilities",
+   "total_label": "Total Current Liabilities",
+   "groups": [
+    {
+     "id": "sttax",
+     "label": "Short term tax liabilities",
+     "note": "20",
+     "sign": "CR",
+     "lines": [
+      {
+       "code": "BS 7.01",
+       "label": "Tax Liabilities"
+      },
+      {
+       "code": "BS 7.02",
+       "label": "Other short term tax & Equivalent liabilities"
+      }
+     ]
+    },
+    {
+     "id": "cur",
+     "label": "Current Liabilities",
+     "note": "18",
+     "sign": "CR",
+     "lines": [
+      {
+       "code": "BS 8.1.1",
+       "label": "Trade payables/Creditors"
+      },
+      {
+       "code": "BS 8.1.2",
+       "label": "Liabilities for leased Assets"
+      },
+      {
+       "code": "BS 8.1.3",
+       "label": "Accrued interests"
+      },
+      {
+       "code": "BS 8.1.4",
+       "label": "Bank overdrafts"
+      },
+      {
+       "code": "BS 8.1.5",
+       "label": "Dividends payables"
+      },
+      {
+       "code": "BS 8.1.6",
+       "label": "Other current liabilities"
+      }
+     ]
+    },
+    {
+     "id": "prov",
+     "label": "Provisions",
+     "note": "19",
+     "sign": "CR",
+     "lines": [
+      {
+       "code": "BS 8.2.1",
+       "label": "Provisions on Income Tax"
+      },
+      {
+       "code": "BS 8.2.2",
+       "label": "Provisions on bad debts"
+      },
+      {
+       "code": "BS 8.2.3",
+       "label": "Other provisions"
+      }
+     ]
+    }
+   ]
+  }
+ ],
+ "computed_lines": {
+  "BS 5.08": "net_profit (from P&L, not from TB)",
+  "BS 8.2.1": "income tax charge of the year (from tax computation, not from TB)",
+  "PL CIT": "income tax charge (from tax computation)"
+ },
+ "income_tax": {
+  "add_backs": [
+   [
+    "PL 4.05",
+    "Bad debt written off",
+    1
+   ],
+   [
+    "PL 4.08",
+    "Communication",
+    0.2
+   ],
+   [
+    "PL 4.09",
+    "Entertainment expenses",
+    1
+   ],
+   [
+    "PL 4.16",
+    "Other utilities",
+    0.2
+   ],
+   [
+    "PL 4.17",
+    "Fuel",
+    0.2
+   ],
+   [
+    "PL 5.10",
+    "Fines and Penalties",
+    1
+   ],
+   [
+    "PL 5.11",
+    "Personal consumption",
+    1
+   ],
+   [
+    "PL 5.12",
+    "Non supported expenses",
+    1
+   ],
+   [
+    "PL 5.13",
+    "Management fee in excess of 2%",
+    1
+   ],
+   [
+    "PL 7.08",
+    "Interests from related parties",
+    1
+   ]
+  ],
+  "individual_brackets_annual": [
+   [
+    360000,
+    0.0
+   ],
+   [
+    1200000,
+    0.2
+   ],
+   [
+    null,
+    0.3
+   ]
+  ]
+ }
+}

@@ -1,0 +1,11 @@
+{
+  "alias": "Annual report — SME simplified (Arial)",
+  "description": "Simplified wording for small companies in Arial: 'Company information', 'External auditor', 'Proposed dividend', and its own shorter notes 21–25 (legal form, commitments, contingencies, events after the reporting date).",
+  "version": "V01",
+  "language": "en",
+  "file": "template.docx",
+  "notes_file": "notes.json",
+  "default_font": "Arial",
+  "order": 4,
+  "active": true
+}

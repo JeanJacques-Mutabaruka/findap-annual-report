@@ -1,0 +1,11 @@
+{
+  "alias": "Annual report — Standard (V09)",
+  "description": "Standard audited annual report: cover, contents, corporate information, directors' report and responsibilities, independent auditor's report, statements (P&L, balance sheet, equity, cash flow) and notes 1–25. Cambria, A4.",
+  "version": "V09",
+  "language": "en",
+  "file": "template.docx",
+  "notes_file": null,
+  "default_font": "Cambria",
+  "order": 1,
+  "active": true
+}

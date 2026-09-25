@@ -1,0 +1,11 @@
+{
+  "alias": "Annual report — Modern (Aptos)",
+  "description": "Modern wording in Aptos: 'Notes to the accounts', 'Board of directors' section in the directors' report, 'The directors present their annual report…', 'For and on behalf of the Board'.",
+  "version": "V01",
+  "language": "en",
+  "file": "template.docx",
+  "notes_file": null,
+  "default_font": "Aptos",
+  "order": 3,
+  "active": true
+}

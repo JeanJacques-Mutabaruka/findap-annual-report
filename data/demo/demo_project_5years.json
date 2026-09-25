@@ -1,0 +1,1245 @@
+{
+ "format": "arg-project-2",
+ "meta": {
+  "company_name": "TEST COMPANY LTD",
+  "period_start": null,
+  "period_end": "2025-12-31",
+  "currency": "Rwf",
+  "company_type": "CORPORATE",
+  "tables_font_size": 8,
+  "variables_color": "0070C0",
+  "hide_zero_lines": true,
+  "source": "demo 5 years"
+ },
+ "general": {
+  "audit_company_name": "AUDIT COMPANY LTD",
+  "audit_company_address": "ADRESS\nCITY - COUNTRY",
+  "directors": "MANAGING DIRECTOR NAME",
+  "registered_office": "TEST COMPANY LTD\nGASABO  DISTRICT\nKIGALI - RWANDA",
+  "bankers": "BANK OF KIGALI",
+  "main_activity": "DESCRIPTION OF COMPANY'S KEY ACTIVITIES",
+  "auditor_report_framework": "International Financial Reporting Standards (IFRS)",
+  "accounting_framework": "00:00:00",
+  "proposed_dividend": "0",
+  "signature_date": "---------------------------------------------------------------------------------",
+  "company_representative": "---------------------------------------------------------------------------------",
+  "fs_signing_date": "---------------------------------------------------------------------------------",
+  "company_director": "---------------------------------------------------------------------------------"
+ },
+ "years_data": {
+  "2025": {
+   "cit_rate": 0.29402739726027394,
+   "prepayments": 1736916,
+   "wht": 0,
+   "grants": 0,
+   "loss_brought_forward": 0,
+   "drawings": 0,
+   "adjustments": 0,
+   "inventory_movement": null,
+   "income_tax_paid": 0,
+   "disposal_proceeds": 0,
+   "additional_loans_from_directors": 0,
+   "short_term_borrowings": 0,
+   "fixed_assets": null
+  },
+  "2024": {
+   "cit_rate": 0.3,
+   "prepayments": 0,
+   "wht": 0,
+   "grants": 0,
+   "loss_brought_forward": 0,
+   "drawings": 0,
+   "adjustments": 0,
+   "inventory_movement": null
+  },
+  "2021": {
+   "cit_rate": 0.3
+  },
+  "2022": {
+   "cit_rate": 0.3
+  },
+  "2023": {
+   "cit_rate": 0.3
+  }
+ },
+ "notes": null,
+ "bookmark_overrides": {},
+ "trial_balance": [
+  {
+   "code": "BS 3.1.3.2",
+   "account": "BPR BANK PLC RWF",
+   "comment": null,
+   "note": null,
+   "amounts": {
+    "2021": [
+     6112665.0,
+     0.0
+    ],
+    "2022": [
+     7779756.0,
+     0.0
+    ],
+    "2023": [
+     9446846.0,
+     0.0
+    ],
+    "2024": [
+     11113937.0,
+     0.0
+    ],
+    "2025": [
+     11113937.0,
+     0.0
+    ]
+   }
+  },
+  {
+   "code": "BS 3.1.3.1",
+   "account": "PETTYCASH RWF",
+   "comment": null,
+   "note": null,
+   "amounts": {
+    "2021": [
+     395521.0,
+     0.0
+    ],
+    "2022": [
+     503390.0,
+     0.0
+    ],
+    "2023": [
+     611260.0,
+     0.0
+    ],
+    "2024": [
+     719129.0,
+     0.0
+    ],
+    "2025": [
+     719129.0,
+     0.0
+    ]
+   }
+  },
+  {
+   "code": "BS 3.1.3.2",
+   "account": "BPR BANK PLC USD",
+   "comment": null,
+   "note": null,
+   "amounts": {
+    "2021": [
+     8671995.0,
+     0.0
+    ],
+    "2022": [
+     11037084.0,
+     0.0
+    ],
+    "2023": [
+     13402174.0,
+     0.0
+    ],
+    "2024": [
+     15767263.0,
+     0.0
+    ],
+    "2025": [
+     15767263.0,
+     0.0
+    ]
+   }
+  },
+  {
+   "code": "BS 3.1.3.1",
+   "account": "PETTYCASH USD",
+   "comment": null,
+   "note": null,
+   "amounts": {
+    "2021": [
+     249883.0,
+     0.0
+    ],
+    "2022": [
+     318033.0,
+     0.0
+    ],
+    "2023": [
+     386183.0,
+     0.0
+    ],
+    "2024": [
+     454333.0,
+     0.0
+    ],
+    "2025": [
+     454333.0,
+     0.0
+    ]
+   }
+  },
+  {
+   "code": "BS 3.1.2.1",
+   "account": "ACCOUNTS RECEIVABLES",
+   "comment": null,
+   "note": null,
+   "amounts": {
+    "2021": [
+     3170394.0,
+     0.0
+    ],
+    "2022": [
+     4035047.0,
+     0.0
+    ],
+    "2023": [
+     4899700.0,
+     0.0
+    ],
+    "2024": [
+     5764353.0,
+     0.0
+    ],
+    "2025": [
+     5764353.0,
+     0.0
+    ]
+   }
+  },
+  {
+   "code": "BS 3.1.1.4",
+   "account": "INVENTORIES",
+   "comment": null,
+   "note": null,
+   "amounts": {
+    "2021": [
+     19029246.0,
+     0.0
+    ],
+    "2022": [
+     24219041.0,
+     0.0
+    ],
+    "2023": [
+     29408836.0,
+     0.0
+    ],
+    "2024": [
+     34598630.0,
+     0.0
+    ],
+    "2025": [
+     34598630.0,
+     0.0
+    ]
+   }
+  },
+  {
+   "code": "BS 3.1.1.3",
+   "account": "GOODS IN TRANSIT",
+   "comment": null,
+   "note": null,
+   "amounts": {
+    "2021": [
+     10398005.0,
+     0.0
+    ],
+    "2022": [
+     13233824.0,
+     0.0
+    ],
+    "2023": [
+     16069644.0,
+     0.0
+    ],
+    "2024": [
+     18905463.0,
+     0.0
+    ],
+    "2025": [
+     18905463.0,
+     0.0
+    ]
+   }
+  },
+  {
+   "code": "BS 3.2.4",
+   "account": "SALARY ADVANCES",
+   "comment": null,
+   "note": null,
+   "amounts": {
+    "2021": [
+     273710.0,
+     0.0
+    ],
+    "2022": [
+     348358.0,
+     0.0
+    ],
+    "2023": [
+     423006.0,
+     0.0
+    ],
+    "2024": [
+     497654.0,
+     0.0
+    ],
+    "2025": [
+     497654.0,
+     0.0
+    ]
+   }
+  },
+  {
+   "code": "BS 3.1.2.2",
+   "account": "PREPAYMENT RENT",
+   "comment": null,
+   "note": null,
+   "amounts": {
+    "2021": [
+     1589757.0,
+     0.0
+    ],
+    "2022": [
+     2023327.0,
+     0.0
+    ],
+    "2023": [
+     2456897.0,
+     0.0
+    ],
+    "2024": [
+     2890467.0,
+     0.0
+    ],
+    "2025": [
+     2890467.0,
+     0.0
+    ]
+   }
+  },
+  {
+   "code": "BS 1.08",
+   "account": "COMPUTERS",
+   "comment": null,
+   "note": null,
+   "amounts": {
+    "2021": [
+     825000.0,
+     0.0
+    ],
+    "2022": [
+     1050000.0,
+     0.0
+    ],
+    "2023": [
+     1275000.0,
+     0.0
+    ],
+    "2024": [
+     1500000.0,
+     0.0
+    ],
+    "2025": [
+     1500000.0,
+     0.0
+    ]
+   }
+  },
+  {
+   "code": "BS 1.09",
+   "account": "ACCUMULATED DEPRECIATION",
+   "comment": "--> For 2024: calculated as\n               ACCUMULATED DEPRECIATION (N) = ACCUMULATED DEPRECIATION (N-1) +  DEPRECIATION(N)",
+   "note": null,
+   "amounts": {
+    "2021": [
+     445408.0,
+     0.0
+    ],
+    "2022": [
+     566882.0,
+     0.0
+    ],
+    "2023": [
+     688357.0,
+     0.0
+    ],
+    "2024": [
+     809832.0,
+     0.0
+    ],
+    "2025": [
+     869664.0,
+     0.0
+    ]
+   }
+  },
+  {
+   "code": "BS 1.07",
+   "account": "FURNITURES & FITTINGS",
+   "comment": null,
+   "note": null,
+   "amounts": {
+    "2021": [
+     1032099.0,
+     0.0
+    ],
+    "2022": [
+     1313580.0,
+     0.0
+    ],
+    "2023": [
+     1595062.0,
+     0.0
+    ],
+    "2024": [
+     1876543.0,
+     0.0
+    ],
+    "2025": [
+     1876543.0,
+     0.0
+    ]
+   }
+  },
+  {
+   "code": "BS 1.09",
+   "account": "ACCUMULATED DEPRECIATION",
+   "comment": "--> For 2024: calculated as\n               ACCUMULATED DEPRECIATION (N) = ACCUMULATED DEPRECIATION (N-1) +  DEPRECIATION(N)",
+   "note": null,
+   "amounts": {
+    "2021": [
+     309187.0,
+     0.0
+    ],
+    "2022": [
+     393511.0,
+     0.0
+    ],
+    "2023": [
+     477834.0,
+     0.0
+    ],
+    "2024": [
+     562158.0,
+     0.0
+    ],
+    "2025": [
+     655180.0,
+     0.0
+    ]
+   }
+  },
+  {
+   "code": "BS 1.03",
+   "account": "MOTOR VEHCLE",
+   "comment": null,
+   "note": null,
+   "amounts": {
+    "2021": [
+     4255165.0,
+     0.0
+    ],
+    "2022": [
+     5415665.0,
+     0.0
+    ],
+    "2023": [
+     6576164.0,
+     0.0
+    ],
+    "2024": [
+     7736664.0,
+     0.0
+    ],
+    "2025": [
+     7736664.0,
+     0.0
+    ]
+   }
+  },
+  {
+   "code": "BS 1.09",
+   "account": "ACCUMULATED DEPRECIATION",
+   "comment": "--> For 2024: calculated as\n               ACCUMULATED DEPRECIATION (N) = ACCUMULATED DEPRECIATION (N-1) +  DEPRECIATION(N)",
+   "note": null,
+   "amounts": {
+    "2021": [
+     1171628.0,
+     0.0
+    ],
+    "2022": [
+     1491162.0,
+     0.0
+    ],
+    "2023": [
+     1810697.0,
+     0.0
+    ],
+    "2024": [
+     2130232.0,
+     0.0
+    ],
+    "2025": [
+     2326298.0,
+     0.0
+    ]
+   }
+  },
+  {
+   "code": "BS 1.08",
+   "account": "OFFICE EQUIPMENT",
+   "comment": null,
+   "note": null,
+   "amounts": {
+    "2021": [
+     484789.0,
+     0.0
+    ],
+    "2022": [
+     617004.0,
+     0.0
+    ],
+    "2023": [
+     749219.0,
+     0.0
+    ],
+    "2024": [
+     881434.0,
+     0.0
+    ],
+    "2025": [
+     881434.0,
+     0.0
+    ]
+   }
+  },
+  {
+   "code": "BS 1.09",
+   "account": "ACCUMULATED DEPRECIATION",
+   "comment": "--> For 2024: calculated as\n               ACCUMULATED DEPRECIATION (N) = ACCUMULATED DEPRECIATION (N-1) +  DEPRECIATION(N)",
+   "note": null,
+   "amounts": {
+    "2021": [
+     137122.0,
+     0.0
+    ],
+    "2022": [
+     174519.0,
+     0.0
+    ],
+    "2023": [
+     211916.0,
+     0.0
+    ],
+    "2024": [
+     249313.0,
+     0.0
+    ],
+    "2025": [
+     278267.0,
+     0.0
+    ]
+   }
+  },
+  {
+   "code": "BS 8.1.1",
+   "account": "ACCOUNTS PAYABLES",
+   "comment": null,
+   "note": null,
+   "amounts": {
+    "2021": [
+     0.0,
+     5422149.0
+    ],
+    "2022": [
+     0.0,
+     6900917.0
+    ],
+    "2023": [
+     0.0,
+     8379685.0
+    ],
+    "2024": [
+     0.0,
+     9858453.0
+    ],
+    "2025": [
+     0.0,
+     9858453.0
+    ]
+   }
+  },
+  {
+   "code": "BS 8.1.6",
+   "account": "SALARY PAYABLE",
+   "comment": null,
+   "note": null,
+   "amounts": {
+    "2021": [
+     0.0,
+     1092715.0
+    ],
+    "2022": [
+     0.0,
+     1390728.0
+    ],
+    "2023": [
+     0.0,
+     1688741.0
+    ],
+    "2024": [
+     0.0,
+     1986754.0
+    ],
+    "2025": [
+     0.0,
+     1986754.0
+    ]
+   }
+  },
+  {
+   "code": "BS 8.1.6",
+   "account": "PAYE (wht PAYABLLE)",
+   "comment": null,
+   "note": null,
+   "amounts": {
+    "2021": [
+     0.0,
+     491285.0
+    ],
+    "2022": [
+     0.0,
+     625272.0
+    ],
+    "2023": [
+     0.0,
+     759258.0
+    ],
+    "2024": [
+     0.0,
+     893245.0
+    ],
+    "2025": [
+     0.0,
+     893245.0
+    ]
+   }
+  },
+  {
+   "code": "BS 8.1.6",
+   "account": "RSSB CONTRIBUTIONS PAYABLES",
+   "comment": null,
+   "note": null,
+   "amounts": {
+    "2021": [
+     0.0,
+     122962.0
+    ],
+    "2022": [
+     0.0,
+     156497.0
+    ],
+    "2023": [
+     0.0,
+     190032.0
+    ],
+    "2024": [
+     0.0,
+     223567.0
+    ],
+    "2025": [
+     0.0,
+     223567.0
+    ]
+   }
+  },
+  {
+   "code": "BS 6.2.2",
+   "account": "OTHER LOANS NON RELATED TO THE COMPANY",
+   "comment": null,
+   "note": null,
+   "amounts": {
+    "2021": [
+     0.0,
+     6790171.0
+    ],
+    "2022": [
+     0.0,
+     8642036.0
+    ],
+    "2023": [
+     0.0,
+     10493900.0
+    ],
+    "2024": [
+     0.0,
+     12345765.0
+    ],
+    "2025": [
+     0.0,
+     12345765.0
+    ]
+   }
+  },
+  {
+   "code": "BS 5.01",
+   "account": "SHARE CAPITAL",
+   "comment": null,
+   "note": null,
+   "amounts": {
+    "2021": [
+     0.0,
+     2200002.0
+    ],
+    "2022": [
+     0.0,
+     2799994.0
+    ],
+    "2023": [
+     0.0,
+     3400001.0
+    ],
+    "2024": [
+     0.0,
+     4000000.0
+    ],
+    "2025": [
+     0.0,
+     4000000.0
+    ]
+   }
+  },
+  {
+   "code": "BS 5.07",
+   "account": "Retained earnings",
+   "comment": "---> Changed the CIT CODE from BS 5.01 to BS 5.07\n---> For 2024: calculated as\n               Retained earning (N) = Retained earning (N-1) + Profit (Loss) of the year (N-1)",
+   "note": null,
+   "amounts": {
+    "2021": [
+     0.0,
+     49749392.0
+    ],
+    "2022": [
+     0.0,
+     63317408.0
+    ],
+    "2023": [
+     0.0,
+     76885424.0
+    ],
+    "2024": [
+     0.0,
+     90453440.28
+    ],
+    "2025": [
+     0.0,
+     139497976.39840004
+    ]
+   }
+  },
+  {
+   "code": "PL 1.1",
+   "account": "Sales From Solar systems",
+   "comment": "Assumption of 11,95% increase of sales in 2025 vs2024",
+   "note": null,
+   "amounts": {
+    "2021": [
+     0.0,
+     245377695.0
+    ],
+    "2022": [
+     0.0,
+     312298885.0
+    ],
+    "2023": [
+     0.0,
+     379220074.0
+    ],
+    "2024": [
+     0.0,
+     446141264.06200004
+    ],
+    "2025": [
+     0.0,
+     499455145.117409
+    ]
+   }
+  },
+  {
+   "code": "PL 1.1",
+   "account": "Other Sales Revenues",
+   "comment": "Assumption of 11,95% increase of sales in 2025 vs2024",
+   "note": null,
+   "amounts": {
+    "2021": [
+     0.0,
+     17874267.0
+    ],
+    "2022": [
+     0.0,
+     22749067.0
+    ],
+    "2023": [
+     0.0,
+     27623867.0
+    ],
+    "2024": [
+     0.0,
+     32498666.85
+    ],
+    "2025": [
+     0.0,
+     36382257.538575
+    ]
+   }
+  },
+  {
+   "code": "PL 2.2.1",
+   "account": "Cost of Sales From Solar systme",
+   "comment": null,
+   "note": null,
+   "amounts": {
+    "2021": [
+     219763348.0,
+     0.0
+    ],
+    "2022": [
+     279698807.0,
+     0.0
+    ],
+    "2023": [
+     339634265.0,
+     0.0
+    ],
+    "2024": [
+     399569724.0,
+     0.0
+    ],
+    "2025": [
+     399569724.0,
+     0.0
+    ]
+   }
+  },
+  {
+   "code": "PL 6.06",
+   "account": "RSSB (Employer Contribution)",
+   "comment": null,
+   "note": null,
+   "amounts": {
+    "2021": [
+     664561.0,
+     0.0
+    ],
+    "2022": [
+     845804.0,
+     0.0
+    ],
+    "2023": [
+     1027048.0,
+     0.0
+    ],
+    "2024": [
+     1208292.0,
+     0.0
+    ],
+    "2025": [
+     1208292.0,
+     0.0
+    ]
+   }
+  },
+  {
+   "code": "PL 5.01",
+   "account": "Dep-Computer Equipement",
+   "comment": null,
+   "note": null,
+   "amounts": {
+    "2021": [
+     32908.0,
+     0.0
+    ],
+    "2022": [
+     41882.0,
+     0.0
+    ],
+    "2023": [
+     50857.0,
+     0.0
+    ],
+    "2024": [
+     59832.0,
+     0.0
+    ],
+    "2025": [
+     59832.0,
+     0.0
+    ]
+   }
+  },
+  {
+   "code": "PL 5.01",
+   "account": "Dep-Furniture&fittings",
+   "comment": null,
+   "note": null,
+   "amounts": {
+    "2021": [
+     51162.0,
+     0.0
+    ],
+    "2022": [
+     65115.0,
+     0.0
+    ],
+    "2023": [
+     79069.0,
+     0.0
+    ],
+    "2024": [
+     93022.0,
+     0.0
+    ],
+    "2025": [
+     93022.0,
+     0.0
+    ]
+   }
+  },
+  {
+   "code": "PL 5.01",
+   "account": "Dep-Moto Vehicle",
+   "comment": null,
+   "note": null,
+   "amounts": {
+    "2021": [
+     107836.0,
+     0.0
+    ],
+    "2022": [
+     137246.0,
+     0.0
+    ],
+    "2023": [
+     166656.0,
+     0.0
+    ],
+    "2024": [
+     196066.0,
+     0.0
+    ],
+    "2025": [
+     196066.0,
+     0.0
+    ]
+   }
+  },
+  {
+   "code": "PL 5.01",
+   "account": "Dep-Office Equipement",
+   "comment": null,
+   "note": null,
+   "amounts": {
+    "2021": [
+     15925.0,
+     0.0
+    ],
+    "2022": [
+     20268.0,
+     0.0
+    ],
+    "2023": [
+     24611.0,
+     0.0
+    ],
+    "2024": [
+     28954.0,
+     0.0
+    ],
+    "2025": [
+     28954.0,
+     0.0
+    ]
+   }
+  },
+  {
+   "code": "PL 4.27",
+   "account": "Repair & maintence -Equipement",
+   "comment": null,
+   "note": null,
+   "amounts": {
+    "2021": [
+     434456.0,
+     0.0
+    ],
+    "2022": [
+     552944.0,
+     0.0
+    ],
+    "2023": [
+     671432.0,
+     0.0
+    ],
+    "2024": [
+     789920.0,
+     0.0
+    ],
+    "2025": [
+     789920.0,
+     0.0
+    ]
+   }
+  },
+  {
+   "code": "PL 4.27",
+   "account": "Trading Lisence/No crreance/other administative document",
+   "comment": null,
+   "note": null,
+   "amounts": {
+    "2021": [
+     272268.0,
+     0.0
+    ],
+    "2022": [
+     346522.0,
+     0.0
+    ],
+    "2023": [
+     420777.0,
+     0.0
+    ],
+    "2024": [
+     495032.0,
+     0.0
+    ],
+    "2025": [
+     495032.0,
+     0.0
+    ]
+   }
+  },
+  {
+   "code": "PL 4.27",
+   "account": "Cleaning cost",
+   "comment": null,
+   "note": null,
+   "amounts": {
+    "2021": [
+     238107.0,
+     0.0
+    ],
+    "2022": [
+     303045.0,
+     0.0
+    ],
+    "2023": [
+     367984.0,
+     0.0
+    ],
+    "2024": [
+     432922.0,
+     0.0
+    ],
+    "2025": [
+     432922.0,
+     0.0
+    ]
+   }
+  },
+  {
+   "code": "PL 4.16",
+   "account": "Utilities and Gaz-Office",
+   "comment": null,
+   "note": null,
+   "amounts": {
+    "2021": [
+     760734.0,
+     0.0
+    ],
+    "2022": [
+     968206.0,
+     0.0
+    ],
+    "2023": [
+     1175679.0,
+     0.0
+    ],
+    "2024": [
+     1383152.0,
+     0.0
+    ],
+    "2025": [
+     1383152.0,
+     0.0
+    ]
+   }
+  },
+  {
+   "code": "PL 5.10",
+   "account": "Fines&Penality-PAYE",
+   "comment": null,
+   "note": null,
+   "amounts": {
+    "2021": [
+     431416.0,
+     0.0
+    ],
+    "2022": [
+     549074.0,
+     0.0
+    ],
+    "2023": [
+     666733.0,
+     0.0
+    ],
+    "2024": [
+     784392.0,
+     0.0
+    ],
+    "2025": [
+     784392.0,
+     0.0
+    ]
+   }
+  },
+  {
+   "code": "PL 6.08",
+   "account": "General insurance",
+   "comment": null,
+   "note": null,
+   "amounts": {
+    "2021": [
+     238261.0,
+     0.0
+    ],
+    "2022": [
+     303241.0,
+     0.0
+    ],
+    "2023": [
+     368222.0,
+     0.0
+    ],
+    "2024": [
+     433202.0,
+     0.0
+    ],
+    "2025": [
+     433202.0,
+     0.0
+    ]
+   }
+  },
+  {
+   "code": "PL 4.27",
+   "account": "other Office expenses",
+   "comment": null,
+   "note": null,
+   "amounts": {
+    "2021": [
+     1263764.0,
+     0.0
+    ],
+    "2022": [
+     1608426.0,
+     0.0
+    ],
+    "2023": [
+     1953089.0,
+     0.0
+    ],
+    "2024": [
+     2297752.0,
+     0.0
+    ],
+    "2025": [
+     2297752.0,
+     0.0
+    ]
+   }
+  },
+  {
+   "code": "PL 7.02",
+   "account": "Bank charges",
+   "comment": null,
+   "note": null,
+   "amounts": {
+    "2021": [
+     192127.0,
+     0.0
+    ],
+    "2022": [
+     244525.0,
+     0.0
+    ],
+    "2023": [
+     296924.0,
+     0.0
+    ],
+    "2024": [
+     349322.0,
+     0.0
+    ],
+    "2025": [
+     349322.0,
+     0.0
+    ]
+   }
+  },
+  {
+   "code": "BS 6.1.4",
+   "account": "SHAREHOLDERS ACCOUNT",
+   "comment": "Calculated to make TB balancing",
+   "note": null,
+   "amounts": {
+    "2021": [
+     0.0,
+     0.0
+    ],
+    "2022": [
+     0.0,
+     0.0
+    ],
+    "2023": [
+     0.0,
+     0.0
+    ],
+    "2024": [
+     0.0,
+     0.0
+    ],
+    "2025": [
+     0.0,
+     0.0
+    ]
+   }
+  },
+  {
+   "code": "BS 3.1.4",
+   "account": "Other Current Assets",
+   "comment": "Calculated to make TB balancing",
+   "note": null,
+   "amounts": {
+    "2021": [
+     46102191.0,
+     0.0
+    ],
+    "2022": [
+     58675516.0,
+     0.0
+    ],
+    "2023": [
+     71248841.0,
+     0.0
+    ],
+    "2024": [
+     83822166.19200003,
+     0.0
+    ],
+    "2025": [
+     189686300.0543841,
+     0.0
+    ]
+   }
+  }
+ ]
+}

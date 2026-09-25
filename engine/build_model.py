@@ -98,10 +98,12 @@ def build(inp, chart, notes_cfg):
     meta = inp.get("meta", {})
     pend = date.fromisoformat(meta["period_end"])
     y_cy, y_py = pend.year, pend.year - 1
+    single = bool(meta.get("single_year"))   # first financial year: no comparative (PY) column
+    YRS = (("cy", y_cy),) if single else (("cy", y_cy), ("py", y_py))
     tb = TB(inp["trial_balance"], ctl)
 
     # ---------------- TB integrity
-    for y, lab in (("cy", y_cy), ("py", y_py)):
+    for y, lab in YRS:
         d, c = tb.totals(y)
         if abs(d - c) > TOL:
             ctl.add("BLOCKING", "TB_NOT_BALANCED", f"Trial balance {lab} does not balance: debit {d:,.0f} vs credit {c:,.0f} (diff {d-c:,.0f}).")
@@ -135,7 +137,7 @@ def build(inp, chart, notes_cfg):
         if len(rs) > 1:
             ctl.add("BLOCKING", "DUPLICATE_ACCOUNT", f"Account description '{rs[0]['account']}' is used on {len(rs)} TB lines "
                     f"({', '.join(str(x['idx']) for x in rs)}) — merge them into one line or give each line a different description.")
-    if all(zero((r["dr_cy"] - r["cr_cy"]) - (r["dr_py"] - r["cr_py"])) for r in tb.rows if r["code"].startswith("BS")):
+    if not single and all(zero((r["dr_cy"] - r["cr_cy"]) - (r["dr_py"] - r["cr_py"])) for r in tb.rows if r["code"].startswith("BS")):
         ctl.add("WARNING", "PY_EQUALS_CY", "All balance-sheet balances are identical in both years — previous-year column may be a copy of the current year.")
 
     # ---------------- line amounts
@@ -233,7 +235,7 @@ def build(inp, chart, notes_cfg):
         add_row(bs_rows, "sectiontotal", sec["total_label"], None, tcy, tpy)
         side_tot[sec["side"]]["cy"] += tcy; side_tot[sec["side"]]["py"] += tpy
     add_row(bs_rows, "grandtotal", "TOTAL EQUITY & LIABILITIES", None, side_tot["equity_liabilities"]["cy"], side_tot["equity_liabilities"]["py"])
-    for y, lab in (("cy", y_cy), ("py", y_py)):
+    for y, lab in YRS:
         d = side_tot["assets"][y] - side_tot["equity_liabilities"][y]
         if abs(d) > TOL:
             ctl.add("BLOCKING", "BS_NOT_BALANCED", f"Balance sheet {lab} does not balance: assets {side_tot['assets'][y]:,.0f} vs equity & liabilities {side_tot['equity_liabilities'][y]:,.0f} (diff {d:,.0f}).")
@@ -241,7 +243,7 @@ def build(inp, chart, notes_cfg):
             ctl.add("INFO", "BS_BALANCED", f"Balance sheet {lab} balances ({side_tot['assets'][y]:,.0f}).")
 
     # accumulated depreciation sign
-    for y in ("cy", "py"):
+    for y, _ in YRS:
         ad = amt("BS 1.09", "DR", y)
         if ad > TOL:
             ctl.add("BLOCKING", "ACCDEP_DEBIT", f"Accumulated depreciation (BS 1.09) has a DEBIT balance {ad:,.0f} ({y_cy if y=='cy' else y_py}) — it is ADDED to fixed assets. It must be a credit balance.")
@@ -254,14 +256,14 @@ def build(inp, chart, notes_cfg):
     re_cy, re_py = amt("BS 5.07", "CR", "cy"), amt("BS 5.07", "CR", "py")
     drawings = inp.get("equity_movements", {}).get("cy", {})
     exp_re = re_py + net_profit["py"] + num(drawings.get("dividends_paid")) * -1 + num(drawings.get("adjustments"))
-    if abs(re_cy - exp_re) > TOL:
+    if not single and abs(re_cy - exp_re) > TOL:
         ctl.add("WARNING", "RE_ROLLFORWARD", f"Retained earnings {y_cy} opening ({re_cy:,.0f}) ≠ retained earnings {y_py} ({re_py:,.0f}) + profit {y_py} ({net_profit['py']:,.0f}) ± movements = {exp_re:,.0f}.")
 
     # ---------------- Cash flow (current year, V11 logic)
     cf = cash_flow(inp, val, bsval, amt, ctl, y_cy)
 
     # ---------------- Equity statement
-    eq = equity_statement(inp, amt, net_profit, bsval, ctl, pend)
+    eq = equity_statement(inp, amt, net_profit, bsval, ctl, pend, single)
 
     # ---------------- PPE schedule & inventory
     ppe = ppe_schedule(inp, amt, dep_pl, ctl, pend)
@@ -280,14 +282,16 @@ def build(inp, chart, notes_cfg):
             ctl.add("WARNING", "MISSING_DATA", f"General data '{k}' is missing or a placeholder ('{v}').", field=k)
     rate = meta.get("cit_rate", {})
     if meta.get("company_type", "CORPORATE") == "CORPORATE":
-        for y, yr in (("cy", pend.year), ("py", pend.year - 1)):
+        for y, yr in YRS:
             r_ = num(rate.get(y, 0))
             std = 0.28 if yr >= 2024 else 0.30
             if abs(r_ - std) > 1e-4:
                 ctl.add("WARNING", "CIT_RATE", f"CIT rate used for {yr} is {r_:.2%}; Rwanda standard rate is {std:.0%} for {yr} (Law 051/2023: 28% from 2024; 2023 prorated). Confirm any reduced/incentive rate.")
 
+    assign_levels(pnl_rows, "pnl")
+    assign_levels(bs_rows, "bs")
     return {
-        "meta": {**meta, "year_cy": y_cy, "year_py": y_py},
+        "meta": {**meta, "year_cy": y_cy, "year_py": y_py, "single_year": single},
         "general": g,
         "pnl": pnl_rows, "bs": bs_rows, "cashflow": cf, "equity": eq,
         "income_tax": tax, "ppe": ppe, "inventory": inv, "notes": notes,
@@ -295,6 +299,25 @@ def build(inp, chart, notes_cfg):
                          "total_assets": side_tot["assets"], "total_equity": bsval["eq"]},
         "controls": ctl.items,
     }
+
+
+def assign_levels(rows, statement):
+    """Detail level of each row (the Excel generator's row grouping):
+    0 = main headings and totals · 1 = groups (sub-aggregates) · 2 = individual statement lines.
+    Lines directly under a heading without groups are level 1 in the balance sheet (e.g. equity items)
+    and level 2 in the P&L (e.g. finance cost lines)."""
+    in_group = False
+    for r in rows:
+        t = r["type"]
+        if t == "group":
+            r["lvl"], in_group = 1, True
+        elif t == "line":
+            r["lvl"] = 2 if (in_group or statement == "pnl") else 1
+        elif t == "total":
+            r["lvl"], in_group = 1, False
+        else:
+            r["lvl"], in_group = 0, False
+    return rows
 
 
 def income_tax(inp, chart, tb, pbt, ctl, meta):
@@ -411,13 +434,13 @@ def cash_flow(inp, val, bsval, amt, ctl, y_cy):
     return [{"type": t, "label": l, "cy": (round(v, 2) if v is not None else None), "py": None} for t, l, v in rows]
 
 
-def equity_statement(inp, amt, np_, bsval, ctl, pend):
+def equity_statement(inp, amt, np_, bsval, ctl, pend, single=False):
     cols = [("Share Capital", ["BS 5.01", "BS 5.02"]), ("Retained earnings", ["BS 5.07"]),
             ("Revaluation reserves", ["BS 5.03"]), ("General reserves", ["BS 5.04", "BS 5.05", "BS 5.06"]),
             ("Grants", ["BS 5.09"])]
     mv = inp.get("equity_movements", {})
     blocks = []
-    for y, lab in (("cy", pend.year), ("py", pend.year - 1)):
+    for y, lab in ((("cy", pend.year),) if single else (("cy", pend.year), ("py", pend.year - 1))):
         opening = [sum(amt(c, "CR", y) for c in codes) for _, codes in cols]
         dr = [-num(mv.get(y, {}).get("drawings", {}).get(n, 0)) if isinstance(mv.get(y, {}).get("drawings"), dict) else 0 for n, _ in cols]
         if not isinstance(mv.get(y, {}).get("drawings"), dict):
@@ -426,7 +449,7 @@ def equity_statement(inp, amt, np_, bsval, ctl, pend):
         prof = [0.0] * 5; prof[1] = np_[y]
         close = [opening[i] + dr[i] + adj[i] + prof[i] for i in range(5)]
         rows = []
-        for t, l, v in (("line", "At 1st January", opening), ("line", "Drawings / dividends", dr),
+        for t, l, v in (("line", "Capital and reserves introduced in the year" if single else "At 1st January", opening), ("line", "Drawings / dividends", dr),
                         ("line", "Adjustment from previous years", adj), ("line", "Profit (Loss) of the year", prof),
                         ("grandtotal", "At 31st December", close)):
             rows.append({"type": t, "label": l, "values": [round(x, 2) for x in v] + [round(sum(v), 2)]})

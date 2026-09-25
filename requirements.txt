@@ -1,6 +1,7 @@
-# Tested with: streamlit 1.64, pandas 3.0, openpyxl 3.1, lxml 6.0, xlrd 2.0 on Python 3.12
+# Tested with: streamlit 1.64, pandas 3.0, openpyxl 3.1, lxml 6.0, xlrd 2.0, pymupdf 1.28 on Python 3.12
 streamlit>=1.49,<2
 pandas>=2.1,<4
 openpyxl>=3.1,<4
 xlrd>=2.0,<3
 lxml>=5.0,<7
+pymupdf>=1.24

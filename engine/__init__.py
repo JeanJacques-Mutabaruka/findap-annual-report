@@ -5,7 +5,7 @@ build_model.py, render_report.py, export_pdf.py, xlsm_import.py (= xlsm_to_input
 """
 from pathlib import Path
 
-VERSION = "V1-0g"
+VERSION = "V1-0i"
 ROOT = Path(__file__).resolve().parent.parent
 DATA = ROOT / "data"
 CHART = DATA / "chart_of_accounts.json"

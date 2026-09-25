@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import sys
 from datetime import date
+from datetime import datetime
 from pathlib import Path
 
 import pandas as pd
@@ -14,7 +15,8 @@ if str(ROOT) not in sys.path:
 
 from app import state  # noqa: E402
 from app.style import cy_py_note, info_banner, ok_banner, section, warn_banner  # noqa: E402
-from engine import multiyear, templates  # noqa: E402
+from engine import company_data, multiyear, package, render_report, templates  # noqa: E402
+from app.downloads import download_button  # noqa: E402
 
 state.init_state()
 state.page_setup("🏢 Company & Report Data")
@@ -30,6 +32,26 @@ if miss:
 else:
     ok_banner("All the information printed in the report is filled in.")
 cy_py_note()
+
+pend_cd = st.session_state.get("arg_pending_company")
+if pend_cd:
+    pg, pm = pend_cd["part"].get("general", {}), pend_cd["part"].get("meta", {})
+    with st.container(border=True):
+        info_banner(f"<b>Company & Report Data found in the TB file</b> “{pend_cd['source']}”: company "
+                    f"<b>{pm.get('company_name') or '—'}</b>, year end <b>{pm.get('period_end') or '—'}</b>, auditor "
+                    f"<b>{pg.get('audit_company_name') or '—'}</b>, per-year data for "
+                    f"<b>{', '.join(sorted((pend_cd['part'].get('years_data') or {}).keys())) or '—'}</b>. "
+                    "Apply them to fill this page, or ignore them.")
+        a1, a2 = st.columns(2)
+        if a1.button("✅ APPLY THESE DATA", type="primary"):
+            done = company_data.apply(d, pend_cd["part"])
+            st.session_state["arg_pending_company"] = None
+            state.mark_dirty()
+            st.success("Applied: " + ", ".join(done) + ". Check the tabs below.")
+            st.rerun()
+        if a2.button("Ignore"):
+            st.session_state["arg_pending_company"] = None
+            st.rerun()
 
 
 def to_date(v):
@@ -52,7 +74,8 @@ def saved():
 
 
 tabs = st.tabs(["🏢 Company & auditor", "📅 Period & tax", "📦 Stock & fixed assets", "💶 Equity & cash flow",
-                "⚙️ Report options"])
+                "⚙️ Report options",
+                "💾 Save / load"])
 
 # ============================================================== company ======
 with tabs[0]:
@@ -211,8 +234,22 @@ with tabs[4]:
         col = c2.color_picker("Colour of inserted data", "#" + (m.get("variables_color") or "000000").lstrip("#"),
                               help="V11 used blue (#0070C0) to spot inserted data; black for the final report")
         hz = c3.checkbox("Hide lines that are zero in both years", value=bool(m.get("hide_zero_lines", True)))
+        c1, c2 = st.columns(2)
+        lv_keys = list(render_report.DETAIL_LEVELS)
+        lv = c1.radio("Level of detail — balance sheet and P&L", lv_keys,
+                      index=lv_keys.index(m.get("detail_level") or "detailed"),
+                      format_func=lambda k: render_report.DETAIL_LEVELS[k][1],
+                      help="Detailed: every statement line (as the Excel generator). Summarised: main headings with "
+                           "their sub-totals (e.g. Current assets → Inventories, Receivables, Cash). Condensed: main "
+                           "headings only (e.g. Current assets, Total assets). Also changeable on Statements Preview.")
+        cp_keys = list(multiyear.COMPARATIVE)
+        cp = c2.radio("Comparative year (PY)", cp_keys, index=cp_keys.index(m.get("comparative") or "auto"),
+                      format_func=lambda k: multiyear.COMPARATIVE[k],
+                      help="A company in its first financial year has no Previous Year: its report shows the Current "
+                           "Year (CY) only.")
         if st.form_submit_button("💾 SAVE", type="primary"):
-            m.update({"tables_font_size": int(fs), "variables_color": col.lstrip("#").upper(), "hide_zero_lines": hz})
+            m.update({"tables_font_size": int(fs), "variables_color": col.lstrip("#").upper(), "hide_zero_lines": hz,
+                      "detail_level": lv, "comparative": cp})
             saved()
 
     section("Word template and font")
@@ -272,3 +309,37 @@ with tabs[4]:
     if c2.button("Reset notes to default"):
         d["notes"] = None
         saved()
+
+# ============================================================ save / load ===
+with tabs[5]:
+    section("Save these data")
+    st.caption("Everything on this page — company, auditor, signatures, per-year tax / equity / cash-flow data, "
+               "inventory movement, fixed-asset registers, report options and notes — but not the trial balance. "
+               "Reload the file next year or for another report of the same company instead of typing again.")
+    slug = package.company_slug(m.get("company_name"))
+    stamp = datetime.now().strftime("%Y-%m-%d %H%M")
+    c1, c2 = st.columns(2)
+    with c1:
+        download_button("⬇️ Excel (.xlsx) — easy to read and edit", company_data.to_excel(d, state.years()),
+                        f"{slug}_Company_Report_Data__V{stamp}.xlsx", key="arg_cd_xlsx", primary=True)
+    with c2:
+        download_button("⬇️ JSON (.json) — exact copy", company_data.to_json(d),
+                        f"{slug}_Company_Report_Data__V{stamp}.json", key="arg_cd_json")
+    section("Load previously saved data")
+    st.caption("An Excel or JSON file saved here (a project file …_project.json is accepted too). Only the sections "
+               "present in the file are replaced; the trial balance is not touched.")
+    up = st.file_uploader("Company & Report Data file", type=["xlsx", "json"], key="arg_cd_file")
+    if up is not None:
+        try:
+            part = company_data.from_file(up.getvalue(), up.name)
+            g_ = part.get("general", {})
+            m_ = part.get("meta", {})
+            info_banner(f"File read: company <b>{m_.get('company_name') or '—'}</b>, year end <b>{m_.get('period_end') or '—'}</b>, "
+                        f"auditor <b>{g_.get('audit_company_name') or '—'}</b>, per-year data for "
+                        f"<b>{', '.join(sorted((part.get('years_data') or {}).keys())) or '—'}</b>.")
+            if st.button("📥 LOAD THESE DATA (replaces the current values)", type="primary"):
+                done = company_data.apply(d, part)
+                state.mark_dirty()
+                st.success("Loaded: " + ", ".join(done) + ".")
+        except Exception as e:  # noqa: BLE001
+            warn_banner(f"This file cannot be read: {e}")

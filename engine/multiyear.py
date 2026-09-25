@@ -76,6 +76,7 @@ def pair_input(project: dict, tb: pd.DataFrame, year: int) -> dict:
     meta["period_end"] = ye.isoformat() if ye else ""
     meta["period_start"] = ""
     meta["cit_rate"] = {"cy": float(c["cit_rate"]), "py": float(p["cit_rate"])}
+    meta["single_year"] = single_year(project, tb, year)
     for k in ("years", "active_year", "view_mode"):
         meta.pop(k, None)
     inv = None
@@ -99,6 +100,26 @@ def pair_input(project: dict, tb: pd.DataFrame, year: int) -> dict:
         "notes": project.get("notes"),
         "bookmark_overrides": project.get("bookmark_overrides") or {},
     }
+
+
+COMPARATIVE = {"auto": "Automatic — Current Year only when the TB has no Previous Year figures",
+               "with": "Always show the Previous Year (PY) column",
+               "without": "Current Year only — first financial year, no comparative"}
+
+
+def has_year_data(tb: pd.DataFrame, year: int) -> bool:
+    cols = [f"debit_{year}", f"credit_{year}"]
+    return all(c in tb.columns for c in cols) and float(tb[cols].abs().sum().sum()) > 0.5
+
+
+def single_year(project: dict, tb: pd.DataFrame, year: int) -> bool:
+    """True when the report of CY = year must show the Current Year only (no PY column)."""
+    mode = project.get("meta", {}).get("comparative") or "auto"
+    if mode == "without":
+        return True
+    if mode == "with":
+        return False
+    return not has_year_data(tb, year - 1)
 
 
 def from_pair_input(d: dict) -> tuple[dict, pd.DataFrame]:
@@ -153,7 +174,7 @@ def multi_statement(models: dict[int, dict], key: str) -> tuple[list[dict], list
         for y in ys:
             rr = models[y][key][i] if key != "income_tax" else models[y]["income_tax"]["rows"][i]
             vals.append(rr.get("cy"))
-        out.append({"type": r["type"], "label": r["label"], "note": r.get("note"), "values": vals})
+        out.append({"type": r["type"], "label": r["label"], "note": r.get("note"), "values": vals, "lvl": r.get("lvl", 2)})
     return out, all_years
 
 

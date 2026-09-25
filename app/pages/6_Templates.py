@@ -15,7 +15,7 @@ if str(ROOT) not in sys.path:
 from app import state  # noqa: E402
 from app.downloads import download_button  # noqa: E402
 from app.style import info_banner, ok_banner, red_alert, warn_banner  # noqa: E402
-from engine import CHART, DEMO, build_model, render_report, templates  # noqa: E402
+from engine import CHART, DEMO, build_model, export_pdf, preview, render_report, templates  # noqa: E402
 
 state.init_state()
 state.page_setup("🗂️ Templates")
@@ -49,6 +49,22 @@ for tab, t in zip(tabs, tlist):
             red_alert(t["error"])
             continue
         st.markdown(t["description"] or "")
+        if t.get("preview"):
+            st.image(str(t["preview"]), caption="Preview with the demo data — cover · corporate information · "
+                     "statement of comprehensive income · first notes (click the image to enlarge). "
+                     "Fonts not installed on the server are shown with a close substitute.", width="stretch")
+        elif export_pdf.find_soffice():
+            if st.button("🖼️ Build a preview", key=f"arg_tpl_prev_{t['id']}"):
+                with st.spinner("Filling the template and taking pictures of 4 pages…"):
+                    try:
+                        st.session_state[f"arg_tpl_prev_{t['id']}"] = preview.preview_png(
+                            preview.sample_docx(t["docx"], t["notes"], t["default_font"]))
+                    except Exception as e:  # noqa: BLE001
+                        st.warning(f"Preview not available: {e}")
+            if st.session_state.get(f"arg_tpl_prev_{t['id']}"):
+                st.image(st.session_state[f"arg_tpl_prev_{t['id']}"], width="stretch")
+        else:
+            st.caption("No preview picture for this template yet (the administrator can add preview.png).")
         c = st.columns(4)
         c[0].metric("Version", t["version"] or "—")
         c[1].metric("Language", (t["language"] or "").upper())

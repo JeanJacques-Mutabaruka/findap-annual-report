@@ -250,6 +250,76 @@ def filter_zero(rows, valkeys):
     return out
 
 
+# ------------------------------------------------------------------ detail levels
+DETAIL_LEVELS = {  # key -> (Excel-style level, label shown to users)
+    "detailed": (2, "Detailed — every statement line"),
+    "summarised": (1, "Summarised — headings and sub-totals"),
+    "condensed": (0, "Condensed — main headings only"),
+}
+
+
+def _vals(r):
+    return r["values"] if "values" in r else [r.get("cy"), r.get("py")]
+
+
+def _has_values(r):
+    return any(v is not None for v in _vals(r))
+
+
+def _note_range(notes):
+    nums = sorted({int(n) for n in notes if str(n).isdigit()})
+    if not nums:
+        return None
+    parts, start = [], nums[0]
+    for a, b in zip(nums, nums[1:] + [None]):
+        if b != a + 1:
+            parts.append(str(start) if start == a else (f"{start}, {a}" if a == start + 1 else f"{start}–{a}"))
+            start = b
+    return ", ".join(parts)
+
+
+def apply_level(rows, level="detailed"):
+    """Balance sheet / P&L rows at a detail level ('detailed' | 'summarised' | 'condensed', or 2 | 1 | 0).
+    Rows need the 'lvl' attribute set by build_model.assign_levels. Works on 2-year rows and multi-year rows."""
+    lv = DETAIL_LEVELS.get(level, (level,))[0] if isinstance(level, str) else level
+    if lv >= 2 or not rows or "lvl" not in rows[0]:
+        return rows
+    out = []
+    if lv == 1:
+        pending = None
+        for r in rows:
+            if r["lvl"] == 2:
+                continue
+            if r["type"] == "group" and not _has_values(r):
+                pending = r
+                continue
+            if r["type"] == "total" and pending is not None:
+                out.append({**r, "type": "line", "label": pending["label"], "note": r.get("note") or pending.get("note")})
+                pending = None
+                continue
+            pending = None
+            out.append({**r, "type": "line"} if r["type"] == "group" else r)
+        return out
+    title, notes = None, []
+    for r in rows:
+        if r["type"] == "title":
+            title, notes = r, [r.get("note")] if r.get("note") else []
+            continue
+        if r.get("note") and any(v is not None and abs(v) >= 0.5 for v in _vals(r)):
+            notes += [x.strip() for x in str(r["note"]).replace("&", ",").split(",")]
+        if r["lvl"] != 0:
+            continue
+        if r["type"] == "sectiontotal":
+            lab = title["label"] if title else r["label"].replace("Total ", "")
+            out.append({**r, "type": "line", "label": lab, "note": r.get("note") or _note_range(notes)})
+            title, notes = None, []
+        elif r["type"] == "line_bold":
+            out.append({**r, "type": "line"})
+        else:
+            out.append(r)
+    return out
+
+
 def statement_rows(rows, cols, size):
     """cols: list of ('note'|'cy'|'py'|int index into values)"""
     body = []
@@ -270,9 +340,16 @@ def statement_rows(rows, cols, size):
 
 def build_two_year(rows, meta, with_note=True, keep_zero=False, bookmark=None):
     size = int(meta.get("tables_font_size", 8)) * 2
+    single = bool(meta.get("single_year"))
     if not keep_zero:
-        rows = filter_zero(rows, ["cy", "py"])
+        rows = filter_zero(rows, ["cy"] if single else ["cy", "py"])
     cur = meta.get("currency", "Rwf")
+    if single:   # first financial year: Current Year only
+        if with_note:
+            widths, hdr, cols = [6822, 700, 1550], [["", "Note", str(meta["year_cy"])], ["", "", cur]], ["note", "cy"]
+        else:
+            widths, hdr, cols = [7522, 1550], [["", str(meta["year_cy"])], ["", cur]], ["cy"]
+        return table(widths, hdr, statement_rows(rows, cols, size), size, bookmark)
     if with_note:
         widths = [5272, 700, 1550, 1550]
         hdr = [["", "Note", str(meta["year_cy"]), str(meta["year_py"])], ["", "", cur, cur]]
@@ -602,8 +679,8 @@ def render(template, model, output, keep_zero_lines=False, allow_blocking=False,
 
     # 2. tables
     builders = {
-        "pnl": lambda bm: build_two_year(model["pnl"], meta, True, keep_zero, bm),
-        "balancesheet": lambda bm: build_two_year(model["bs"], meta, True, keep_zero, bm),
+        "pnl": lambda bm: build_two_year(apply_level(model["pnl"], meta.get("detail_level", "detailed")), meta, True, keep_zero, bm),
+        "balancesheet": lambda bm: build_two_year(apply_level(model["bs"], meta.get("detail_level", "detailed")), meta, True, keep_zero, bm),
         "cashflow": lambda bm: build_cashflow(model["cashflow"], meta, keep_zero, bm),
         "equity": lambda bm: build_matrix(
             model["equity"]["columns"],

@@ -179,7 +179,7 @@ def test_template_cascade_lists_and_code_derivation():
     cat = pd.DataFrame(rows)
     x = package.tb_template([2025, 2024], cat, "ACME")
     wb = openpyxl.load_workbook(io.BytesIO(x))
-    assert wb.sheetnames == ["Instructions", "Trial Balance", "Lists", "CIT codes"]
+    assert wb.sheetnames == ["Instructions", "Trial Balance", "CIT codes", "Lists"]
     assert wb["Lists"].sheet_state == "hidden"
     assert len(wb["Trial Balance"].data_validations.dataValidation) == 5
     ws = wb["Trial Balance"]
@@ -228,3 +228,66 @@ def test_template_registry_and_generic_bookmarks(demo):
     assert "str_companyname__9" in rep["replaced"] and "tbl_pnl" in rep["replaced"] and "var_notes" in rep["replaced"]
     doc = zipfile.ZipFile(io.BytesIO(out.getvalue())).read("word/document.xml").decode("utf-8")
     assert set(_re.findall(r'w:ascii="([^"]+)"', doc)) <= {"Georgia", "Symbol"}
+
+
+def test_company_data_roundtrip_and_multi_tb(demo):
+    from engine import company_data
+    proj, tb = multiyear.from_pair_input(demo)
+    proj["general"]["audit_company_name"] = "AUDIT X"
+    proj.setdefault("years_data", {}).setdefault("2025", {})["prepayments"] = 1234.0
+    for fmt, data in (("json", company_data.to_json(proj)), ("xlsx", company_data.to_excel(proj, [2024, 2025]))):
+        part = company_data.from_file(data, f"x.{fmt}")
+        assert part["general"]["audit_company_name"] == "AUDIT X"
+        assert abs(part["years_data"]["2025"]["prepayments"] - 1234) < 0.01
+        assert abs(part["years_data"]["2025"]["cit_rate"] - proj["years_data"]["2025"]["cit_rate"]) < 1e-6
+        target = {"meta": {}, "general": {}, "years_data": {}}
+        assert "printed data" in company_data.apply(target, part)
+    cat = pd.DataFrame([{"code": "BS 3.1.3.2", "statement": "Balance sheet", "section": "s", "group": "g", "line": "Bank", "note": ""},
+                        {"code": "BS 5.01", "statement": "Balance sheet", "section": "s", "group": "g2", "line": "Capital", "note": ""}])
+    rows = [{"code": "BS 3.1.3.2", "account": "BANK", "amounts": {2025: (100, 0), 2024: (50, 0)}},
+            {"code": "BS 5.01", "account": "CAPITAL", "amounts": {2025: (0, 100), 2024: (0, 50)}}]
+    x = package.tb_template([2025, 2024], cat, "ACME", sheets={"TB A": rows, "TB B": rows[:1]})
+    found = tb_io.tb_sheets(x, "t.xlsx")
+    assert [f["sheet"] for f in found] == ["TB A", "TB B"]
+    assert found[0]["balanced"] and not found[1]["balanced"] and found[0]["lines"] == 2
+
+
+def test_single_year_and_detail_levels(demo):
+    proj, tb = multiyear.from_pair_input(demo)
+    tb1 = tb.drop(columns=["debit_2024", "credit_2024"])            # company in its first year
+    assert multiyear.single_year(proj, tb1, 2025)
+    m = build(multiyear.pair_input(proj, tb1, 2025))
+    assert m["meta"]["single_year"] and len(m["equity"]["blocks"]) == 1
+    assert "RE_ROLLFORWARD" not in ids(m, "WARNING")
+    out = io.BytesIO()
+    render_report.render(str(TEMPLATE), m, out, allow_blocking=True)
+    xml = zipfile.ZipFile(io.BytesIO(out.getvalue())).read("word/document.xml").decode("utf-8")
+    assert ">2025<" in xml and ">2024<" not in xml
+    # forced comparative
+    proj["meta"]["comparative"] = "with"
+    assert not multiyear.single_year(proj, tb1, 2025)
+    # levels
+    m2 = build(demo)
+    det = render_report.apply_level(m2["pnl"], "detailed")
+    summ = render_report.apply_level(m2["pnl"], "summarised")
+    cond = render_report.apply_level(m2["bs"], "condensed")
+    assert len(det) > len(summ) > 0
+    assert [r["label"] for r in cond if r["type"] == "line"] == ["Non Current Assets", "Current Assets", "Equity",
+                                                                   "Non Current Liabilities", "Current Liabilities"]
+    np_row = next(r for r in render_report.apply_level(m2["pnl"], "condensed") if r["type"] == "grandtotal")
+    assert round(np_row["cy"]) == 89_851_899
+    rep = render_report.render(str(TEMPLATE), {**m2, "meta": {**m2["meta"], "detail_level": "condensed"}}, io.BytesIO(),
+                               allow_blocking=True)
+    assert not rep["missing"]
+
+
+def test_company_sheets_inside_tb_file(demo):
+    from engine import company_data
+    proj, tb = multiyear.from_pair_input(demo)
+    proj["general"]["audit_company_name"] = "AUDIT Y"
+    cat = pd.DataFrame([{"code": "BS 5.01", "statement": "Balance sheet", "section": "s", "group": "g", "line": "Capital", "note": ""}])
+    x = package.tb_template([2025, 2024], cat, "ACME", extra_sheets=company_data.frames(proj, [2024, 2025])[0])
+    names = tb_io.sheet_names(x, "t.xlsx")
+    assert company_data.has_company_sheets(names)
+    assert [f["sheet"] for f in tb_io.tb_sheets(x, "t.xlsx")] == ["Trial Balance"]
+    assert company_data.from_file(x, "t.xlsx")["general"]["audit_company_name"] == "AUDIT Y"

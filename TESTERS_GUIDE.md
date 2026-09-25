@@ -1,6 +1,6 @@
 # Annual Report Generator — Testers' guide
 
-**Version under test: V1-0g** (shown at the bottom of the left menu) · about **50 minutes** for the 11 scenarios.
+**Version under test: V1-0i** (shown at the bottom of the left menu) · about **60 minutes** for the 14 scenarios.
 
 Thank you for testing. The tool turns a company's **trial balance** into its audited **annual report**
 (Word and PDF): it checks the figures, asks for what is missing, then generates the files.
@@ -79,6 +79,21 @@ Page 5 → **Download project file**. Close the tab, reopen the app, page **Tria
 Page **Templates** → download the template, then **Prepare a sample with the demo data** (try another font).
 Page **Company and Report Data** → Report options → choose a font → generate again.
 **Expected:** the sample and the report use the chosen font everywhere (titles, text, tables).
+
+### 12. Save and reload the company data — 3 min
+Page **Company and Report Data** → tab **💾 Save / load** → download the Excel file, open it, change the auditor name,
+save, load it back.
+**Expected:** the new auditor name appears on page 3; the trial balance is unchanged.
+
+### 13. A file with two trial balances — 2 min
+Upload a file holding two TB sheets (you received one).
+**Expected:** the app lists both sheets with their years and balance status and lets you choose one.
+
+### 14. Level of detail and first financial year — 4 min
+Statements Preview → switch **Detailed / Summarised / Condensed**, then generate a report.
+Report options → Comparative year → **Current Year only**, generate again.
+**Expected:** the balance sheet and P&L follow the level chosen (preview and Word); in CY-only mode every table
+has a single year column.
 
 ## Final questions (in the feedback form)
 

@@ -12,7 +12,8 @@ templates/
 ├── standard-v09/                 ← folder name = template id (lower case, no spaces)
 │   ├── template.json             ← manifest (required)
 │   ├── template.docx             ← the Word template (required)
-│   └── notes.json                ← optional: notes specific to this template (else data/notes_default.json)
+│   ├── notes.json                ← optional: notes specific to this template (else data/notes_default.json)
+│   └── preview.png               ← optional: picture shown on the Templates page (scripts/make_previews.py)
 └── _example-new-template/        ← scaffold (inactive): copy, rename, fill, set "active": true
 ```
 

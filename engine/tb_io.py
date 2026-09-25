@@ -62,13 +62,54 @@ def read_table(data: bytes, filename: str, sheet: str | int = 0, header_row: int
     return df.dropna(how="all")
 
 
-def guess_header_row(data: bytes, filename: str, sheet=0, max_rows: int = 15) -> int:
-    """First row (1-based) that contains an 'account'-like and a 'debit'/'balance'-like label."""
+def find_header_row(data: bytes, filename: str, sheet=0, max_rows: int = 15) -> int | None:
+    """First row (1-based) holding an 'account'-like and a 'debit'/'balance'-like label, or None."""
+    r = guess_header_row(data, filename, sheet, max_rows, default=None)
+    return r
+
+
+def tb_sheets(data: bytes, filename: str) -> list[dict]:
+    """Sheets of a file that look like a trial balance: [{"sheet", "header_row", "years", "lines", "balanced"}].
+    Hidden sheets are skipped (e.g. the template's 'Lists')."""
+    if filename.lower().endswith(".csv"):
+        return [{"sheet": "(csv)", "header_row": guess_header_row(data, filename), "years": [], "lines": None, "balanced": None}]
+    hidden = set()
+    if filename.lower().endswith((".xlsx", ".xlsm")):
+        try:
+            import openpyxl
+            wb = openpyxl.load_workbook(io.BytesIO(data), read_only=True)
+            hidden = {ws.title for ws in wb.worksheets if ws.sheet_state != "visible"}
+        except Exception:  # noqa: BLE001
+            pass
+    out = []
+    for sh in sheet_names(data, filename):
+        if sh in hidden:
+            continue
+        h = find_header_row(data, filename, sh)
+        if not h:
+            continue
+        info = {"sheet": sh, "header_row": h, "years": [], "lines": None, "balanced": None}
+        try:
+            raw = read_table(data, filename, sh, h)
+            mp = guess_mapping(list(raw.columns))
+            if mp.get("account") and mp["years"]:
+                tb, _ = to_tb(raw, mp)
+                info.update(years=years_of(tb), lines=len(tb), balanced=balance(tb)["ok"])
+            else:
+                continue
+        except Exception:  # noqa: BLE001
+            continue
+        out.append(info)
+    return out
+
+
+def guess_header_row(data: bytes, filename: str, sheet=0, max_rows: int = 15, default: int | None = 1) -> int | None:
+    """First row (1-based) that contains an 'account'-like and a 'debit'/'balance'-like label (else `default`)."""
     try:
         raw = (pd.read_csv(io.BytesIO(data), header=None, nrows=max_rows) if filename.lower().endswith(".csv")
                else pd.read_excel(io.BytesIO(data), sheet_name=sheet, header=None, nrows=max_rows))
     except Exception:  # noqa: BLE001
-        return 1
+        return default
     for i, row in raw.iterrows():
         cells = [str(x).lower() for x in row.tolist() if str(x).strip() not in ("", "nan", "None")]
         if len(cells) < 3:  # a title or instruction line, not a header row
@@ -76,7 +117,7 @@ def guess_header_row(data: bytes, filename: str, sheet=0, max_rows: int = 15) ->
         txt = " | ".join(cells)
         if re.search(r"account|compte|libell|name|intitul", txt) and re.search(r"debit|débit|credit|crédit|balance|solde", txt):
             return int(i) + 1
-    return 1
+    return default
 
 
 def guess_mapping(columns: list[str], default_latest_year: int | None = None) -> dict:

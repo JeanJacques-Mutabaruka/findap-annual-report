@@ -18,7 +18,7 @@ from app import state  # noqa: E402
 from app.downloads import download_button  # noqa: E402
 from app.formatting import fmt  # noqa: E402
 from app.style import cy_py_note, info_banner, ok_banner, red_alert, section, warn_banner  # noqa: E402
-from engine import package, tb_io, xlsm_import  # noqa: E402
+from engine import company_data, package, tb_io, xlsm_import  # noqa: E402
 
 state.init_state()
 state.page_setup("🧾 Trial Balance")
@@ -55,9 +55,19 @@ with tabs[0]:
             sheets = None
             red_alert(f"This file cannot be read: {e}")
         if sheets:
-            default_sheet = next((i for i, s in enumerate(sheets) if re.search(r"trial|balance|tb", s, re.I)), 0)
+            found = tb_io.tb_sheets(data, name)
+            show_all = False
+            if len(found) > 1:
+                info_banner(f"This file contains <b>{len(found)} trial balances</b>. Choose the one to use:")
+                st.dataframe(pd.DataFrame([{"Sheet": f_["sheet"], "Years": ", ".join(map(str, f_["years"])),
+                                            "Lines": f_["lines"], "Balanced": "✅" if f_["balanced"] else "❌"}
+                                           for f_ in found]), hide_index=True, width="stretch")
+                show_all = st.checkbox("Show every sheet of the file", value=False)
+            choices = sheets if (show_all or not found) else [f_["sheet"] for f_ in found]
+            default_sheet = 0 if found and not show_all else next(
+                (i for i, s in enumerate(choices) if re.search(r"trial|balance|tb", s, re.I)), 0)
             c1, c2 = st.columns([2, 1])
-            sheet = c1.selectbox("Sheet", sheets, index=default_sheet)
+            sheet = c1.selectbox("Trial balance to use (sheet)" if len(found) > 1 else "Sheet", choices, index=default_sheet)
             sheet_arg = 0 if sheet == "(csv)" else sheet
             header = c2.number_input("Header row (row holding the column titles)", min_value=1, max_value=50,
                                      value=tb_io.guess_header_row(data, name, sheet_arg), step=1)
@@ -130,11 +140,22 @@ with tabs[0]:
             ys = sorted(y["year"] for y in years_map)
             st.caption(f"Years loaded: {', '.join(map(str, ys))} → reports possible for CY "
                        f"{', '.join(map(str, ys[1:] or ys))} (each compared with its PY).")
+        company_part = None
+        if company_data.has_company_sheets(sheets):
+            try:
+                company_part = company_data.from_file(data, name)
+                info_banner("This file also contains <b>Company & Report Data</b> sheets (company, auditor, per-year "
+                            "data…). They will be proposed on <b>3 · Company & Report Data</b> after loading the TB — "
+                            "nothing is replaced until you apply them there.")
+            except Exception as e:  # noqa: BLE001
+                warn_banner(f"Company & Report Data sheets found but not readable: {e}")
         if st.button("▶️ LOAD TRIAL BALANCE", type="primary", disabled=bool(problems)):
             tb, notes = tb_io.to_tb(raw, mapping, state.code_catalogue())
             if tb.empty:
                 red_alert("No account lines found with this mapping.")
             else:
+                if company_part:
+                    st.session_state["arg_pending_company"] = {"part": company_part, "source": name}
                 state.set_tb(tb, f"{name} [{sheet}]")
                 st.session_state["arg_demo"] = False
                 st.session_state["arg_import_notes"] = notes
@@ -172,10 +193,14 @@ with tabs[1]:
                          value=int(state.years()[-1]) if state.has_tb() else pd.Timestamp.today().year - 1, step=1)
     comp = c3.text_input("Company name (title of the sheet)", state.project()["meta"].get("company_name") or "")
     yrs = [int(ly) - i for i in range(int(ny))]
+    with_cd = st.checkbox("Also include the Company & Report Data sheets (pre-filled with this project's data)",
+                          value=False, help="Company, auditor, per-year tax data… in the same workbook as the TB. "
+                                            "When the file is uploaded, they are proposed on page 3.")
     st.caption("Columns: Statement · Section · Group · Statement line · CIT code · Account name · " +
                " · ".join(f"Debit {y} · Credit {y}" for y in yrs) + " · Comments · Check")
     download_button("⬇️ Download the TB template (Excel)",
-                    package.tb_template(yrs, state.code_catalogue(), comp),
+                    package.tb_template(yrs, state.code_catalogue(), comp,
+                                        extra_sheets=company_data.frames(state.project(), yrs)[0] if with_cd else None),
                     f"{package.company_slug(comp or 'Company')}_TB_template_{min(yrs)}-{max(yrs)}.xlsx",
                     key="arg_dl_template", primary=True)
 

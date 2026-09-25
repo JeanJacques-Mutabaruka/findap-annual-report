@@ -24,7 +24,17 @@ if not state.require_tb():
 
 BOLD = {"heading", "title", "group", "line_bold", "total", "sectiontotal", "subtotal", "grandtotal", "blocktitle"}
 meta = state.project()["meta"]
-hide = st.toggle("Hide lines that are zero in every year shown", value=bool(meta.get("hide_zero_lines", True)))
+c1, c2 = st.columns([3, 2])
+lv_keys = list(render_report.DETAIL_LEVELS)
+level = c1.radio("Level of detail (balance sheet and P&L — also used in the Word report)", lv_keys, horizontal=True,
+                 index=lv_keys.index(meta.get("detail_level") or "detailed"),
+                 format_func=lambda k: render_report.DETAIL_LEVELS[k][1].split(" — ")[0],
+                 help="\n\n".join(v[1] for v in render_report.DETAIL_LEVELS.values()))
+if level != (meta.get("detail_level") or "detailed"):
+    meta["detail_level"] = level
+    st.session_state["arg_outputs"] = {}
+    st.session_state["arg_dirty"] = True
+hide = c2.toggle("Hide lines that are zero in every year shown", value=bool(meta.get("hide_zero_lines", True)))
 
 
 def show(rows, cols, labels, note=True):
@@ -71,6 +81,8 @@ if state.view_all():
                                              ("cashflow", "Statement of cash flows"),
                                              ("income_tax", "Income tax computation")]):
         rows, yrs = multiyear.multi_statement(models, key)
+        if key in ("pnl", "bs"):
+            rows = render_report.apply_level(rows, level)
         sheets[title[:31]] = (rows, yrs)
         with tab:
             section(f"{title} — {yrs[0]} to {yrs[-1]}")
@@ -104,7 +116,12 @@ if model is None:
     st.stop()
 cy_py_note(cy)
 y, p = model["meta"]["year_cy"], model["meta"]["year_py"]
-L = [ylab(y, cy), ylab(p, cy)]
+single = bool(model["meta"].get("single_year"))
+L = [ylab(y, cy)] if single else [ylab(y, cy), ylab(p, cy)]
+C = ["cy"] if single else ["cy", "py"]
+if single:
+    info_banner(f"<b>Current Year only</b> — {y} is presented without comparative (first financial year or option "
+                "chosen in 3 · Company & Report Data → Report options).")
 blocking = [c for c in model["controls"] if c["level"] == "BLOCKING"]
 if blocking:
     red_alert(f"{len(blocking)} blocking issue(s) — figures below are provisional. See 2 · Checks & Corrections.")
@@ -112,10 +129,10 @@ if blocking:
 tabs = st.tabs(["P&L", "Balance sheet", "Cash flow", "Equity", "Income tax", "Fixed assets", "Notes"])
 with tabs[0]:
     section(f"Statement of comprehensive income — year ended {model['meta']['period_end']}")
-    show(model["pnl"], ["cy", "py"], L)
+    show(render_report.apply_level(model["pnl"], level), C, L)
 with tabs[1]:
     section(f"Statement of financial position — as at {model['meta']['period_end']}")
-    show(model["bs"], ["cy", "py"], L)
+    show(render_report.apply_level(model["bs"], level), C, L)
 with tabs[2]:
     section(f"Statement of cash flows — CY {y}")
     show(model["cashflow"], ["cy"], [L[0]], note=False)
@@ -126,7 +143,7 @@ with tabs[3]:
         show(blk["rows"], list(range(len(model["equity"]["columns"]))), model["equity"]["columns"], note=False)
 with tabs[4]:
     section("Income tax computation (note 10)")
-    show(model["income_tax"]["rows"], ["cy", "py"], L, note=False)
+    show(model["income_tax"]["rows"], C, L, note=False)
 with tabs[5]:
     section("Property and equipment (note 11)")
     st.caption(f"Source: {model['ppe']['source']}")
@@ -140,7 +157,7 @@ with tabs[6]:
             if b["kind"] == "text":
                 st.write(b["text"])
             elif b["kind"] == "table2":
-                show(b["rows"], ["cy", "py"], L, note=False)
+                show(b["rows"], C, L, note=False)
             elif b["kind"] == "tableN":
                 show(b["rows"], list(range(len(b["columns"]))), b["columns"], note=False)
 

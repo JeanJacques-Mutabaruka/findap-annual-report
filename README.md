@@ -1,6 +1,6 @@
 # Annual Report Generator
 
-**Version V1-0g**
+**Version V1-0i**
 
 A Streamlit tool that turns a **trial balance** into the audited **annual report** (Word + PDF) of a
 Rwandan company, using the firm's Word template (cover, directors' report, auditor's report, P&L,
@@ -73,9 +73,9 @@ A TB can hold any number of years. In the sidebar choose **Years shown**:
 | **Home** | Progress checklist, key figures, demo data |
 | **1 · Trial Balance** | Blank TB template (1–10 years, cascading Statement › Section › Group › Statement line › CIT code drop-downs). Upload the TB (xlsx / xls / xlsm / csv, any number of years): header row detection, column mapping per year (debit/credit or signed balance), balance check. Resume a saved project. Import a V11 Excel generator workbook. Find a CIT code by keyword / section / group and add or apply it; edit lines (searchable), add / remove years. |
 | **2 · Checks & Corrections** | One tab per check: balance per year, duplicated account descriptions (merge / rename), issues on individual lines, CIT-code mapping with suggestions to confirm, download of the account ↔ code map and of the chart of codes, quick fix for accumulated depreciation, every report control with **what to do** and a link to the page where it is corrected |
-| **3 · Company & Report Data** | Company, auditor, directors, bankers, frameworks, signatures; year end; per-year grids for tax, equity and cash-flow data; inventory movement per year; fixed-asset register per year; report options (font size, colour, zero lines, custom template, notes) |
-| **4 · Statements Preview** | CY vs PY: P&L, balance sheet, cash flow, equity, income tax, fixed assets and notes as printed. All years: the same statements with one column per year + multi-year workbook |
-| **6 · Templates** | See, download and choose the Word templates (managed by the administrator in `templates/`), prepare a sample filled with the demo data, choose the report font |
+| **3 · Company & Report Data** | Save / load all these data (Excel or JSON). Company, auditor, directors, bankers, frameworks, signatures; year end; per-year grids for tax, equity and cash-flow data; inventory movement per year; fixed-asset register per year; report options (font size, colour, zero lines, custom template, notes) |
+| **4 · Statements Preview** | Level of detail (Detailed / Summarised / Condensed). CY vs PY (or CY only for a first financial year): P&L, balance sheet, cash flow, equity, income tax, fixed assets and notes as printed. All years: the same statements with one column per year + multi-year workbook |
+| **6 · Templates** | Preview (4 pages with demo data), see, download and choose the Word templates (managed by the administrator in `templates/`), prepare a sample filled with the demo data, choose the report font |
 | **5 · Generate & Download** | One report (selected CY) or every year pair, downloads grouped in one tab per year: project file, skill input, model, controls, statements workbook, Word, PDF, multi-year workbook — individually or as a ZIP |
 
 ### What the checks do
@@ -135,6 +135,7 @@ annual-report-app/
 │   ├── package.py              TB template, code maps, workbooks, file names, ZIP
 │   └── guidance.py             "what to do" text for every control
 ├── templates/                  Word templates — one folder per template (admin only, see templates/README.md)
+├── scripts/make_previews.py    (administrator) rebuild templates/<id>/preview.png
 ├── data/
 │   ├── chart_of_accounts.json  CIT codes → statement lines, groups, notes, signs
 │   ├── notes_default.json      explanatory notes 5–25
@@ -157,7 +158,7 @@ pip install pytest
 pytest -q
 ```
 
-20 tests: figures identical to the V11 Excel tool, blocking controls, upload/mapping (2 and 5 years,
+23 tests: figures identical to the V11 Excel tool, blocking controls, upload/mapping (2 and 5 years,
 un-labelled total line, missing account names), signed balances, code suggestions, multi-year alignment,
 TB template round-trip, Word rendering without leftover placeholders, statements workbook, and headless
 runs of every page including full 2-year and 5-year generations.

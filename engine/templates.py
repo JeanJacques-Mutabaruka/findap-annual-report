@@ -48,6 +48,7 @@ def list_templates(include_inactive: bool = False) -> list[dict]:
                     "version": m.get("version", ""), "language": m.get("language", "en"),
                     "default_font": m.get("default_font"), "order": m.get("order", 99), "active": m.get("active", True),
                     "docx": docx, "notes": notes if notes and notes.exists() else None,
+                    "preview": (d / m.get("preview", "preview.png")) if (d / m.get("preview", "preview.png")).exists() else None,
                     "error": None if docx.exists() else f"file {docx.name} not found in templates/{d.name}/"})
     return sorted(out, key=lambda t: (t["order"], t["alias"]))
 

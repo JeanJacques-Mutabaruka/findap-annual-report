@@ -55,11 +55,13 @@ def rows_df(rows: list[dict], cols=("cy", "py"), labels=None) -> pd.DataFrame:
 
 def statements_workbook(model: dict, tb: pd.DataFrame | None = None) -> bytes:
     y, p = str(model["meta"]["year_cy"]), str(model["meta"]["year_py"])
+    single = bool(model["meta"].get("single_year"))
+    cols, labs = (("cy",), [y]) if single else (("cy", "py"), [y, p])
     sheets = {
-        "P&L": rows_df(model["pnl"], labels=[y, p]),
-        "Balance sheet": rows_df(model["bs"], labels=[y, p]),
+        "P&L": rows_df(model["pnl"], cols=cols, labels=labs),
+        "Balance sheet": rows_df(model["bs"], cols=cols, labels=labs),
         "Cash flow": rows_df(model["cashflow"], cols=("cy",), labels=[y]),
-        "Income tax": rows_df(model["income_tax"]["rows"], labels=[y, p]),
+        "Income tax": rows_df(model["income_tax"]["rows"], cols=cols, labels=labs),
     }
     eq_rows = []
     for blk in model["equity"]["blocks"]:
@@ -70,13 +72,14 @@ def statements_workbook(model: dict, tb: pd.DataFrame | None = None) -> bytes:
         sheets["PPE"] = rows_df(model["ppe"]["rows"], labels=model["ppe"]["columns"])
     note_rows = []
     for n in model["notes"]:
-        note_rows.append({"Note": n["id"], "Line": n["title"], y: None, p: None, "_type": "title"})
+        note_rows.append({"Note": n["id"], "Line": n["title"], y: None, **({} if single else {p: None}), "_type": "title"})
         for b in n["blocks"]:
             if b["kind"] == "text":
-                note_rows.append({"Note": "", "Line": b["text"], y: None, p: None, "_type": "text"})
+                note_rows.append({"Note": "", "Line": b["text"], y: None, **({} if single else {p: None}), "_type": "text"})
             elif b["kind"] == "table2":
                 for r in b["rows"]:
-                    note_rows.append({"Note": "", "Line": r["label"], y: r.get("cy"), p: r.get("py"), "_type": r["type"]})
+                    note_rows.append({"Note": "", "Line": r["label"], y: r.get("cy"), **({} if single else {p: r.get("py")}),
+                                      "_type": r["type"]})
     sheets["Notes"] = pd.DataFrame(note_rows)
     sheets["Controls"] = pd.DataFrame(model["controls"])[["level", "id", "message"]]
     if tb is not None:
@@ -105,7 +108,7 @@ def statements_workbook(model: dict, tb: pd.DataFrame | None = None) -> bytes:
                             c.font = Font(bold=True)
         info = pd.DataFrame({"Field": ["Generated at", "Company", "Period end", "Tool"],
                              "Value": [datetime.now().strftime("%d-%b-%Y %H:%M"), model["meta"].get("company_name"),
-                                       model["meta"].get("period_end"), "Annual Report Generator V1-0g"]})
+                                       model["meta"].get("period_end"), "Annual Report Generator V1-0i"]})
         info.to_excel(xl, sheet_name="_INFO", index=False)
     return buf.getvalue()
 
@@ -231,7 +234,8 @@ def _lists_sheet(wb, catalogue: pd.DataFrame):
     return blocks["STATEMENTS"], len(cat) + 1
 
 
-def tb_template(years: list[int], catalogue: pd.DataFrame, company: str = "", n_rows: int = 300) -> bytes:
+def tb_template(years: list[int], catalogue: pd.DataFrame, company: str = "", n_rows: int = 300,
+                sheets: dict | None = None, extra_sheets: dict | None = None) -> bytes:
     """Blank trial-balance template.
 
     Columns: Statement · Section · Group · Statement line · CIT code · Account name · Debit/Credit per year
@@ -239,13 +243,30 @@ def tb_template(years: list[int], catalogue: pd.DataFrame, company: str = "", n_
     a Section limits the Groups, a Group limits the Statement lines, and the CIT-code list always follows the
     most precise choice made (all codes when nothing is chosen). The Check column shows the statement line of
     the CIT code entered and flags a code that contradicts the line chosen. Re-uploaded, it maps automatically
-    (a blank CIT code is derived from Group + Statement line)."""
+    (a blank CIT code is derived from Group + Statement line).
+
+    sheets: {sheet title: rows | None}. None = example lines. rows = [{"code", "account", "comment",
+            "amounts": {year: (debit, credit)}}] — several TB sheets make a multi-TB file (the app lets the user
+            choose the sheet). extra_sheets: {title: DataFrame} appended as plain tables (e.g. differences)."""
     from openpyxl import Workbook
     ys = sorted(years, reverse=True)
     wb = Workbook()
-    ws = wb.active
-    ws.title = "Trial Balance"
     _, n_codes = _lists_sheet(wb, catalogue)
+    sheets = sheets or {"Trial Balance": None}
+    n_rows = max([n_rows] + [len(r) + 50 for r in sheets.values() if r])
+    for si, (title, rows) in enumerate(sheets.items()):
+        ws = wb.active if si == 0 else wb.create_sheet(title[:31])
+        ws.title = title[:31]
+        _tb_sheet(ws, ys, catalogue, company, rows, n_rows, n_codes)
+    _tb_tail(wb, ys, catalogue, list(sheets), extra_sheets)
+    wb.move_sheet("Lists", offset=len(wb.sheetnames) - 1 - wb.sheetnames.index("Lists"))
+    wb.active = 1
+    buf = io.BytesIO()
+    wb.save(buf)
+    return buf.getvalue()
+
+
+def _tb_sheet(ws, ys, catalogue, company, rows, n_rows, n_codes):
     ws["A1"] = f"{company or 'COMPANY NAME'} — TRIAL BALANCE (one line per account)"
     ws["A1"].font = Font(bold=True, size=12, color="1F4E79")
     ws["A2"] = ("Choose Statement › Section › Group › Statement line to narrow the CIT-code list, or pick the CIT code "
@@ -267,14 +288,21 @@ def tb_template(years: list[int], catalogue: pd.DataFrame, company: str = "", n_
                 ("PL 1.1", "SALES"), ("PL 2.2.1", "COST OF SALES - LOCAL PURCHASES"), ("PL 6.01", "STAFF SALARIES"),
                 ("PL 5.01", "DEPRECIATION"), ("PL 7.02", "BANK CHARGES")]
     cat = catalogue.set_index("code")
-    for i, (code, acc) in enumerate(examples):
+    if rows is None:
+        rows = [{"code": c, "account": a, "comment": "example line — replace or delete", "amounts": {}} for c, a in examples]
+    for i, rec in enumerate(rows):
         r = first + i
+        code = rec.get("code") or ""
         if code in cat.index:
             h = cat.loc[code]
             ws[f"{A}{r}"], ws[f"{B}{r}"], ws[f"{C}{r}"], ws[f"{D}{r}"] = h["statement"], h["section"], h["group"], h["line"]
-        ws[f"{E}{r}"] = code
-        ws[f"{col['Account name']}{r}"] = acc
-        ws[f"{col['Comments']}{r}"] = "example line — replace or delete"
+        ws[f"{E}{r}"] = code or None
+        ws[f"{col['Account name']}{r}"] = rec.get("account")
+        ws[f"{col['Comments']}{r}"] = rec.get("comment") or None
+        for y, (dr, cr) in (rec.get("amounts") or {}).items():
+            if f"Debit {y}" in col:
+                ws[f"{col[f'Debit {y}']}{r}"] = dr or None
+                ws[f"{col[f'Credit {y}']}{r}"] = cr or None
     lk = "Lists!$A:$B"
     for r in range(first, last + 1):
         # helper: range of the CIT codes allowed by the most precise choice made on the row
@@ -322,6 +350,9 @@ def tb_template(years: list[int], catalogue: pd.DataFrame, company: str = "", n_
         L = col[h]
         ws[f"{L}{tot}"] = f"=SUM({L}{first}:{L}{last})"
         ws[f"{L}{tot}"].font = Font(bold=True)
+
+
+def _tb_tail(wb, ys, catalogue, tb_sheets, extra_sheets):
     cs = wb.create_sheet("CIT codes")
     cs.append(["CIT code", "Statement", "Section", "Group", "Statement line", "Note"])
     for r in catalogue.itertuples():
@@ -336,7 +367,7 @@ def tb_template(years: list[int], catalogue: pd.DataFrame, company: str = "", n_
     lines = [
         "HOW TO FILL THE TRIAL BALANCE TEMPLATE",
         "",
-        "1. Sheet 'Trial Balance': one line per ledger account, all years on the same line.",
+        "1. Trial-balance sheet(s): one line per ledger account, all years on the same line.",
         f"2. Years in this template: {', '.join(str(y) for y in ys)} (most recent first).",
         "   CY = Current Year (the year being reported); PY = Previous Year (the comparative year before it).",
         "3. Finding the CIT code — two ways:",
@@ -361,10 +392,15 @@ def tb_template(years: list[int], catalogue: pd.DataFrame, company: str = "", n_
     for i, t in enumerate(lines, start=1):
         ins.cell(i, 1, t).font = Font(bold=(i == 1), size=12 if i == 1 else 10, color="1F4E79" if i == 1 else "000000")
     ins.column_dimensions["A"].width = 115
-    wb.active = 1
-    buf = io.BytesIO()
-    wb.save(buf)
-    return buf.getvalue()
+    if len(tb_sheets) > 1:
+        ins.cell(len(lines) + 2, 1, "This file holds several trial balances: " + " · ".join(tb_sheets) +
+                 " — on upload, choose the sheet to use.").font = Font(bold=True, color="C00000")
+    for title, df in (extra_sheets or {}).items():
+        xs = wb.create_sheet(title[:31])
+        xs.append(list(df.columns))
+        for row in df.itertuples(index=False):
+            xs.append(list(row))
+        _format_sheet(xs, df, [c for c in df.columns if pd.api.types.is_numeric_dtype(df[c]) and not str(c).lower().startswith("year")])
 
 
 # ------------------------------------------------------------ multi-year Excel --

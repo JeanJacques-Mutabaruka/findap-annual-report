@@ -91,8 +91,10 @@ font = state.project()["meta"].get("font_name") or (tpl or {}).get("default_font
 if tpl is None:
     red_alert("No Word template available — the administrator must add one in the templates/ folder.")
     st.stop()
-st.caption(f"Word template: **{tpl['alias']}** · font: **{font or 'template fonts'}** — change them in "
-           "3 · Company & Report Data → Report options.")
+lvl_lab = render_report.DETAIL_LEVELS[state.project()["meta"].get("detail_level") or "detailed"][1].split(" — ")[0]
+st.caption(f"Word template: **{tpl['alias']}** · font: **{font or 'template fonts'}** · level of detail: **{lvl_lab}** · "
+           f"comparative: **{'CY only' if any(mm['meta'].get('single_year') for mm in models.values()) else 'CY and PY'}** "
+           "— change them in 3 · Company & Report Data → Report options.")
 
 # -------------------------------------------------------------- generate ----
 section("Generate")

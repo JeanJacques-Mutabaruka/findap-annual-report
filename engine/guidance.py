@@ -15,18 +15,18 @@ GUIDE: dict[str, tuple[str, str]] = {
     "TB_UNMAPPED": ("Every TB line needs a CIT code from the chart. Assign it in the ACCOUNT MAPPING section of this "
                     "page (suggestions are pre-filled — confirm each one).", CHECKS),
     "BS_NOT_BALANCED": ("Assets differ from equity + liabilities. Usually caused by unmapped lines, a TB that does not "
-                        "balance, or tax/profit accounts (PL CIT, BS 5.08, BS 8.2.1) already booked in the TB. Fix the "
+                        "balance, or tax/profit accounts (PL CIT, BS 05.08, BS 08.02.01) already booked in the TB. Fix the "
                         "TB first; this check clears by itself.", CHECKS),
     "CF_CASH": ("The cash-flow statement does not end on the balance-sheet cash. Check that all cash and bank accounts "
-                "use BS 3.1.3.1 / BS 3.1.3.2 and that the previous-year column is complete.", TB),
-    "ACCDEP_DEBIT": ("Accumulated depreciation (BS 1.09) must be a CREDIT balance; as a debit it is added to fixed "
+                "use BS 03.01.03.01 / BS 03.01.03.02 and that the previous-year column is complete.", TB),
+    "ACCDEP_DEBIT": ("Accumulated depreciation (BS 01.10) must be a CREDIT balance; as a debit it is added to fixed "
                      "assets. Move the amounts to the credit column (quick fix below or Edit TB). If the TB then no "
                      "longer balances, the original TB was balanced by a compensating error to be found.", CHECKS),
     "DUPLICATE_ACCOUNT": ("Several TB lines carry the same account description. A CIT code may be repeated, but "
                           "each line must have its own description (the notes list accounts by name). Merge the lines "
                           "or rename them in the 👯 Duplicates tab of this page.", CHECKS),
     "NOTE_SEQUENCE": ("Note numbers must follow each other (Word numbers the notes automatically).", DATA),
-    "TB_COMPUTED_CODE": ("PL CIT, BS 5.08 and BS 8.2.1 are computed by the generator (tax charge, profit of the year, "
+    "TB_COMPUTED_CODE": ("PL CIT, BS 05.08 and BS 08.02.01 are computed by the generator (tax charge, profit of the year, "
                          "tax provision). Remove these lines from the TB or re-code them.", TB),
     "TB_PLUG_COMMENT": ("A balancing (plug) figure has no accounting meaning — analyse it and replace it by the real "
                         "accounts before issuing the report.", TB),
@@ -36,7 +36,7 @@ GUIDE: dict[str, tuple[str, str]] = {
     "DEP_MISMATCH": ("Depreciation in the P&L differs from the movement of accumulated depreciation. Explain it "
                      "(disposals, reclassification) or correct the TB; entering the fixed-asset register helps.", DATA),
     "RE_ROLLFORWARD": ("Opening retained earnings should equal last year's retained earnings + last year's profit ± "
-                       "dividends/adjustments. Check BS 5.07 and enter dividends or prior-year adjustments.", DATA),
+                       "dividends/adjustments. Check BS 05.07 and enter dividends or prior-year adjustments.", DATA),
     "EQ_STATEMENT": ("The equity statement does not end on balance-sheet equity. Enter drawings/dividends and "
                      "adjustments, or check the equity codes (BS 5.xx).", DATA),
     "CIT_RATE": ("The CIT rate differs from the statutory rate (30% up to 2023, 28% from 2024). Confirm or correct it "

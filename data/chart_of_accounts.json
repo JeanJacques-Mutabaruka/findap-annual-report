@@ -1,5 +1,5 @@
 {
- "_about": "CIT codes (RRA Rwanda CIT declaration codes) -> statement layout. Extracted from Template__Tool_Annualreport_Generator_COMPANY_Ltd__V11.xlsm (sheets PnL, BalanceSheet). sign CR => amount = credit - debit ; DR => amount = debit - credit.",
+ "_about": "CIT codes -> statement layout. Codes = RRA 'Serial No' of the CIT annexure (CITRealAnnexure_ver7 from 2023, sheets BALANCE_SHEET / PROFIT_AND_LOSS) with every level on 2 digits (RRA 1.10 -> BS 01.10, RRA 4.1 -> PL 04.01). Codes the RRA file does not have are sub-codes of the RRA line they roll up into (one more level). 'rra' = the RRA line (sheet, row, serial) each code is reported in; 'rollup': true for sub-codes; 'old_code' = V11 code. sign CR => amount = credit - debit ; DR => amount = debit - credit.",
  "pnl": [
   {
    "id": "rev",
@@ -13,16 +13,34 @@
      "sign": "CR",
      "lines": [
       {
-       "code": "PL 1.1",
-       "label": "Revenue from general trading manufactured goods"
+       "code": "PL 01.01",
+       "label": "Revenue from general trading manufactured goods",
+       "old_code": "PL 1.1",
+       "rra": {
+        "sheet": "PL",
+        "row": 3,
+        "serial": "1.1"
+       }
       },
       {
-       "code": "PL 1.2",
-       "label": "Revenue from Services other than Rent"
+       "code": "PL 01.02",
+       "label": "Revenue from Services other than Rent",
+       "old_code": "PL 1.2",
+       "rra": {
+        "sheet": "PL",
+        "row": 4,
+        "serial": "1.2"
+       }
       },
       {
-       "code": "PL 1.3",
-       "label": "Revenue from rent"
+       "code": "PL 01.03",
+       "label": "Revenue from rent",
+       "old_code": "PL 1.3",
+       "rra": {
+        "sheet": "PL",
+        "row": 5,
+        "serial": "1.3"
+       }
       }
      ]
     },
@@ -32,60 +50,146 @@
      "sign": "CR",
      "lines": [
       {
-       "code": "PL 8.01",
-       "label": "Interest income"
+       "code": "PL 08.01",
+       "label": "Interest income",
+       "old_code": "PL 8.01",
+       "rra": {
+        "sheet": "PL",
+        "row": 84,
+        "serial": "8.1"
+       }
       },
       {
-       "code": "PL 8.02",
-       "label": "Farming above 12,000,000"
+       "code": "PL 08.02",
+       "label": "Farming and livestock income",
+       "old_code": "PL 8.02",
+       "rra": {
+        "sheet": "PL",
+        "row": 85,
+        "serial": "8.2"
+       }
       },
       {
-       "code": "PL 8.03",
-       "label": "Rental Income"
+       "code": "PL 08.03",
+       "label": "Rental Income",
+       "old_code": "PL 8.03",
+       "rra": {
+        "sheet": "PL",
+        "row": 86,
+        "serial": "8.3"
+       }
       },
       {
-       "code": "PL 8.04",
-       "label": "Realised exchange gain"
+       "code": "PL 08.04",
+       "label": "Realised exchange gain",
+       "old_code": "PL 8.04",
+       "rra": {
+        "sheet": "PL",
+        "row": 87,
+        "serial": "8.4"
+       }
       },
       {
-       "code": "PL 8.05",
-       "label": "Unrealised exchange gain"
+       "code": "PL 08.05",
+       "label": "Unrealised exchange gain",
+       "old_code": "PL 8.05",
+       "rra": {
+        "sheet": "PL",
+        "row": 88,
+        "serial": "8.5"
+       }
       },
       {
-       "code": "PL 8.06",
-       "label": "Provision on bad and doubtiful debts"
+       "code": "PL 08.06",
+       "label": "Provision on bad and doubtiful debts",
+       "old_code": "PL 8.06",
+       "rra": {
+        "sheet": "PL",
+        "row": 89,
+        "serial": "8.6"
+       }
       },
       {
-       "code": "PL 8.07",
-       "label": "Royalty income"
+       "code": "PL 08.07",
+       "label": "Royalty income",
+       "old_code": "PL 8.07",
+       "rra": {
+        "sheet": "PL",
+        "row": 90,
+        "serial": "8.7"
+       }
       },
       {
-       "code": "PL 8.08",
-       "label": "Natural resource revenue"
+       "code": "PL 08.08",
+       "label": "Natural resource revenue",
+       "old_code": "PL 8.08",
+       "rra": {
+        "sheet": "PL",
+        "row": 91,
+        "serial": "8.8"
+       }
       },
       {
-       "code": "PL 8.09",
-       "label": "Fees from rent of property or asset"
+       "code": "PL 08.09",
+       "label": "Fees from rent of property or asset",
+       "old_code": "PL 8.09",
+       "rra": {
+        "sheet": "PL",
+        "row": 92,
+        "serial": "8.9"
+       }
       },
       {
-       "code": "PL 8.10",
-       "label": "Dividends"
+       "code": "PL 08.10",
+       "label": "Dividends",
+       "old_code": "PL 8.10",
+       "rra": {
+        "sheet": "PL",
+        "row": 93,
+        "serial": "8.10"
+       }
       },
       {
-       "code": "PL 8.11",
-       "label": "Commissions"
+       "code": "PL 08.11",
+       "label": "Profit from disposal of an asset",
+       "old_code": "PL 8.12",
+       "rra": {
+        "sheet": "PL",
+        "row": 94,
+        "serial": "8.11"
+       }
       },
       {
-       "code": "PL 8.12",
-       "label": "Profit from disposal of an asset"
+       "code": "PL 08.12",
+       "label": "Insurance compensation",
+       "old_code": "PL 8.13",
+       "rra": {
+        "sheet": "PL",
+        "row": 95,
+        "serial": "8.12"
+       }
       },
       {
-       "code": "PL 8.13",
-       "label": "Insurance compensation"
+       "code": "PL 08.13",
+       "label": "Other income",
+       "old_code": "PL 8.14",
+       "rra": {
+        "sheet": "PL",
+        "row": 96,
+        "serial": "8.13"
+       }
       },
       {
-       "code": "PL 8.14",
-       "label": "Other income"
+       "code": "PL 08.13.01",
+       "label": "Commissions received",
+       "old_code": "PL 8.11",
+       "rra": {
+        "sheet": "PL",
+        "row": 96,
+        "serial": "8.13",
+        "rollup": true
+       },
+       "rra_note": "Commissions received — reported in RRA 8.13 Other income"
       }
      ]
     }
@@ -103,16 +207,34 @@
      "sign": "CR",
      "lines": [
       {
-       "code": "PL 2.1.1",
-       "label": "Raw materials"
+       "code": "PL 02.01.01",
+       "label": "Raw materials",
+       "old_code": "PL 2.1.1",
+       "rra": {
+        "sheet": "PL",
+        "row": 8,
+        "serial": "2.1.1"
+       }
       },
       {
-       "code": "PL 2.1.2",
-       "label": "Work in progress"
+       "code": "PL 02.01.02",
+       "label": "Work in progress",
+       "old_code": "PL 2.1.2",
+       "rra": {
+        "sheet": "PL",
+        "row": 9,
+        "serial": "2.1.2"
+       }
       },
       {
-       "code": "PL 2.1.3",
-       "label": "Trading/manufactured goods"
+       "code": "PL 02.01.03",
+       "label": "Trading/manufactured goods",
+       "old_code": "PL 2.1.3",
+       "rra": {
+        "sheet": "PL",
+        "row": 10,
+        "serial": "2.1.3"
+       }
       }
      ],
      "in_total": false
@@ -123,12 +245,26 @@
      "sign": "CR",
      "lines": [
       {
-       "code": "PL 2.2.1",
-       "label": "Cost of sales (Local purchases)"
+       "code": "PL 02.02.01",
+       "label": "Cost of sales (Local purchases)",
+       "old_code": "PL 2.2.1",
+       "rra": {
+        "sheet": "PL",
+        "row": 12,
+        "serial": "2.2.1"
+       }
       },
       {
-       "code": "PL 2.2.2",
-       "label": "Other direct costs (Import)"
+       "code": "PL 02.02.01.01",
+       "label": "Other direct costs (Import)",
+       "old_code": "PL 2.2.2",
+       "rra": {
+        "sheet": "PL",
+        "row": 12,
+        "serial": "2.2.1",
+        "rollup": true
+       },
+       "rra_note": "Import direct costs — reported in RRA 2.2.1 Purchases (net of VAT)"
       }
      ]
     },
@@ -138,12 +274,24 @@
      "sign": "CR",
      "lines": [
       {
-       "code": "PL 2.3.1",
-       "label": "Direct wages"
+       "code": "PL 02.03.01",
+       "label": "Direct wages",
+       "old_code": "PL 2.3.1",
+       "rra": {
+        "sheet": "PL",
+        "row": 14,
+        "serial": "2.3.1"
+       }
       },
       {
-       "code": "PL 2.3.2",
-       "label": "Direct local transport on imports"
+       "code": "PL 02.03.02",
+       "label": "Direct local transport on imports",
+       "old_code": "PL 2.3.2",
+       "rra": {
+        "sheet": "PL",
+        "row": 15,
+        "serial": "2.3.2"
+       }
       }
      ]
     },
@@ -153,32 +301,74 @@
      "sign": "CR",
      "lines": [
       {
-       "code": "PL 2.4.1",
-       "label": "Factory rent"
+       "code": "PL 02.04.01",
+       "label": "Factory rent",
+       "old_code": "PL 2.4.1",
+       "rra": {
+        "sheet": "PL",
+        "row": 17,
+        "serial": "2.4.1"
+       }
       },
       {
-       "code": "PL 2.4.2",
-       "label": "Factory water"
+       "code": "PL 02.04.02",
+       "label": "Factory water",
+       "old_code": "PL 2.4.2",
+       "rra": {
+        "sheet": "PL",
+        "row": 18,
+        "serial": "2.4.2"
+       }
       },
       {
-       "code": "PL 2.4.3",
-       "label": "Factory fuel and Electricity"
+       "code": "PL 02.04.03",
+       "label": "Factory fuel and Electricity",
+       "old_code": "PL 2.4.3",
+       "rra": {
+        "sheet": "PL",
+        "row": 19,
+        "serial": "2.4.3"
+       }
       },
       {
-       "code": "PL 2.4.4",
-       "label": "Factory indirect wages"
+       "code": "PL 02.04.04",
+       "label": "Factory indirect wages",
+       "old_code": "PL 2.4.4",
+       "rra": {
+        "sheet": "PL",
+        "row": 20,
+        "serial": "2.4.4"
+       }
       },
       {
-       "code": "PL 2.4.5",
-       "label": "Consumables"
+       "code": "PL 02.04.05",
+       "label": "Consumables",
+       "old_code": "PL 2.4.5",
+       "rra": {
+        "sheet": "PL",
+        "row": 21,
+        "serial": "2.4.5"
+       }
       },
       {
-       "code": "PL 2.4.6",
-       "label": "Factory Depreciation"
+       "code": "PL 02.04.06",
+       "label": "Factory Depreciation",
+       "old_code": "PL 2.4.6",
+       "rra": {
+        "sheet": "PL",
+        "row": 22,
+        "serial": "2.4.6"
+       }
       },
       {
-       "code": "PL 2.4.7",
-       "label": "Other direct costs"
+       "code": "PL 02.04.07",
+       "label": "Other direct costs",
+       "old_code": "PL 2.4.7",
+       "rra": {
+        "sheet": "PL",
+        "row": 23,
+        "serial": "2.4.7"
+       }
       }
      ]
     },
@@ -188,16 +378,34 @@
      "sign": "CR",
      "lines": [
       {
-       "code": "PL 2.5.1",
-       "label": "Raw materials"
+       "code": "PL 02.05.01",
+       "label": "Raw materials",
+       "old_code": "PL 2.5.1",
+       "rra": {
+        "sheet": "PL",
+        "row": 25,
+        "serial": "2.5.1"
+       }
       },
       {
-       "code": "PL 2.5.2",
-       "label": "Work in progress"
+       "code": "PL 02.05.02",
+       "label": "Work in progress",
+       "old_code": "PL 2.5.2",
+       "rra": {
+        "sheet": "PL",
+        "row": 26,
+        "serial": "2.5.2"
+       }
       },
       {
-       "code": "PL 2.5.3",
-       "label": "Trading/manufactured goods"
+       "code": "PL 02.05.03",
+       "label": "Trading/manufactured goods",
+       "old_code": "PL 2.5.3",
+       "rra": {
+        "sheet": "PL",
+        "row": 27,
+        "serial": "2.5.3"
+       }
       }
      ],
      "in_total": false
@@ -207,18 +415,18 @@
     "label": "Stock variation",
     "pairs": [
      [
-      "PL 2.1.1",
-      "PL 2.5.1",
+      "PL 02.01.01",
+      "PL 02.05.01",
       "Raw materials"
      ],
      [
-      "PL 2.1.2",
-      "PL 2.5.2",
+      "PL 02.01.02",
+      "PL 02.05.02",
       "Work in progress"
      ],
      [
-      "PL 2.1.3",
-      "PL 2.5.3",
+      "PL 02.01.03",
+      "PL 02.05.03",
       "Trading/manufactured goods"
      ]
     ]
@@ -246,116 +454,286 @@
      "sign": "CR",
      "lines": [
       {
-       "code": "PL 4.01",
-       "label": "Travel \u00a0expense including foreign travels"
+       "code": "PL 04.01",
+       "label": "Travel  expense including foreign travels",
+       "old_code": "PL 4.01",
+       "rra": {
+        "sheet": "PL",
+        "row": 30,
+        "serial": "4.1"
+       }
       },
       {
-       "code": "PL 4.02",
-       "label": "Advertisement & Marketing"
+       "code": "PL 04.02",
+       "label": "Advertisement & Marketing",
+       "old_code": "PL 4.02",
+       "rra": {
+        "sheet": "PL",
+        "row": 31,
+        "serial": "4.2"
+       }
       },
       {
-       "code": "PL 4.03",
-       "label": "Audit expenses"
+       "code": "PL 04.03",
+       "label": "Audit expenses",
+       "old_code": "PL 4.03",
+       "rra": {
+        "sheet": "PL",
+        "row": 32,
+        "serial": "4.3"
+       }
       },
       {
-       "code": "PL 4.04",
-       "label": "Legal expense"
+       "code": "PL 04.04",
+       "label": "Legal expense",
+       "old_code": "PL 4.04",
+       "rra": {
+        "sheet": "PL",
+        "row": 33,
+        "serial": "4.4"
+       }
       },
       {
-       "code": "PL 4.05",
-       "label": "Bad debts writtenoff"
+       "code": "PL 04.05",
+       "label": "Bad debts writtenoff",
+       "old_code": "PL 4.05",
+       "rra": {
+        "sheet": "PL",
+        "row": 34,
+        "serial": "4.5"
+       }
       },
       {
-       "code": "PL 4.06",
-       "label": "Commissions paid"
+       "code": "PL 04.06",
+       "label": "Commissions paid",
+       "old_code": "PL 4.06",
+       "rra": {
+        "sheet": "PL",
+        "row": 35,
+        "serial": "4.6"
+       }
       },
       {
-       "code": "PL 4.07",
-       "label": "Consultancy expense"
+       "code": "PL 04.07",
+       "label": "Consultancy expense",
+       "old_code": "PL 4.07",
+       "rra": {
+        "sheet": "PL",
+        "row": 36,
+        "serial": "4.7"
+       }
       },
       {
-       "code": "PL 4.08",
-       "label": "Communication/ telephone expense"
+       "code": "PL 04.08",
+       "label": "Communication/ telephone expense",
+       "old_code": "PL 4.08",
+       "rra": {
+        "sheet": "PL",
+        "row": 37,
+        "serial": "4.8"
+       }
       },
       {
-       "code": "PL 4.09",
-       "label": "Entertainment"
+       "code": "PL 04.09",
+       "label": "Entertainment",
+       "old_code": "PL 4.09",
+       "rra": {
+        "sheet": "PL",
+        "row": 38,
+        "serial": "4.9"
+       }
       },
       {
-       "code": "PL 4.10",
-       "label": "Donations"
+       "code": "PL 04.10",
+       "label": "Donations",
+       "old_code": "PL 4.10",
+       "rra": {
+        "sheet": "PL",
+        "row": 39,
+        "serial": "4.10"
+       }
       },
       {
-       "code": "PL 4.11",
-       "label": "Consumption from store"
+       "code": "PL 04.11",
+       "label": "Consumption from store",
+       "old_code": "PL 4.11",
+       "rra": {
+        "sheet": "PL",
+        "row": 40,
+        "serial": "4.11"
+       }
       },
       {
-       "code": "PL 4.12",
-       "label": "Rent"
+       "code": "PL 04.12",
+       "label": "Rent",
+       "old_code": "PL 4.12",
+       "rra": {
+        "sheet": "PL",
+        "row": 41,
+        "serial": "4.12"
+       }
       },
       {
-       "code": "PL 4.13",
-       "label": "Hotel expenses"
+       "code": "PL 04.13",
+       "label": "Hotel expenses",
+       "old_code": "PL 4.13",
+       "rra": {
+        "sheet": "PL",
+        "row": 42,
+        "serial": "4.13"
+       }
       },
       {
-       "code": "PL 4.14",
-       "label": "Electricity"
+       "code": "PL 04.14",
+       "label": "Electricity",
+       "old_code": "PL 4.14",
+       "rra": {
+        "sheet": "PL",
+        "row": 43,
+        "serial": "4.14"
+       }
       },
       {
-       "code": "PL 4.15",
-       "label": "Water"
+       "code": "PL 04.15",
+       "label": "Water",
+       "old_code": "PL 4.15",
+       "rra": {
+        "sheet": "PL",
+        "row": 44,
+        "serial": "4.15"
+       }
       },
       {
-       "code": "PL 4.16",
-       "label": "Other utilities"
+       "code": "PL 04.16",
+       "label": "Other utilities",
+       "old_code": "PL 4.16",
+       "rra": {
+        "sheet": "PL",
+        "row": 45,
+        "serial": "4.16"
+       }
       },
       {
-       "code": "PL 4.17",
-       "label": "Fuel"
+       "code": "PL 04.17",
+       "label": "Fuel",
+       "old_code": "PL 4.17",
+       "rra": {
+        "sheet": "PL",
+        "row": 46,
+        "serial": "4.17"
+       }
       },
       {
-       "code": "PL 4.18",
-       "label": "Provision for bad and doubtful debts"
+       "code": "PL 04.18",
+       "label": "Provision for bad and doubtful debts",
+       "old_code": "PL 4.18",
+       "rra": {
+        "sheet": "PL",
+        "row": 47,
+        "serial": "4.18"
+       }
       },
       {
-       "code": "PL 4.19",
-       "label": "Repaires for building"
+       "code": "PL 04.19",
+       "label": "Repaires for building",
+       "old_code": "PL 4.19",
+       "rra": {
+        "sheet": "PL",
+        "row": 48,
+        "serial": "4.19"
+       }
       },
       {
-       "code": "PL 4.20",
-       "label": "Repaires for machinery"
+       "code": "PL 04.20",
+       "label": "Repaires for machinery",
+       "old_code": "PL 4.20",
+       "rra": {
+        "sheet": "PL",
+        "row": 49,
+        "serial": "4.20"
+       }
       },
       {
-       "code": "PL 4.21",
-       "label": "Sales promotions other than advertisement"
+       "code": "PL 04.21",
+       "label": "Sales promotions other than advertisement",
+       "old_code": "PL 4.21",
+       "rra": {
+        "sheet": "PL",
+        "row": 50,
+        "serial": "4.21"
+       }
       },
       {
-       "code": "PL 4.22",
-       "label": "Pre operating expenses or start up expenses"
+       "code": "PL 04.22",
+       "label": "Pre operating expenses or start up expenses",
+       "old_code": "PL 4.22",
+       "rra": {
+        "sheet": "PL",
+        "row": 51,
+        "serial": "4.22"
+       }
       },
       {
-       "code": "PL 4.23",
-       "label": "Training expenses"
+       "code": "PL 04.23",
+       "label": "Training expenses",
+       "old_code": "PL 4.23",
+       "rra": {
+        "sheet": "PL",
+        "row": 52,
+        "serial": "4.23"
+       }
       },
       {
-       "code": "PL 4.24",
-       "label": "Printing  Stationary"
+       "code": "PL 04.24",
+       "label": "Printing  Stationary",
+       "old_code": "PL 4.24",
+       "rra": {
+        "sheet": "PL",
+        "row": 53,
+        "serial": "4.24"
+       }
       },
       {
-       "code": "PL 4.25",
-       "label": "Cleaning expenses"
+       "code": "PL 04.25",
+       "label": "Cleaning expenses",
+       "old_code": "PL 4.25",
+       "rra": {
+        "sheet": "PL",
+        "row": 54,
+        "serial": "4.25"
+       }
       },
       {
-       "code": "PL 4.26",
-       "label": "Security expenses"
+       "code": "PL 04.26",
+       "label": "Security expenses",
+       "old_code": "PL 4.26",
+       "rra": {
+        "sheet": "PL",
+        "row": 55,
+        "serial": "4.26"
+       }
       },
       {
-       "code": "PL 4.27",
-       "label": "Other operating expenses"
+       "code": "PL 04.27",
+       "label": "Other operating expenses",
+       "old_code": "PL 4.27",
+       "rra": {
+        "sheet": "PL",
+        "row": 56,
+        "serial": "4.27"
+       }
       },
       {
-       "code": "PL 4.28",
-       "label": "Payments to subcontrators"
+       "code": "PL 04.27.01",
+       "label": "Payments to subcontrators",
+       "old_code": "PL 4.28",
+       "rra": {
+        "sheet": "PL",
+        "row": 56,
+        "serial": "4.27",
+        "rollup": true
+       },
+       "rra_note": "sub-code — rolls up into RRA 4.27 Other operating expenses"
       }
      ]
     },
@@ -366,56 +744,144 @@
      "sign": "CR",
      "lines": [
       {
-       "code": "PL 5.01",
-       "label": "Depreciation"
+       "code": "PL 05.01",
+       "label": "Depreciation",
+       "old_code": "PL 5.01",
+       "rra": {
+        "sheet": "PL",
+        "row": 58,
+        "serial": "5.1"
+       }
       },
       {
-       "code": "PL 5.02",
-       "label": "Loss on disposal of an asset"
+       "code": "PL 05.02",
+       "label": "Loss on disposal of an asset",
+       "old_code": "PL 5.02",
+       "rra": {
+        "sheet": "PL",
+        "row": 59,
+        "serial": "5.2"
+       }
       },
       {
-       "code": "PL 5.03",
-       "label": "Management fees"
+       "code": "PL 05.03",
+       "label": "Management fees",
+       "old_code": "PL 5.03",
+       "rra": {
+        "sheet": "PL",
+        "row": 60,
+        "serial": "5.3"
+       }
       },
       {
-       "code": "PL 5.04",
-       "label": "Research expenses"
+       "code": "PL 05.04",
+       "label": "Research expenses",
+       "old_code": "PL 5.04",
+       "rra": {
+        "sheet": "PL",
+        "row": 61,
+        "serial": "5.4"
+       }
       },
       {
-       "code": "PL 5.05",
-       "label": "Decentralised taxes"
+       "code": "PL 05.05",
+       "label": "Decentralised taxes",
+       "old_code": "PL 5.05",
+       "rra": {
+        "sheet": "PL",
+        "row": 62,
+        "serial": "5.5"
+       }
       },
       {
-       "code": "PL 5.06",
-       "label": "Royalties"
+       "code": "PL 05.06",
+       "label": "Royalties",
+       "old_code": "PL 5.06",
+       "rra": {
+        "sheet": "PL",
+        "row": 63,
+        "serial": "5.6"
+       }
       },
       {
-       "code": "PL 5.07",
-       "label": "Licence fees"
+       "code": "PL 05.07",
+       "label": "Licence fees",
+       "old_code": "PL 5.07",
+       "rra": {
+        "sheet": "PL",
+        "row": 64,
+        "serial": "5.7"
+       }
       },
       {
-       "code": "PL 5.08",
-       "label": "Other administration expenses"
+       "code": "PL 05.08",
+       "label": "Other administration expenses",
+       "old_code": "PL 5.08",
+       "rra": {
+        "sheet": "PL",
+        "row": 65,
+        "serial": "5.8"
+       }
       },
       {
-       "code": "PL 5.09",
-       "label": "Other expenses"
+       "code": "PL 05.08.01",
+       "label": "Other expenses",
+       "old_code": "PL 5.09",
+       "rra": {
+        "sheet": "PL",
+        "row": 65,
+        "serial": "5.8",
+        "rollup": true
+       },
+       "rra_note": "sub-code — rolls up into RRA 5.8 Other administration expenses"
       },
       {
-       "code": "PL 5.10",
-       "label": "Fines and Penalities"
+       "code": "PL 05.08.02",
+       "label": "Fines and Penalities",
+       "old_code": "PL 5.10",
+       "rra": {
+        "sheet": "PL",
+        "row": 65,
+        "serial": "5.8",
+        "rollup": true
+       },
+       "rra_note": "sub-code — rolls up into RRA 5.8 Other administration expenses"
       },
       {
-       "code": "PL 5.11",
-       "label": "Personal consumption"
+       "code": "PL 05.08.03",
+       "label": "Personal consumption",
+       "old_code": "PL 5.11",
+       "rra": {
+        "sheet": "PL",
+        "row": 65,
+        "serial": "5.8",
+        "rollup": true
+       },
+       "rra_note": "sub-code — rolls up into RRA 5.8 Other administration expenses"
       },
       {
-       "code": "PL 5.12",
-       "label": "Non supported expenses"
+       "code": "PL 05.08.04",
+       "label": "Non supported expenses",
+       "old_code": "PL 5.12",
+       "rra": {
+        "sheet": "PL",
+        "row": 65,
+        "serial": "5.8",
+        "rollup": true
+       },
+       "rra_note": "sub-code — rolls up into RRA 5.8 Other administration expenses"
       },
       {
-       "code": "PL 5.13",
-       "label": "Management fees paid"
+       "code": "PL 05.08.05",
+       "label": "Management fees paid",
+       "old_code": "PL 5.13",
+       "rra": {
+        "sheet": "PL",
+        "row": 65,
+        "serial": "5.8",
+        "rollup": true
+       },
+       "rra_note": "sub-code — rolls up into RRA 5.8 Other administration expenses"
       }
      ]
     },
@@ -426,44 +892,138 @@
      "sign": "CR",
      "lines": [
       {
-       "code": "PL 6.01",
-       "label": "Staff salaries including medical, transport and housing"
+       "code": "PL 06.01",
+       "label": "Staff salaries including medical, transport and housing",
+       "old_code": "PL 6.01",
+       "rra": {
+        "sheet": "PL",
+        "row": 67,
+        "serial": "6.1"
+       }
       },
       {
-       "code": "PL 6.02",
-       "label": "Bonus"
+       "code": "PL 06.01.01",
+       "label": "Leave pay",
+       "old_code": "PL 6.04",
+       "rra": {
+        "sheet": "PL",
+        "row": 67,
+        "serial": "6.1",
+        "rollup": true
+       },
+       "rra_note": "sub-code — rolls up into RRA 6.1 Staff salaries including medical transport housing Leave pay"
       },
       {
-       "code": "PL 6.03",
-       "label": "Reimbursement of medical expenses"
+       "code": "PL 06.01.02",
+       "label": "Wages of non permanent employees",
+       "old_code": "PL 6.05",
+       "rra": {
+        "sheet": "PL",
+        "row": 67,
+        "serial": "6.1",
+        "rollup": true
+       },
+       "rra_note": "sub-code — rolls up into RRA 6.1 Staff salaries including medical transport housing Leave pay"
       },
       {
-       "code": "PL 6.04",
-       "label": "Leave pay"
+       "code": "PL 06.02",
+       "label": "Bonus",
+       "old_code": "PL 6.02",
+       "rra": {
+        "sheet": "PL",
+        "row": 68,
+        "serial": "6.2"
+       }
       },
       {
-       "code": "PL 6.05",
-       "label": "Wages of non permanent employees"
+       "code": "PL 06.03",
+       "label": "Reimbursement of medical expenses",
+       "old_code": "PL 6.03",
+       "rra": {
+        "sheet": "PL",
+        "row": 69,
+        "serial": "6.3"
+       }
       },
       {
-       "code": "PL 6.06",
-       "label": "Contribution to retirement fund"
+       "code": "PL 06.04",
+       "label": "Contribution to retirement fund",
+       "old_code": "PL 6.06",
+       "rra": {
+        "sheet": "PL",
+        "row": 70,
+        "serial": "6.4"
+       }
       },
       {
-       "code": "PL 6.07",
-       "label": "Contribution to any other fund"
+       "code": "PL 06.05",
+       "label": "Contribution to any other fund",
+       "old_code": "PL 6.07",
+       "rra": {
+        "sheet": "PL",
+        "row": 71,
+        "serial": "6.5"
+       }
       },
       {
-       "code": "PL 6.08",
-       "label": "Staff life insurance contribution"
+       "code": "PL 06.06",
+       "label": "Staff life insurance contribution",
+       "old_code": "PL 6.08",
+       "rra": {
+        "sheet": "PL",
+        "row": 72,
+        "serial": "6.6"
+       }
       },
       {
-       "code": "PL 6.09",
-       "label": "Staff welfare expenses( refreshments and restaurant)"
+       "code": "PL 06.07",
+       "label": "Staff welfare expenses( refreshments and restaurant)",
+       "old_code": "PL 6.09",
+       "rra": {
+        "sheet": "PL",
+        "row": 73,
+        "serial": "6.7"
+       }
       },
       {
-       "code": "PL 6.10",
-       "label": "other staff costs"
+       "code": "PL 06.08",
+       "label": "other staff costs",
+       "old_code": "PL 6.10",
+       "rra": {
+        "sheet": "PL",
+        "row": 74,
+        "serial": "6.8"
+       }
+      }
+     ]
+    },
+    {
+     "id": "xexp",
+     "label": "Extra ordinary expenses",
+     "sign": "CR",
+     "note": "07",
+     "lines": [
+      {
+       "code": "PL 09.01",
+       "label": "Farming and livestock expenses",
+       "old_code": null,
+       "rra": {
+        "sheet": "PL",
+        "row": 98,
+        "serial": "9.1"
+       },
+       "added": "V1-0k — RRA line missing in V11"
+      },
+      {
+       "code": "PL 09.02",
+       "label": "Other extra ordinary expenses",
+       "old_code": null,
+       "rra": {
+        "sheet": "PL",
+        "row": 99,
+        "serial": "9.2"
+       },
+       "added": "V1-0k — RRA line missing in V11"
       }
      ]
     }
@@ -482,36 +1042,86 @@
      "sign": "CR",
      "lines": [
       {
-       "code": "PL 7.01",
-       "label": "Interest expense"
+       "code": "PL 07.01",
+       "label": "Interest expense",
+       "old_code": "PL 7.01",
+       "rra": {
+        "sheet": "PL",
+        "row": 76,
+        "serial": "7.1"
+       }
       },
       {
-       "code": "PL 7.02",
-       "label": "Bank charges"
+       "code": "PL 07.01.01",
+       "label": "Interests from related parties",
+       "old_code": "PL 7.08",
+       "rra": {
+        "sheet": "PL",
+        "row": 76,
+        "serial": "7.1",
+        "rollup": true
+       },
+       "rra_note": "sub-code — rolls up into RRA 7.1 Interest expense"
       },
       {
-       "code": "PL 7.03",
-       "label": "Insurance cost"
+       "code": "PL 07.02",
+       "label": "Bank charges",
+       "old_code": "PL 7.02",
+       "rra": {
+        "sheet": "PL",
+        "row": 77,
+        "serial": "7.2"
+       }
       },
       {
-       "code": "PL 7.04",
-       "label": "Commitment fees"
+       "code": "PL 07.03",
+       "label": "Insurance cost",
+       "old_code": "PL 7.03",
+       "rra": {
+        "sheet": "PL",
+        "row": 78,
+        "serial": "7.3"
+       }
       },
       {
-       "code": "PL 7.05",
-       "label": "Realised exchange loss"
+       "code": "PL 07.04",
+       "label": "Commitment fees",
+       "old_code": "PL 7.04",
+       "rra": {
+        "sheet": "PL",
+        "row": 79,
+        "serial": "7.4"
+       }
       },
       {
-       "code": "PL 7.06",
-       "label": "Unrealised exchange loss"
+       "code": "PL 07.05",
+       "label": "Realised exchange loss",
+       "old_code": "PL 7.05",
+       "rra": {
+        "sheet": "PL",
+        "row": 80,
+        "serial": "7.5"
+       }
       },
       {
-       "code": "PL 7.07",
-       "label": "Any other charges"
+       "code": "PL 07.06",
+       "label": "Unrealised exchange loss",
+       "old_code": "PL 7.06",
+       "rra": {
+        "sheet": "PL",
+        "row": 81,
+        "serial": "7.6"
+       }
       },
       {
-       "code": "PL 7.08",
-       "label": "Interests from related parties"
+       "code": "PL 07.07",
+       "label": "Any other charges",
+       "old_code": "PL 7.07",
+       "rra": {
+        "sheet": "PL",
+        "row": 82,
+        "serial": "7.7"
+       }
       }
      ]
     }
@@ -556,44 +1166,115 @@
      "sign": "DR",
      "lines": [
       {
-       "code": "BS 1.01",
-       "label": "Land"
+       "code": "BS 01.01",
+       "label": "Land",
+       "old_code": "BS 1.01",
+       "rra": {
+        "sheet": "BS",
+        "row": 3,
+        "serial": "1.1"
+       }
       },
       {
-       "code": "BS 1.02",
-       "label": "Building"
+       "code": "BS 01.02",
+       "label": "Building",
+       "old_code": "BS 1.02",
+       "rra": {
+        "sheet": "BS",
+        "row": 4,
+        "serial": "1.2"
+       }
       },
       {
-       "code": "BS 1.03",
-       "label": "Motor vehicles"
+       "code": "BS 01.03",
+       "label": "Motor vehicles",
+       "old_code": "BS 1.03",
+       "rra": {
+        "sheet": "BS",
+        "row": 5,
+        "serial": "1.3"
+       }
       },
       {
-       "code": "BS 1.04",
-       "label": "Machinery"
+       "code": "BS 01.04",
+       "label": "Machinery",
+       "old_code": "BS 1.04",
+       "rra": {
+        "sheet": "BS",
+        "row": 6,
+        "serial": "1.4"
+       }
       },
       {
-       "code": "BS 1.05",
-       "label": "Leased property"
+       "code": "BS 01.05",
+       "label": "Leased property",
+       "old_code": "BS 1.05",
+       "rra": {
+        "sheet": "BS",
+        "row": 7,
+        "serial": "1.5"
+       }
       },
       {
-       "code": "BS 1.06",
-       "label": "Intangible assets"
+       "code": "BS 01.06",
+       "label": "Intangible assets",
+       "old_code": "BS 1.06",
+       "rra": {
+        "sheet": "BS",
+        "row": 8,
+        "serial": "1.6"
+       }
       },
       {
-       "code": "BS 1.07",
-       "label": "Furniture and fittings"
+       "code": "BS 01.07",
+       "label": "IT equipment & technologies",
+       "old_code": null,
+       "rra": {
+        "sheet": "BS",
+        "row": 9,
+        "serial": "1.7"
+       },
+       "added": "V1-0k — RRA line missing in V11"
       },
       {
-       "code": "BS 1.08",
-       "label": "Other assets"
+       "code": "BS 01.08",
+       "label": "Furniture and fittings",
+       "old_code": "BS 1.07",
+       "rra": {
+        "sheet": "BS",
+        "row": 10,
+        "serial": "1.8"
+       }
       },
       {
-       "code": "BS 1.09",
-       "label": "Accumulated depreciation/amortisation"
+       "code": "BS 01.09",
+       "label": "Other assets",
+       "old_code": "BS 1.08",
+       "rra": {
+        "sheet": "BS",
+        "row": 11,
+        "serial": "1.9"
+       }
       },
       {
-       "code": "BS 1.10",
-       "label": "Freehold property"
+       "code": "BS 01.10",
+       "label": "Accumulated depreciation/amortisation",
+       "old_code": "BS 1.09",
+       "rra": {
+        "sheet": "BS",
+        "row": 12,
+        "serial": "1.10"
+       }
+      },
+      {
+       "code": "BS 01.11",
+       "label": "Freehold property",
+       "old_code": "BS 1.10",
+       "rra": {
+        "sheet": "BS",
+        "row": 13,
+        "serial": "1.11"
+       }
       }
      ]
     },
@@ -604,24 +1285,54 @@
      "sign": "DR",
      "lines": [
       {
-       "code": "BS 2.01",
-       "label": "Shares"
+       "code": "BS 02.01",
+       "label": "Shares",
+       "old_code": "BS 2.01",
+       "rra": {
+        "sheet": "BS",
+        "row": 15,
+        "serial": "2.1"
+       }
       },
       {
-       "code": "BS 2.02",
-       "label": "Debentures"
+       "code": "BS 02.02",
+       "label": "Debentures",
+       "old_code": "BS 2.02",
+       "rra": {
+        "sheet": "BS",
+        "row": 16,
+        "serial": "2.2"
+       }
       },
       {
-       "code": "BS 2.03",
-       "label": "Fixed deposits"
+       "code": "BS 02.03",
+       "label": "Fixed deposits",
+       "old_code": "BS 2.03",
+       "rra": {
+        "sheet": "BS",
+        "row": 17,
+        "serial": "2.3"
+       }
       },
       {
-       "code": "BS 2.04",
-       "label": "Government securities"
+       "code": "BS 02.04",
+       "label": "Government securities",
+       "old_code": "BS 2.04",
+       "rra": {
+        "sheet": "BS",
+        "row": 18,
+        "serial": "2.4"
+       }
       },
       {
-       "code": "BS 2.05",
-       "label": "Other investments"
+       "code": "BS 02.05",
+       "label": "Other investments",
+       "old_code": "BS 2.05",
+       "rra": {
+        "sheet": "BS",
+        "row": 19,
+        "serial": "2.5"
+       }
       }
      ]
     }
@@ -640,20 +1351,44 @@
      "sign": "DR",
      "lines": [
       {
-       "code": "BS 3.1.1.1",
-       "label": "Consumables including packaging materials"
+       "code": "BS 03.01.01.01",
+       "label": "Consumables including packaging materials",
+       "old_code": "BS 3.1.1.1",
+       "rra": {
+        "sheet": "BS",
+        "row": 23,
+        "serial": "3.1.1.1"
+       }
       },
       {
-       "code": "BS 3.1.1.2",
-       "label": "Raw materials other than stock"
+       "code": "BS 03.01.01.02",
+       "label": "Raw materials other than stock",
+       "old_code": "BS 3.1.1.2",
+       "rra": {
+        "sheet": "BS",
+        "row": 24,
+        "serial": "3.1.1.2"
+       }
       },
       {
-       "code": "BS 3.1.1.3",
-       "label": "Work in progress"
+       "code": "BS 03.01.01.03",
+       "label": "Work in progress",
+       "old_code": "BS 3.1.1.3",
+       "rra": {
+        "sheet": "BS",
+        "row": 25,
+        "serial": "3.1.1.3"
+       }
       },
       {
-       "code": "BS 3.1.1.4",
-       "label": "Trading/ manufactured goods(finished)"
+       "code": "BS 03.01.01.04",
+       "label": "Trading/ manufactured goods(finished)",
+       "old_code": "BS 3.1.1.4",
+       "rra": {
+        "sheet": "BS",
+        "row": 26,
+        "serial": "3.1.1.4"
+       }
       }
      ]
     },
@@ -664,16 +1399,34 @@
      "sign": "DR",
      "lines": [
       {
-       "code": "BS 3.1.2.1",
-       "label": "Trade receivables/debtors"
+       "code": "BS 03.01.02.01",
+       "label": "Trade receivables/debtors",
+       "old_code": "BS 3.1.2.1",
+       "rra": {
+        "sheet": "BS",
+        "row": 28,
+        "serial": "3.1.2.1"
+       }
       },
       {
-       "code": "BS 3.1.2.2",
-       "label": "Prepayments"
+       "code": "BS 03.01.02.02",
+       "label": "Prepayments",
+       "old_code": "BS 3.1.2.2",
+       "rra": {
+        "sheet": "BS",
+        "row": 29,
+        "serial": "3.1.2.2"
+       }
       },
       {
-       "code": "BS 3.1.2.3",
-       "label": "Other recievables/ other debtors"
+       "code": "BS 03.01.02.03",
+       "label": "Other recievables/ other debtors",
+       "old_code": "BS 3.1.2.3",
+       "rra": {
+        "sheet": "BS",
+        "row": 30,
+        "serial": "3.1.2.3"
+       }
       }
      ]
     },
@@ -684,32 +1437,74 @@
      "sign": "DR",
      "lines": [
       {
-       "code": "BS 3.2.1",
-       "label": "Foreign loans to related parties"
+       "code": "BS 03.01.04",
+       "label": "Other Current Assets",
+       "old_code": "BS 3.1.4",
+       "rra": {
+        "sheet": "BS",
+        "row": 34,
+        "serial": "3.1.4"
+       }
       },
       {
-       "code": "BS 3.2.2",
-       "label": "Foreign loans to unrelated parties"
+       "code": "BS 03.02.01",
+       "label": "Foreign loans to related parties",
+       "old_code": "BS 3.2.1",
+       "rra": {
+        "sheet": "BS",
+        "row": 36,
+        "serial": "3.2.1"
+       }
       },
       {
-       "code": "BS 3.2.3",
-       "label": "Local loans"
+       "code": "BS 03.02.02",
+       "label": "Foreign loans to unrelated parties",
+       "old_code": "BS 3.2.2",
+       "rra": {
+        "sheet": "BS",
+        "row": 37,
+        "serial": "3.2.2"
+       }
       },
       {
-       "code": "BS 3.2.4",
-       "label": "Loans and advances to staff"
+       "code": "BS 03.02.03",
+       "label": "Local loans",
+       "old_code": "BS 3.2.3",
+       "rra": {
+        "sheet": "BS",
+        "row": 38,
+        "serial": "3.2.3"
+       }
       },
       {
-       "code": "BS 3.2.5",
-       "label": "Deposits (other than fixed deposits)"
+       "code": "BS 03.02.04",
+       "label": "Loans and advances to staff",
+       "old_code": "BS 3.2.4",
+       "rra": {
+        "sheet": "BS",
+        "row": 39,
+        "serial": "3.2.4"
+       }
       },
       {
-       "code": "BS 3.2.6",
-       "label": "Loans and advances to others"
+       "code": "BS 03.02.05",
+       "label": "Deposits (other than fixed deposits)",
+       "old_code": "BS 3.2.5",
+       "rra": {
+        "sheet": "BS",
+        "row": 40,
+        "serial": "3.2.5"
+       }
       },
       {
-       "code": "BS 3.1.4",
-       "label": "Other Current Assets"
+       "code": "BS 03.02.06",
+       "label": "Loans and advances to others",
+       "old_code": "BS 3.2.6",
+       "rra": {
+        "sheet": "BS",
+        "row": 41,
+        "serial": "3.2.6"
+       }
       }
      ]
     },
@@ -720,16 +1515,51 @@
      "sign": "DR",
      "lines": [
       {
-       "code": "BS 3.3.1",
-       "label": "VAT Receivables"
+       "code": "BS 03.01.04.01",
+       "label": "VAT Receivables",
+       "old_code": "BS 3.3.1",
+       "rra": {
+        "sheet": "BS",
+        "row": 34,
+        "serial": "3.1.4",
+        "rollup": true
+       },
+       "rra_note": "sub-code — rolls up into RRA 3.1.4 OTHER CURRENT ASSETS"
       },
       {
-       "code": "BS 3.3.2",
-       "label": "WHT Receivables"
+       "code": "BS 03.01.04.02",
+       "label": "WHT Receivables",
+       "old_code": "BS 3.3.2",
+       "rra": {
+        "sheet": "BS",
+        "row": 34,
+        "serial": "3.1.4",
+        "rollup": true
+       },
+       "rra_note": "sub-code — rolls up into RRA 3.1.4 OTHER CURRENT ASSETS"
       },
       {
-       "code": "BS 3.3.3",
-       "label": "Other Tax Receivables"
+       "code": "BS 03.01.04.03",
+       "label": "Other Tax Receivables",
+       "old_code": "BS 3.3.3",
+       "rra": {
+        "sheet": "BS",
+        "row": 34,
+        "serial": "3.1.4",
+        "rollup": true
+       },
+       "rra_note": "sub-code — rolls up into RRA 3.1.4 OTHER CURRENT ASSETS"
+      },
+      {
+       "code": "BS 03.03",
+       "label": "Deferred tax assets",
+       "old_code": null,
+       "rra": {
+        "sheet": "BS",
+        "row": 42,
+        "serial": "3.3"
+       },
+       "added": "V1-0k — RRA line missing in V11"
       }
      ]
     },
@@ -740,12 +1570,25 @@
      "sign": "DR",
      "lines": [
       {
-       "code": "BS 3.1.3.1",
-       "label": "Cash in hand & equivalents"
+       "code": "BS 03.01.03.01",
+       "label": "Cash in hand & equivalents",
+       "old_code": "BS 3.1.3.1",
+       "rra": {
+        "sheet": "BS",
+        "row": 32,
+        "serial": "3.1.3.1"
+       }
       },
       {
-       "code": "BS 3.1.3.2",
-       "label": "Bank balances"
+       "code": "BS 03.01.03.02",
+       "label": "Bank balances",
+       "old_code": "BS 3.1.3.2",
+       "rra": {
+        "sheet": "BS",
+        "row": 33,
+        "serial": "3.1.3.1"
+       },
+       "rra_note": "RRA prints 3.1.3.1 for both cash (row 32) and bank balances (row 33)"
       }
      ]
     }
@@ -764,40 +1607,96 @@
      "sign": "CR",
      "lines": [
       {
-       "code": "BS 5.01",
-       "label": "Issued subscribed & paid up Share Capital"
+       "code": "BS 05.01",
+       "label": "Issued subscribed & paid up Share Capital",
+       "old_code": "BS 5.01",
+       "rra": {
+        "sheet": "BS",
+        "row": 45,
+        "serial": "5.1"
+       }
       },
       {
-       "code": "BS 5.02",
-       "label": "Share Premium"
+       "code": "BS 05.02",
+       "label": "Share Premium",
+       "old_code": "BS 5.02",
+       "rra": {
+        "sheet": "BS",
+        "row": 46,
+        "serial": "5.2"
+       }
       },
       {
-       "code": "BS 5.03",
-       "label": "Reevaluation reserves"
+       "code": "BS 05.03",
+       "label": "Reevaluation reserves",
+       "old_code": "BS 5.03",
+       "rra": {
+        "sheet": "BS",
+        "row": 47,
+        "serial": "5.3"
+       }
       },
       {
-       "code": "BS 5.04",
-       "label": "Translation reserves"
+       "code": "BS 05.04",
+       "label": "Translation reserves",
+       "old_code": "BS 5.04",
+       "rra": {
+        "sheet": "BS",
+        "row": 48,
+        "serial": "5.4"
+       }
       },
       {
-       "code": "BS 5.05",
-       "label": "General reserves"
+       "code": "BS 05.05",
+       "label": "General reserves",
+       "old_code": "BS 5.05",
+       "rra": {
+        "sheet": "BS",
+        "row": 49,
+        "serial": "5.5"
+       }
       },
       {
-       "code": "BS 5.06",
-       "label": "Other reserves"
+       "code": "BS 05.06",
+       "label": "Other reserves",
+       "old_code": "BS 5.06",
+       "rra": {
+        "sheet": "BS",
+        "row": 50,
+        "serial": "5.6"
+       }
       },
       {
-       "code": "BS 5.07",
-       "label": "Retained earnings"
+       "code": "BS 05.06.01",
+       "label": "Grants",
+       "old_code": "BS 5.09",
+       "rra": {
+        "sheet": "BS",
+        "row": 50,
+        "serial": "5.6",
+        "rollup": true
+       },
+       "rra_note": "Grants — reported in RRA 5.6 ANY OTHER RESERVES"
       },
       {
-       "code": "BS 5.08",
-       "label": "Profit (Loss) of the year"
+       "code": "BS 05.07",
+       "label": "Retained earnings",
+       "old_code": "BS 5.07",
+       "rra": {
+        "sheet": "BS",
+        "row": 51,
+        "serial": "5.7"
+       }
       },
       {
-       "code": "BS 5.09",
-       "label": "Grants"
+       "code": "BS 05.08",
+       "label": "Profit (Loss) of the year",
+       "old_code": "BS 5.08",
+       "rra": {
+        "sheet": "BS",
+        "row": 52,
+        "serial": "5.8"
+       }
       }
      ]
     }
@@ -816,24 +1715,54 @@
      "sign": "CR",
      "lines": [
       {
-       "code": "BS 6.1.1",
-       "label": "Foreign loans from related parties"
+       "code": "BS 06.01.01",
+       "label": "Foreign loans from related parties",
+       "old_code": "BS 6.1.1",
+       "rra": {
+        "sheet": "BS",
+        "row": 55,
+        "serial": "6.1.1"
+       }
       },
       {
-       "code": "BS 6.1.2",
-       "label": "Froreign loans from unrelated parties"
+       "code": "BS 06.01.02",
+       "label": "Froreign loans from unrelated parties",
+       "old_code": "BS 6.1.2",
+       "rra": {
+        "sheet": "BS",
+        "row": 56,
+        "serial": "6.1.2"
+       }
       },
       {
-       "code": "BS 6.1.3",
-       "label": "Local loans"
+       "code": "BS 06.01.03",
+       "label": "Local loans",
+       "old_code": "BS 6.1.3",
+       "rra": {
+        "sheet": "BS",
+        "row": 57,
+        "serial": "6.1.3"
+       }
       },
       {
-       "code": "BS 6.1.4",
-       "label": "Other loans"
+       "code": "BS 06.01.04",
+       "label": "Other loans",
+       "old_code": "BS 6.1.4",
+       "rra": {
+        "sheet": "BS",
+        "row": 58,
+        "serial": "6.1.4"
+       }
       },
       {
-       "code": "BS 6.1.5",
-       "label": "Other securities issued"
+       "code": "BS 06.01.05",
+       "label": "Other securities issued",
+       "old_code": "BS 6.1.5",
+       "rra": {
+        "sheet": "BS",
+        "row": 59,
+        "serial": "6.1.5"
+       }
       }
      ]
     },
@@ -844,24 +1773,54 @@
      "sign": "CR",
      "lines": [
       {
-       "code": "BS 6.2.1",
-       "label": "Foreign loans from related parties"
+       "code": "BS 06.02.01",
+       "label": "Foreign loans from related parties",
+       "old_code": "BS 6.2.1",
+       "rra": {
+        "sheet": "BS",
+        "row": 61,
+        "serial": "6.2.1"
+       }
       },
       {
-       "code": "BS 6.2.2",
-       "label": "Froreign loans from unrelated parties"
+       "code": "BS 06.02.02",
+       "label": "Froreign loans from unrelated parties",
+       "old_code": "BS 6.2.2",
+       "rra": {
+        "sheet": "BS",
+        "row": 62,
+        "serial": "6.2.2"
+       }
       },
       {
-       "code": "BS 6.2.3",
-       "label": "Local loans"
+       "code": "BS 06.02.03",
+       "label": "Local loans",
+       "old_code": "BS 6.2.3",
+       "rra": {
+        "sheet": "BS",
+        "row": 63,
+        "serial": "6.2.3"
+       }
       },
       {
-       "code": "BS 6.2.4",
-       "label": "Other loans"
+       "code": "BS 06.02.04",
+       "label": "Other loans",
+       "old_code": "BS 6.2.4",
+       "rra": {
+        "sheet": "BS",
+        "row": 64,
+        "serial": "6.2.4"
+       }
       },
       {
-       "code": "BS 6.2.5",
-       "label": "Payables/Creditors for 1+ year"
+       "code": "BS 06.02.05",
+       "label": "Payables/Creditors for 1+ year",
+       "old_code": "BS 6.2.5",
+       "rra": {
+        "sheet": "BS",
+        "row": 65,
+        "serial": "6.2.5"
+       }
       }
      ]
     }
@@ -880,12 +1839,24 @@
      "sign": "CR",
      "lines": [
       {
-       "code": "BS 7.01",
-       "label": "Tax Liabilities"
+       "code": "BS 07.01",
+       "label": "Tax Liabilities",
+       "old_code": "BS 7.01",
+       "rra": {
+        "sheet": "BS",
+        "row": 67,
+        "serial": "7.1"
+       }
       },
       {
-       "code": "BS 7.02",
-       "label": "Other short term tax & Equivalent liabilities"
+       "code": "BS 07.02",
+       "label": "Other short term tax & Equivalent liabilities",
+       "old_code": "BS 7.02",
+       "rra": {
+        "sheet": "BS",
+        "row": 68,
+        "serial": "7.2"
+       }
       }
      ]
     },
@@ -896,28 +1867,64 @@
      "sign": "CR",
      "lines": [
       {
-       "code": "BS 8.1.1",
-       "label": "Trade payables/Creditors"
+       "code": "BS 08.01.01",
+       "label": "Trade payables/Creditors",
+       "old_code": "BS 8.1.1",
+       "rra": {
+        "sheet": "BS",
+        "row": 71,
+        "serial": "8.1.1"
+       }
       },
       {
-       "code": "BS 8.1.2",
-       "label": "Liabilities for leased Assets"
+       "code": "BS 08.01.02",
+       "label": "Liabilities for leased Assets",
+       "old_code": "BS 8.1.2",
+       "rra": {
+        "sheet": "BS",
+        "row": 72,
+        "serial": "8.1.2"
+       }
       },
       {
-       "code": "BS 8.1.3",
-       "label": "Accrued interests"
+       "code": "BS 08.01.03",
+       "label": "Accrued interests",
+       "old_code": "BS 8.1.3",
+       "rra": {
+        "sheet": "BS",
+        "row": 73,
+        "serial": "8.1.3"
+       }
       },
       {
-       "code": "BS 8.1.4",
-       "label": "Bank overdrafts"
+       "code": "BS 08.01.04",
+       "label": "Bank overdrafts",
+       "old_code": "BS 8.1.4",
+       "rra": {
+        "sheet": "BS",
+        "row": 74,
+        "serial": "8.1.4"
+       }
       },
       {
-       "code": "BS 8.1.5",
-       "label": "Dividends payables"
+       "code": "BS 08.01.05",
+       "label": "Dividends payables",
+       "old_code": "BS 8.1.5",
+       "rra": {
+        "sheet": "BS",
+        "row": 75,
+        "serial": "8.1.5"
+       }
       },
       {
-       "code": "BS 8.1.6",
-       "label": "Other current liabilities"
+       "code": "BS 08.01.06",
+       "label": "Other current liabilities",
+       "old_code": "BS 8.1.6",
+       "rra": {
+        "sheet": "BS",
+        "row": 76,
+        "serial": "8.1.6"
+       }
       }
      ]
     },
@@ -928,16 +1935,34 @@
      "sign": "CR",
      "lines": [
       {
-       "code": "BS 8.2.1",
-       "label": "Provisions on Income Tax"
+       "code": "BS 08.02.01",
+       "label": "Provisions on Income Tax",
+       "old_code": "BS 8.2.1",
+       "rra": {
+        "sheet": "BS",
+        "row": 78,
+        "serial": "8.2.1"
+       }
       },
       {
-       "code": "BS 8.2.2",
-       "label": "Provisions on bad debts"
+       "code": "BS 08.02.02",
+       "label": "Provisions on bad debts",
+       "old_code": "BS 8.2.2",
+       "rra": {
+        "sheet": "BS",
+        "row": 79,
+        "serial": "8.2.2"
+       }
       },
       {
-       "code": "BS 8.2.3",
-       "label": "Other provisions"
+       "code": "BS 08.02.03",
+       "label": "Other provisions",
+       "old_code": "BS 8.2.3",
+       "rra": {
+        "sheet": "BS",
+        "row": 80,
+        "serial": "8.2.3"
+       }
       }
      ]
     }
@@ -945,59 +1970,54 @@
   }
  ],
  "computed_lines": {
-  "BS 5.08": "net_profit (from P&L, not from TB)",
-  "BS 8.2.1": "income tax charge of the year (from tax computation, not from TB)",
+  "BS 05.08": "net_profit (from P&L, not from TB)",
+  "BS 08.02.01": "income tax charge of the year (from tax computation, not from TB)",
   "PL CIT": "income tax charge (from tax computation)"
  },
  "income_tax": {
   "add_backs": [
    [
-    "PL 4.05",
+    "PL 04.05",
     "Bad debt written off",
     1
    ],
    [
-    "PL 4.08",
+    "PL 04.08",
     "Communication",
     0.2
    ],
    [
-    "PL 4.09",
+    "PL 04.09",
     "Entertainment expenses",
     1
    ],
    [
-    "PL 4.16",
+    "PL 04.16",
     "Other utilities",
     0.2
    ],
    [
-    "PL 4.17",
+    "PL 04.17",
     "Fuel",
     0.2
    ],
    [
-    "PL 5.10",
+    "PL 05.08.02",
     "Fines and Penalties",
     1
    ],
    [
-    "PL 5.11",
+    "PL 05.08.03",
     "Personal consumption",
     1
    ],
    [
-    "PL 5.12",
+    "PL 05.08.04",
     "Non supported expenses",
     1
    ],
    [
-    "PL 5.13",
-    "Management fee in excess of 2%",
-    1
-   ],
-   [
-    "PL 7.08",
+    "PL 07.01.01",
     "Interests from related parties",
     1
    ]
@@ -1015,6 +2035,137 @@
     null,
     0.3
    ]
+  ],
+  "management_fee": {
+   "code": "PL 05.08.05",
+   "limit_rate": 0.02,
+   "_about": "added back = max(0, management fees paid − limit_rate × turnover); turnover = ALL revenues: codes starting with PL 01 (sales, RRA P&L 1) and PL 08 (other income, RRA P&L 8)",
+   "turnover_prefixes": [
+    "PL 01",
+    "PL 08"
+   ]
+  },
+  "non_taxable_income": [
+   [
+    "PL 08.10",
+    "Dividends received (non-taxable)",
+    null,
+    "12"
+   ],
+   [
+    "PL 08.02",
+    "Farming and livestock income (non-taxable up to 12,000,000)",
+    12000000,
+    "13"
+   ]
+  ],
+  "loss_carry_forward_years": 5,
+  "cit_standard_rates": [
+   [
+    0,
+    0.3
+   ],
+   [
+    2024,
+    0.28
+   ]
+  ],
+  "_about": "ONE place for the tax parameters: add_backs [code, label, coefficient]; management_fee; non_taxable_income [code, label, cap or null, RRA P&L line]; loss_carry_forward_years (default, an extension can be entered per project); cit_standard_rates [[from_year, rate]]; individual_brackets_annual [[upper limit or null, rate]]. Used by the computation, the controls and the Excel formulas."
+ },
+ "code_format": {
+  "version": "V1-0k",
+  "rra_file": "CITRealAnnexure_ver7 from 2023.xlsm (RRA e-tax annexure), sheets BALANCE_SHEET and PROFIT_AND_LOSS"
+ },
+ "fixed_assets": {
+  "_about": "Depreciation rates per asset category (one place; editable per project on page 8). Book: straight-line per asset, full year in the acquisition year, none in the disposal year (option), residual value 0. Tax (RRA): reducing balance per category (pool), same rates; a pool worth less than small_pool_limit after the purchases and disposals of the year (before depreciation) is written off at 100%; a disposal removes the asset's own tax value.",
+  "small_pool_limit": 500000,
+  "categories": [
+   {
+    "code": "BS 01.01",
+    "name": "Land",
+    "rate": 0.0
+   },
+   {
+    "code": "BS 01.02",
+    "name": "Buildings",
+    "rate": 0.05
+   },
+   {
+    "code": "BS 01.03",
+    "name": "Motor vehicles",
+    "rate": 0.25
+   },
+   {
+    "code": "BS 01.04",
+    "name": "Machinery",
+    "rate": 0.25
+   },
+   {
+    "code": "BS 01.05",
+    "name": "Leased property",
+    "rate": null
+   },
+   {
+    "code": "BS 01.06",
+    "name": "Intangible assets",
+    "rate": 0.1
+   },
+   {
+    "code": "BS 01.07",
+    "name": "Computers and accessories (IT equipment)",
+    "rate": 0.5
+   },
+   {
+    "code": "BS 01.08",
+    "name": "Furniture and fittings",
+    "rate": 0.25
+   },
+   {
+    "code": "BS 01.09",
+    "name": "Office and other equipment",
+    "rate": 0.25
+   },
+   {
+    "code": "BS 01.11",
+    "name": "Freehold property",
+    "rate": null
+   }
+  ]
+ },
+ "stock": {
+  "_about": "Stock form: item level, grouped by the RRA inventory categories.",
+  "categories": [
+   {
+    "code": "BS 03.01.01.01",
+    "name": "Consumables incl. packaging materials",
+    "pl_open": null,
+    "pl_close": null
+   },
+   {
+    "code": "BS 03.01.01.02",
+    "name": "Raw materials",
+    "pl_open": "PL 02.01.01",
+    "pl_close": "PL 02.05.01"
+   },
+   {
+    "code": "BS 03.01.01.03",
+    "name": "Work in progress",
+    "pl_open": "PL 02.01.02",
+    "pl_close": "PL 02.05.02"
+   },
+   {
+    "code": "BS 03.01.01.04",
+    "name": "Trading / manufactured goods (finished)",
+    "pl_open": "PL 02.01.03",
+    "pl_close": "PL 02.05.03"
+   }
+  ],
+  "loss_events": [
+   "Theft",
+   "Damage",
+   "Expiry",
+   "Fire / disaster",
+   "Other unforeseen event"
   ]
  }
 }

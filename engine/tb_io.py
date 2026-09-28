@@ -14,6 +14,8 @@ import re
 
 import pandas as pd
 
+from engine import codes
+
 BASE = ["code", "account", "comment", "note"]
 TOL = 1.0
 YEAR_RE = re.compile(r"(?<!\d)(?:19|20)\d{2}(?!\d)")
@@ -136,8 +138,11 @@ def guess_mapping(columns: list[str], default_latest_year: int | None = None) ->
                 return c
         return None
 
-    m: dict = {"code": first(r"cit\s*code|^code|rra|\bcit\b")}
-    m["account"] = first(r"account\s*name|intitul|libell|account|compte|description|name", exclude=[m["code"]])
+    # an exact "CIT code" column wins over a ledger "Code" column; "Account name" wins over "Account code"
+    m: dict = {"code": first(r"cit\s*code") or first(r"^code|rra|\bcit\b", exclude=[c for c, l in low.items() if "statement" in l])}
+    m["account"] = (first(r"account\s*name|intitul|libell|description", exclude=[m["code"]]) or
+                    first(r"account|compte|name", exclude=[m["code"]] + [c for c, l in low.items() if re.search(r"code|n[°o]\b|number", l)]) or
+                    first(r"account|compte|name", exclude=[m["code"]]))
     m["comment"] = first(r"comment|remark|observ")
     m["group"] = first(r"^group$")                 # TB template: used to derive a missing CIT code
     m["line"] = first(r"^statement\s*line$")
@@ -220,7 +225,11 @@ def to_tb(df: pd.DataFrame, mapping: dict, catalogue: pd.DataFrame | None = None
     if bad_cells.any():
         rows = ", ".join(str(i + 1) for i in bad_cells[bad_cells].index[:10])
         notes.append(f"{int(bad_cells.sum())} amount cell(s) were not numbers and were read as 0 (rows {rows}…). Check them.")
-    out["code"] = out["code"].apply(norm_code)
+    raw_codes = out["code"].apply(lambda c: norm_code(c, convert=False))
+    out["code"], changed = raw_codes.apply(codes.to_new), [(o, codes.to_new(o)) for o in raw_codes if codes.to_new(o) != o]
+    note = codes.conversion_note(changed)
+    if note:
+        notes.append(note)
     if catalogue is not None and mapping.get("line"):
         key = {(clean_text(r.group), clean_text(r.line)): r.code for r in catalogue.itertuples()}
         by_line = catalogue.groupby("line")["code"].apply(list).to_dict()
@@ -261,12 +270,14 @@ def drop_blank_and_totals(tb: pd.DataFrame) -> tuple[pd.DataFrame, int]:
     return tb[~drop].reset_index(drop=True), int(drop.sum())
 
 
-def norm_code(c) -> str:
+def norm_code(c, convert: bool = True) -> str:
+    """Upper case, one space after BS/PL; old V11 codes (e.g. 'BS 1.09') converted to the RRA format ('BS 01.10')."""
     c = clean_text(c)
     if not c:
         return ""
     c = re.sub(r"\s+", " ", c.upper())
-    return re.sub(r"^(BS|PL)\s*", lambda m: m.group(1) + " ", c)
+    c = re.sub(r"^(BS|PL)\s*", lambda m: m.group(1) + " ", c)
+    return codes.to_new(c) if convert else c
 
 
 def normalise(tb: pd.DataFrame) -> pd.DataFrame:
@@ -360,11 +371,15 @@ def line_issues(tb: pd.DataFrame, valid_codes: set[str]) -> pd.DataFrame:
             out.append((n, acc, r["code"], "", "BLOCKING", f"CIT code '{r['code']}' is not in the chart of accounts"))
         for y in years:
             if r[f"debit_{y}"] < 0 or r[f"credit_{y}"] < 0:
-                out.append((n, acc, r["code"], str(y), "WARNING", "Negative amount — put credits in the credit column"))
+                out.append((n, acc, r["code"], str(y), "WARNING", "Negative amount — accepted as an exception; normally it "
+                                                                   "goes on the other side (Quick fixes can move it)"))
             if abs(r[f"debit_{y}"]) > TOL and abs(r[f"credit_{y}"]) > TOL:
                 out.append((n, acc, r["code"], str(y), "WARNING", "Both debit and credit filled (the net is used)"))
-            if r["code"] == "BS 1.09" and (r[f"debit_{y}"] - r[f"credit_{y}"]) > TOL:
+            if r["code"] == "BS 01.10" and (r[f"debit_{y}"] - r[f"credit_{y}"]) > TOL:
                 out.append((n, acc, r["code"], str(y), "BLOCKING", "Accumulated depreciation with a DEBIT balance (must be credit)"))
+        if r["code"] == "BS 01.09" and re.search(r"computer|laptop|ordinateur|informatique|\bit\b|printer|server", str(r["account"]), re.I):
+            out.append((n, acc, r["code"], "", "WARNING", "Computers / IT under Other assets (BS 01.09) — the RRA annexure "
+                                                            "has its own line IT equipment (BS 01.07)"))
         if amts and all(abs(r[a]) <= TOL for a in amts):
             out.append((n, acc, r["code"], "", "INFO", "Zero in every year"))
         if re.search(r"balanc|plug|make.*tb", str(r.get("comment") or ""), re.I):
@@ -375,6 +390,64 @@ def line_issues(tb: pd.DataFrame, valid_codes: set[str]) -> pd.DataFrame:
             out.append((i + 1, tb.at[i, "account"], tb.at[i, "code"], "", "BLOCKING",
                         f"Same account description on lines {lines} — merge them or give each a different description"))
     return pd.DataFrame(out, columns=["Line", "Account", "Code", "Year", "Level", "Issue"])
+
+
+def tb_notices(tb: pd.DataFrame) -> list[str]:
+    """Messages shown when a TB is loaded: not balanced (per year) and negative amounts (accepted as exceptions)."""
+    out = []
+    if tb.empty:
+        return out
+    bal = balance(tb)
+    bad = [y for y in years_of(tb) if not bal[y]["ok"]]
+    if bad:
+        out.append("NOT BALANCED — total debits ≠ total credits in " + ", ".join(
+            f"{y} (difference {bal[y]['diff']:,.0f})" for y in sorted(bad, reverse=True)) +
+            ". The report cannot be generated until the TB balances (2 · Checks & Corrections).")
+    neg = [(i + 1, str(tb.at[i, "account"] or "(no name)"), y, s_) for i in tb.index for y in years_of(tb)
+           for s_ in ("debit", "credit") if float(tb.at[i, f"{s_}_{y}"] or 0) < -TOL]
+    if neg:
+        ex = "; ".join(f"line {n} {acc[:30]} ({s_} {y})" for n, acc, y, s_ in neg[:5])
+        out.append(f"NEGATIVE AMOUNTS — {len(neg)} negative debit/credit amount(s) accepted as exceptions: {ex}"
+                   f"{'…' if len(neg) > 5 else ''}. A negative debit is normally a credit (and vice versa) — you can move "
+                   "them to the other side in 2 · Checks & Corrections → 🛠️ Quick fixes.")
+    return out
+
+
+def move_negatives(tb: pd.DataFrame) -> tuple[pd.DataFrame, int]:
+    """Negative debit -> positive credit and negative credit -> positive debit (net balance unchanged)."""
+    tb = tb.copy()
+    n = 0
+    for y in years_of(tb):
+        for i in tb.index:
+            d, c = float(tb.at[i, f"debit_{y}"] or 0), float(tb.at[i, f"credit_{y}"] or 0)
+            if d < -TOL or c < -TOL:
+                nd, nc = max(d, 0.0) + max(-c, 0.0), max(c, 0.0) + max(-d, 0.0)
+                tb.at[i, f"debit_{y}"], tb.at[i, f"credit_{y}"] = nd, nc
+                n += 1
+    return tb, n
+
+
+def zero_lines(tb: pd.DataFrame) -> list[int]:
+    """Indexes of the lines with 0 (or nothing) in every year — they add nothing to the statements."""
+    amts = amount_cols(tb)
+    if tb.empty or not amts:
+        return []
+    z = tb[amts].apply(pd.to_numeric, errors="coerce").fillna(0.0).abs().le(TOL).all(axis=1)
+    return [int(i) for i in tb.index[z]]
+
+
+def delete_lines(tb: pd.DataFrame, rows: list[int]) -> pd.DataFrame:
+    """Remove the given line indexes (0-based) and renumber."""
+    return tb.drop(index=[r for r in rows if r in tb.index]).reset_index(drop=True)
+
+
+def line_net(tb: pd.DataFrame, i: int) -> float | None:
+    """Debit − credit of a line in the most recent year where it is not zero (None if zero everywhere)."""
+    for y in sorted(years_of(tb), reverse=True):
+        n = float(tb.at[i, f"debit_{y}"] or 0) - float(tb.at[i, f"credit_{y}"] or 0)
+        if abs(n) > TOL:
+            return n
+    return None
 
 
 def desc_key(name) -> str:

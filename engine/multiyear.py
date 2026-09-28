@@ -31,8 +31,8 @@ YEAR_FIELDS = {  # key -> (label, help)
     "cit_rate": ("CIT rate (%)", "Corporate income tax rate of the year. Rwanda: 30% up to 2023, 28% from 2024."),
     "prepayments": ("Quarterly prepayments", "CIT quarterly prepayments paid for the year"),
     "wht": ("WHT credits", "Withholding tax (3% / 15%) credited against the CIT of the year"),
-    "grants": ("Grants received", "Grants received — added to the taxable profit"),
-    "loss_brought_forward": ("Tax loss brought forward", "Tax loss carried forward into the year (positive number)"),
+    "grants": ("Grants received", "Not used for the moment — treatment of grants to be designed"),
+    "loss_brought_forward": ("Tax loss brought forward (old)", "Replaced by the table of tax losses per year of origin"),
     "income_tax_paid": ("Income tax paid", "Tax actually paid during the year (cash flow)"),
     "disposal_proceeds": ("Disposal proceeds", "Cash received from the sale of fixed assets (cash flow)"),
     "additional_loans_from_directors": ("Loans from directors", "New loans from directors in the year (cash flow)"),
@@ -45,7 +45,12 @@ INV_KEYS = [("opening", "At 1st January"), ("purchases", "Purchases"), ("purchas
 
 
 def statutory_cit(year: int) -> float:
-    return 0.30 if year <= 2023 else 0.28
+    """Standard CIT rate of a year — from chart_of_accounts.json income_tax.cit_standard_rates (one place)."""
+    import json
+    from engine import CHART
+    tab = sorted(json.loads(CHART.read_text(encoding="utf-8"))["income_tax"].get("cit_standard_rates") or [[0, 0.30]],
+                 reverse=True)
+    return next((r for fy, r in tab if year >= fy), tab[-1][1])
 
 
 def year_end(meta: dict, year: int) -> date | None:
@@ -68,9 +73,28 @@ def yd(project: dict, year: int) -> dict:
     return d
 
 
-def pair_input(project: dict, tb: pd.DataFrame, year: int) -> dict:
+def pair_input(project: dict, tb: pd.DataFrame, year: int, chart: dict | None = None) -> dict:
     """2-year engine input (skill input.json format) for CY = year, PY = year-1."""
     c, p = yd(project, year), yd(project, year - 1)
+    if chart is None:
+        import json
+        from engine import CHART
+        chart = json.loads(CHART.read_text(encoding="utf-8"))
+    ls = loss_schedule(project, tb, chart)
+    src = (f"tax losses of the previous {ls['years']} years" + (" (extension)" if ls["extension"] else "") +
+           " — 1 · Company & Report Data → Period & tax")
+    src = src.replace("1 · Company", "3 · Company")
+    from engine import fixed_assets as fa_mod
+    fa_cats, fa_why = fa_mod.note11_from_project(project, tb, chart, year)
+    fa_input = ({"categories": fa_cats, "source_note": fa_why} if fa_cats else
+                ({"categories": c["fixed_assets"]} if c.get("fixed_assets") else None))
+    loss_av, loss_src = {}, {}
+    for tag, yy, v in (("cy", year, c), ("py", year - 1, p)):
+        loss_av[tag] = (ls["by_year"].get(yy) or {}).get("available", 0.0)
+        loss_src[tag] = src
+        if not ls["origins"] and float(v.get("loss_brought_forward") or 0):     # older project: total entered per year
+            loss_av[tag] = abs(float(v["loss_brought_forward"]))
+            loss_src[tag] = "total entered per year (older project) — enter the losses per year of origin instead"
     meta = copy.deepcopy(project["meta"])
     ye = year_end(meta, year)
     meta["period_end"] = ye.isoformat() if ye else ""
@@ -80,23 +104,28 @@ def pair_input(project: dict, tb: pd.DataFrame, year: int) -> dict:
     for k in ("years", "active_year", "view_mode"):
         meta.pop(k, None)
     inv = None
-    if c.get("inventory_movement") or p.get("inventory_movement"):
-        z = {k: 0.0 for k, _ in INV_KEYS}
-        inv = {"cy": c.get("inventory_movement") or z, "py": p.get("inventory_movement") or z}
+    from engine import stock as stock_mod
+    z = {k: 0.0 for k, _ in INV_KEYS}
+    im = {}
+    for tag, yy, v in (("cy", year, c), ("py", year - 1, p)):
+        form_im, _why = stock_mod.note12_from_project(project, tb, chart, yy) if chart.get("stock") else (None, "")
+        im[tag] = form_im or v.get("inventory_movement")
+    if im["cy"] or im["py"]:
+        inv = {"cy": im["cy"] or z, "py": im["py"] or z}
     return {
         "meta": meta,
         "general": copy.deepcopy(project.get("general", {})),
         "trial_balance": tb_io.pair_rows(tb, year),
         "tax": {"prepayments": {"cy": c["prepayments"], "py": p["prepayments"]},
                 "wht": {"cy": c["wht"], "py": p["wht"]},
-                "grants": {"cy": c["grants"], "py": p["grants"]},
-                **({"loss_brought_forward": {"cy": c["loss_brought_forward"]}} if c["loss_brought_forward"] else {})},
+                "grants": {"cy": 0.0, "py": 0.0},
+                "loss_available": loss_av, "loss_source": loss_src},
         "cashflow": {k: c[k] for k in ("income_tax_paid", "disposal_proceeds", "additional_loans_from_directors",
                                        "short_term_borrowings")},
         "equity_movements": {"cy": {"drawings": c["drawings"], "adjustments": c["adjustments"]},
                              "py": {"drawings": p["drawings"], "adjustments": p["adjustments"]}},
         "inventory_movement": inv,
-        "fixed_assets": {"categories": c["fixed_assets"]} if c.get("fixed_assets") else None,
+        "fixed_assets": fa_input,
         "notes": project.get("notes"),
         "bookmark_overrides": project.get("bookmark_overrides") or {},
     }
@@ -209,3 +238,75 @@ def multi_notes(models: dict[int, dict]) -> tuple[list[dict], list[int]]:
                  "values": [vals[(s, lab, t)].get(y) for y in all_years]} for (s, lab, t) in labels]
         notes.append({"id": n["id"], "title": n["title"], "rows": rows, "texts": texts})
     return notes, all_years
+
+
+# ------------------------------------------------------------------ tax losses --
+def loss_settings(project: dict, chart: dict | None = None) -> dict:
+    """{"carry_forward_years": N, "extension": bool, "losses": [{"year", "loss", "used_before"}]}"""
+    default_n = int(((chart or {}).get("income_tax") or {}).get("loss_carry_forward_years") or 5)
+    s = dict(project.get("tax_losses") or {})
+    s.setdefault("extension", False)
+    s["carry_forward_years"] = int(s.get("carry_forward_years") or default_n) if s["extension"] else default_n
+    s.setdefault("losses", [])
+    return s
+
+
+def loss_schedule(project: dict, tb: pd.DataFrame, chart: dict) -> dict:
+    """Tax losses carried forward, year by year (FIFO, oldest first).
+
+    Losses by year of ORIGIN come from project["tax_losses"]["losses"] (entered by the user, positive amounts, with
+    the part already used in tax returns before the years of the TB). For a year of the TB whose taxable income before
+    losses is negative, that loss is taken automatically unless the user entered the year. A loss can be deducted in
+    the N years following its year of origin (N = 5 by default, or the extension entered for the client).
+    Returns {"years": N, "by_year": {Y: {"available", "used", "before_losses", "expired"}}, "origins": [...]}.
+    """
+    from engine import build_model
+    st_ = loss_settings(project, chart)
+    n = st_["carry_forward_years"]
+    tb_years = tb_io.years_of(tb)
+    before = {}
+    for y in tb_years:
+        tbo = build_model.TB(tb_io.pair_rows(tb, y), build_model.Controls())
+        before[y] = build_model.pre_loss_taxable(tbo, "cy", chart)["before_losses"]
+    origins: dict[int, dict] = {}
+    for r in st_["losses"]:
+        try:
+            yr = int(r.get("year"))
+        except (TypeError, ValueError):
+            continue
+        amt = abs(float(r.get("loss") or 0))
+        if amt > 0:
+            origins[yr] = {"year": yr, "loss": amt, "used_before": min(amt, abs(float(r.get("used_before") or 0))),
+                           "source": "entered"}
+    for y in tb_years:
+        if before[y] < 0 and y not in origins:
+            origins[y] = {"year": y, "loss": -before[y], "used_before": 0.0, "source": "computed from the TB"}
+    for o in origins.values():
+        o["remaining"] = o["loss"] - o["used_before"]
+        o["used_by_year"] = {}
+        o["expires_after"] = o["year"] + n
+    by_year = {}
+    first = min([*origins.keys(), *tb_years]) if (origins or tb_years) else None
+    last = max(tb_years) if tb_years else None
+    if first is None or last is None:
+        return {"years": n, "by_year": {}, "origins": [], "extension": st_["extension"]}
+    for Y in range(first + 1, last + 1):
+        live = sorted((o for o in origins.values() if Y - n <= o["year"] <= Y - 1 and o["remaining"] > 0.5),
+                      key=lambda o: o["year"])
+        expired = sum(o["remaining"] for o in origins.values() if o["year"] == Y - n - 1 and o["remaining"] > 0.5)
+        avail = sum(o["remaining"] for o in live)
+        used = 0.0
+        if Y in before and before[Y] > 0:
+            need = min(avail, before[Y])
+            used = need
+            for o in live:
+                take = min(o["remaining"], need)
+                if take > 0:
+                    o["remaining"] -= take
+                    o["used_by_year"][Y] = take
+                    need -= take
+        by_year[Y] = {"available": avail, "used": used, "before_losses": before.get(Y), "expired": expired}
+    for y in tb_years:
+        by_year.setdefault(y, {"available": 0.0, "used": 0.0, "before_losses": before[y], "expired": 0.0})
+    return {"years": n, "extension": st_["extension"], "by_year": by_year,
+            "origins": sorted(origins.values(), key=lambda o: o["year"])}

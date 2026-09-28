@@ -66,7 +66,7 @@
  "bookmark_overrides": {},
  "trial_balance": [
   {
-   "code": "BS 3.1.3.2",
+   "code": "BS 03.01.03.02",
    "account": "BPR BANK PLC RWF",
    "comment": null,
    "note": null,
@@ -94,7 +94,7 @@
    }
   },
   {
-   "code": "BS 3.1.3.1",
+   "code": "BS 03.01.03.01",
    "account": "PETTYCASH RWF",
    "comment": null,
    "note": null,
@@ -122,7 +122,7 @@
    }
   },
   {
-   "code": "BS 3.1.3.2",
+   "code": "BS 03.01.03.02",
    "account": "BPR BANK PLC USD",
    "comment": null,
    "note": null,
@@ -150,7 +150,7 @@
    }
   },
   {
-   "code": "BS 3.1.3.1",
+   "code": "BS 03.01.03.01",
    "account": "PETTYCASH USD",
    "comment": null,
    "note": null,
@@ -178,7 +178,7 @@
    }
   },
   {
-   "code": "BS 3.1.2.1",
+   "code": "BS 03.01.02.01",
    "account": "ACCOUNTS RECEIVABLES",
    "comment": null,
    "note": null,
@@ -206,7 +206,7 @@
    }
   },
   {
-   "code": "BS 3.1.1.4",
+   "code": "BS 03.01.01.04",
    "account": "INVENTORIES",
    "comment": null,
    "note": null,
@@ -234,7 +234,7 @@
    }
   },
   {
-   "code": "BS 3.1.1.3",
+   "code": "BS 03.01.01.03",
    "account": "GOODS IN TRANSIT",
    "comment": null,
    "note": null,
@@ -262,7 +262,7 @@
    }
   },
   {
-   "code": "BS 3.2.4",
+   "code": "BS 03.02.04",
    "account": "SALARY ADVANCES",
    "comment": null,
    "note": null,
@@ -290,7 +290,7 @@
    }
   },
   {
-   "code": "BS 3.1.2.2",
+   "code": "BS 03.01.02.02",
    "account": "PREPAYMENT RENT",
    "comment": null,
    "note": null,
@@ -318,7 +318,7 @@
    }
   },
   {
-   "code": "BS 1.08",
+   "code": "BS 01.07",
    "account": "COMPUTERS",
    "comment": null,
    "note": null,
@@ -346,7 +346,7 @@
    }
   },
   {
-   "code": "BS 1.09",
+   "code": "BS 01.10",
    "account": "ACCUMULATED DEPRECIATION",
    "comment": "--> For 2024: calculated as\n               ACCUMULATED DEPRECIATION (N) = ACCUMULATED DEPRECIATION (N-1) +  DEPRECIATION(N)",
    "note": null,
@@ -374,7 +374,7 @@
    }
   },
   {
-   "code": "BS 1.07",
+   "code": "BS 01.08",
    "account": "FURNITURES & FITTINGS",
    "comment": null,
    "note": null,
@@ -402,7 +402,7 @@
    }
   },
   {
-   "code": "BS 1.09",
+   "code": "BS 01.10",
    "account": "ACCUMULATED DEPRECIATION",
    "comment": "--> For 2024: calculated as\n               ACCUMULATED DEPRECIATION (N) = ACCUMULATED DEPRECIATION (N-1) +  DEPRECIATION(N)",
    "note": null,
@@ -430,7 +430,7 @@
    }
   },
   {
-   "code": "BS 1.03",
+   "code": "BS 01.03",
    "account": "MOTOR VEHCLE",
    "comment": null,
    "note": null,
@@ -458,7 +458,7 @@
    }
   },
   {
-   "code": "BS 1.09",
+   "code": "BS 01.10",
    "account": "ACCUMULATED DEPRECIATION",
    "comment": "--> For 2024: calculated as\n               ACCUMULATED DEPRECIATION (N) = ACCUMULATED DEPRECIATION (N-1) +  DEPRECIATION(N)",
    "note": null,
@@ -486,7 +486,7 @@
    }
   },
   {
-   "code": "BS 1.08",
+   "code": "BS 01.09",
    "account": "OFFICE EQUIPMENT",
    "comment": null,
    "note": null,
@@ -514,7 +514,7 @@
    }
   },
   {
-   "code": "BS 1.09",
+   "code": "BS 01.10",
    "account": "ACCUMULATED DEPRECIATION",
    "comment": "--> For 2024: calculated as\n               ACCUMULATED DEPRECIATION (N) = ACCUMULATED DEPRECIATION (N-1) +  DEPRECIATION(N)",
    "note": null,
@@ -542,7 +542,7 @@
    }
   },
   {
-   "code": "BS 8.1.1",
+   "code": "BS 08.01.01",
    "account": "ACCOUNTS PAYABLES",
    "comment": null,
    "note": null,
@@ -570,7 +570,7 @@
    }
   },
   {
-   "code": "BS 8.1.6",
+   "code": "BS 08.01.06",
    "account": "SALARY PAYABLE",
    "comment": null,
    "note": null,
@@ -598,7 +598,7 @@
    }
   },
   {
-   "code": "BS 8.1.6",
+   "code": "BS 08.01.06",
    "account": "PAYE (wht PAYABLLE)",
    "comment": null,
    "note": null,
@@ -626,7 +626,7 @@
    }
   },
   {
-   "code": "BS 8.1.6",
+   "code": "BS 08.01.06",
    "account": "RSSB CONTRIBUTIONS PAYABLES",
    "comment": null,
    "note": null,
@@ -654,7 +654,7 @@
    }
   },
   {
-   "code": "BS 6.2.2",
+   "code": "BS 06.02.02",
    "account": "OTHER LOANS NON RELATED TO THE COMPANY",
    "comment": null,
    "note": null,
@@ -682,7 +682,7 @@
    }
   },
   {
-   "code": "BS 5.01",
+   "code": "BS 05.01",
    "account": "SHARE CAPITAL",
    "comment": null,
    "note": null,
@@ -710,7 +710,7 @@
    }
   },
   {
-   "code": "BS 5.07",
+   "code": "BS 05.07",
    "account": "Retained earnings",
    "comment": "---> Changed the CIT CODE from BS 5.01 to BS 5.07\n---> For 2024: calculated as\n               Retained earning (N) = Retained earning (N-1) + Profit (Loss) of the year (N-1)",
    "note": null,
@@ -738,7 +738,7 @@
    }
   },
   {
-   "code": "PL 1.1",
+   "code": "PL 01.01",
    "account": "Sales From Solar systems",
    "comment": "Assumption of 11,95% increase of sales in 2025 vs2024",
    "note": null,
@@ -766,7 +766,7 @@
    }
   },
   {
-   "code": "PL 1.1",
+   "code": "PL 01.01",
    "account": "Other Sales Revenues",
    "comment": "Assumption of 11,95% increase of sales in 2025 vs2024",
    "note": null,
@@ -794,7 +794,7 @@
    }
   },
   {
-   "code": "PL 2.2.1",
+   "code": "PL 02.02.01",
    "account": "Cost of Sales From Solar systme",
    "comment": null,
    "note": null,
@@ -822,7 +822,7 @@
    }
   },
   {
-   "code": "PL 6.06",
+   "code": "PL 06.04",
    "account": "RSSB (Employer Contribution)",
    "comment": null,
    "note": null,
@@ -850,7 +850,7 @@
    }
   },
   {
-   "code": "PL 5.01",
+   "code": "PL 05.01",
    "account": "Dep-Computer Equipement",
    "comment": null,
    "note": null,
@@ -878,7 +878,7 @@
    }
   },
   {
-   "code": "PL 5.01",
+   "code": "PL 05.01",
    "account": "Dep-Furniture&fittings",
    "comment": null,
    "note": null,
@@ -906,7 +906,7 @@
    }
   },
   {
-   "code": "PL 5.01",
+   "code": "PL 05.01",
    "account": "Dep-Moto Vehicle",
    "comment": null,
    "note": null,
@@ -934,7 +934,7 @@
    }
   },
   {
-   "code": "PL 5.01",
+   "code": "PL 05.01",
    "account": "Dep-Office Equipement",
    "comment": null,
    "note": null,
@@ -962,7 +962,7 @@
    }
   },
   {
-   "code": "PL 4.27",
+   "code": "PL 04.27",
    "account": "Repair & maintence -Equipement",
    "comment": null,
    "note": null,
@@ -990,7 +990,7 @@
    }
   },
   {
-   "code": "PL 4.27",
+   "code": "PL 04.27",
    "account": "Trading Lisence/No crreance/other administative document",
    "comment": null,
    "note": null,
@@ -1018,7 +1018,7 @@
    }
   },
   {
-   "code": "PL 4.27",
+   "code": "PL 04.27",
    "account": "Cleaning cost",
    "comment": null,
    "note": null,
@@ -1046,7 +1046,7 @@
    }
   },
   {
-   "code": "PL 4.16",
+   "code": "PL 04.16",
    "account": "Utilities and Gaz-Office",
    "comment": null,
    "note": null,
@@ -1074,7 +1074,7 @@
    }
   },
   {
-   "code": "PL 5.10",
+   "code": "PL 05.08.02",
    "account": "Fines&Penality-PAYE",
    "comment": null,
    "note": null,
@@ -1102,7 +1102,7 @@
    }
   },
   {
-   "code": "PL 6.08",
+   "code": "PL 06.06",
    "account": "General insurance",
    "comment": null,
    "note": null,
@@ -1130,7 +1130,7 @@
    }
   },
   {
-   "code": "PL 4.27",
+   "code": "PL 04.27",
    "account": "other Office expenses",
    "comment": null,
    "note": null,
@@ -1158,7 +1158,7 @@
    }
   },
   {
-   "code": "PL 7.02",
+   "code": "PL 07.02",
    "account": "Bank charges",
    "comment": null,
    "note": null,
@@ -1186,7 +1186,7 @@
    }
   },
   {
-   "code": "BS 6.1.4",
+   "code": "BS 06.01.04",
    "account": "SHAREHOLDERS ACCOUNT",
    "comment": "Calculated to make TB balancing",
    "note": null,
@@ -1214,7 +1214,7 @@
    }
   },
   {
-   "code": "BS 3.1.4",
+   "code": "BS 03.01.04",
    "account": "Other Current Assets",
    "comment": "Calculated to make TB balancing",
    "note": null,

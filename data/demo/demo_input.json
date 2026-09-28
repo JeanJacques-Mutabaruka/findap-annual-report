@@ -31,7 +31,7 @@
  },
  "trial_balance": [
   {
-   "code": "BS 3.1.3.2",
+   "code": "BS 03.01.03.02",
    "account": "BPR BANK PLC RWF",
    "debit_cy": 11113937,
    "credit_cy": 0,
@@ -40,7 +40,7 @@
    "comment": null
   },
   {
-   "code": "BS 3.1.3.1",
+   "code": "BS 03.01.03.01",
    "account": "PETTYCASH RWF",
    "debit_cy": 719129,
    "credit_cy": 0,
@@ -49,7 +49,7 @@
    "comment": null
   },
   {
-   "code": "BS 3.1.3.2",
+   "code": "BS 03.01.03.02",
    "account": "BPR BANK PLC USD",
    "debit_cy": 15767263,
    "credit_cy": 0,
@@ -58,7 +58,7 @@
    "comment": null
   },
   {
-   "code": "BS 3.1.3.1",
+   "code": "BS 03.01.03.01",
    "account": "PETTYCASH USD",
    "debit_cy": 454333,
    "credit_cy": 0,
@@ -67,7 +67,7 @@
    "comment": null
   },
   {
-   "code": "BS 3.1.2.1",
+   "code": "BS 03.01.02.01",
    "account": "ACCOUNTS RECEIVABLES",
    "debit_cy": 5764353,
    "credit_cy": 0,
@@ -76,7 +76,7 @@
    "comment": null
   },
   {
-   "code": "BS 3.1.1.4",
+   "code": "BS 03.01.01.04",
    "account": "INVENTORIES",
    "debit_cy": 34598630,
    "credit_cy": 0,
@@ -85,7 +85,7 @@
    "comment": null
   },
   {
-   "code": "BS 3.1.1.3",
+   "code": "BS 03.01.01.03",
    "account": "GOODS IN TRANSIT",
    "debit_cy": 18905463,
    "credit_cy": 0,
@@ -94,7 +94,7 @@
    "comment": null
   },
   {
-   "code": "BS 3.2.4",
+   "code": "BS 03.02.04",
    "account": "SALARY ADVANCES",
    "debit_cy": 497654,
    "credit_cy": 0,
@@ -103,7 +103,7 @@
    "comment": null
   },
   {
-   "code": "BS 3.1.2.2",
+   "code": "BS 03.01.02.02",
    "account": "PREPAYMENT RENT",
    "debit_cy": 2890467,
    "credit_cy": 0,
@@ -112,7 +112,7 @@
    "comment": null
   },
   {
-   "code": "BS 1.08",
+   "code": "BS 01.07",
    "account": "COMPUTERS",
    "debit_cy": 1500000,
    "credit_cy": 0,
@@ -121,7 +121,7 @@
    "comment": null
   },
   {
-   "code": "BS 1.09",
+   "code": "BS 01.10",
    "account": "ACCUMULATED DEPRECIATION",
    "debit_cy": 869664,
    "credit_cy": 0,
@@ -130,7 +130,7 @@
    "comment": "--> For 2024: calculated as\n               ACCUMULATED DEPRECIATION (N) = ACCUMULATED DEPRECIATION (N-1) +  DEPRECIATION(N)"
   },
   {
-   "code": "BS 1.07",
+   "code": "BS 01.08",
    "account": "FURNITURES & FITTINGS",
    "debit_cy": 1876543,
    "credit_cy": 0,
@@ -139,7 +139,7 @@
    "comment": null
   },
   {
-   "code": "BS 1.09",
+   "code": "BS 01.10",
    "account": "ACCUMULATED DEPRECIATION",
    "debit_cy": 655180,
    "credit_cy": 0,
@@ -148,7 +148,7 @@
    "comment": "--> For 2024: calculated as\n               ACCUMULATED DEPRECIATION (N) = ACCUMULATED DEPRECIATION (N-1) +  DEPRECIATION(N)"
   },
   {
-   "code": "BS 1.03",
+   "code": "BS 01.03",
    "account": "MOTOR VEHCLE",
    "debit_cy": 7736664,
    "credit_cy": 0,
@@ -157,7 +157,7 @@
    "comment": null
   },
   {
-   "code": "BS 1.09",
+   "code": "BS 01.10",
    "account": "ACCUMULATED DEPRECIATION",
    "debit_cy": 2326298,
    "credit_cy": 0,
@@ -166,7 +166,7 @@
    "comment": "--> For 2024: calculated as\n               ACCUMULATED DEPRECIATION (N) = ACCUMULATED DEPRECIATION (N-1) +  DEPRECIATION(N)"
   },
   {
-   "code": "BS 1.08",
+   "code": "BS 01.09",
    "account": "OFFICE EQUIPMENT",
    "debit_cy": 881434,
    "credit_cy": 0,
@@ -175,7 +175,7 @@
    "comment": null
   },
   {
-   "code": "BS 1.09",
+   "code": "BS 01.10",
    "account": "ACCUMULATED DEPRECIATION",
    "debit_cy": 278267,
    "credit_cy": 0,
@@ -184,7 +184,7 @@
    "comment": "--> For 2024: calculated as\n               ACCUMULATED DEPRECIATION (N) = ACCUMULATED DEPRECIATION (N-1) +  DEPRECIATION(N)"
   },
   {
-   "code": "BS 8.1.1",
+   "code": "BS 08.01.01",
    "account": "ACCOUNTS PAYABLES",
    "debit_cy": 0,
    "credit_cy": 9858453,
@@ -193,7 +193,7 @@
    "comment": null
   },
   {
-   "code": "BS 8.1.6",
+   "code": "BS 08.01.06",
    "account": "SALARY PAYABLE",
    "debit_cy": 0,
    "credit_cy": 1986754,
@@ -202,7 +202,7 @@
    "comment": null
   },
   {
-   "code": "BS 8.1.6",
+   "code": "BS 08.01.06",
    "account": "PAYE (wht PAYABLLE)",
    "debit_cy": 0,
    "credit_cy": 893245,
@@ -211,7 +211,7 @@
    "comment": null
   },
   {
-   "code": "BS 8.1.6",
+   "code": "BS 08.01.06",
    "account": "RSSB CONTRIBUTIONS PAYABLES",
    "debit_cy": 0,
    "credit_cy": 223567,
@@ -220,7 +220,7 @@
    "comment": null
   },
   {
-   "code": "BS 6.2.2",
+   "code": "BS 06.02.02",
    "account": "OTHER LOANS NON RELATED TO THE COMPANY",
    "debit_cy": 0,
    "credit_cy": 12345765,
@@ -229,7 +229,7 @@
    "comment": null
   },
   {
-   "code": "BS 5.01",
+   "code": "BS 05.01",
    "account": "SHARE CAPITAL",
    "debit_cy": 0,
    "credit_cy": 4000000,
@@ -238,7 +238,7 @@
    "comment": null
   },
   {
-   "code": "BS 5.07",
+   "code": "BS 05.07",
    "account": "Retained earnings",
    "debit_cy": 0,
    "credit_cy": 139497976.39840004,
@@ -247,7 +247,7 @@
    "comment": "---> Changed the CIT CODE from BS 5.01 to BS 5.07\n---> For 2024: calculated as\n               Retained earning (N) = Retained earning (N-1) + Profit (Loss) of the year (N-1)"
   },
   {
-   "code": "PL 1.1",
+   "code": "PL 01.01",
    "account": "Sales From Solar systems",
    "debit_cy": 0,
    "credit_cy": 499455145.117409,
@@ -256,7 +256,7 @@
    "comment": "Assumption of 11,95% increase of sales in 2025 vs2024"
   },
   {
-   "code": "PL 1.1",
+   "code": "PL 01.01",
    "account": "Other Sales Revenues",
    "debit_cy": 0,
    "credit_cy": 36382257.538575,
@@ -265,7 +265,7 @@
    "comment": "Assumption of 11,95% increase of sales in 2025 vs2024"
   },
   {
-   "code": "PL 2.2.1",
+   "code": "PL 02.02.01",
    "account": "Cost of Sales From Solar systme",
    "debit_cy": 399569724,
    "credit_cy": 0,
@@ -274,7 +274,7 @@
    "comment": null
   },
   {
-   "code": "PL 6.06",
+   "code": "PL 06.04",
    "account": "RSSB (Employer Contribution)",
    "debit_cy": 1208292,
    "credit_cy": 0,
@@ -283,7 +283,7 @@
    "comment": null
   },
   {
-   "code": "PL 5.01",
+   "code": "PL 05.01",
    "account": "Dep-Computer Equipement ",
    "debit_cy": 59832,
    "credit_cy": 0,
@@ -292,7 +292,7 @@
    "comment": null
   },
   {
-   "code": "PL 5.01",
+   "code": "PL 05.01",
    "account": "Dep-Furniture&fittings",
    "debit_cy": 93022,
    "credit_cy": 0,
@@ -301,7 +301,7 @@
    "comment": null
   },
   {
-   "code": "PL 5.01",
+   "code": "PL 05.01",
    "account": "Dep-Moto Vehicle",
    "debit_cy": 196066,
    "credit_cy": 0,
@@ -310,7 +310,7 @@
    "comment": null
   },
   {
-   "code": "PL 5.01",
+   "code": "PL 05.01",
    "account": "Dep-Office Equipement ",
    "debit_cy": 28954,
    "credit_cy": 0,
@@ -319,7 +319,7 @@
    "comment": null
   },
   {
-   "code": "PL 4.27",
+   "code": "PL 04.27",
    "account": "Repair & maintence -Equipement ",
    "debit_cy": 789920,
    "credit_cy": 0,
@@ -328,7 +328,7 @@
    "comment": null
   },
   {
-   "code": "PL 4.27",
+   "code": "PL 04.27",
    "account": "Trading Lisence/No crreance/other administative document ",
    "debit_cy": 495032,
    "credit_cy": 0,
@@ -337,7 +337,7 @@
    "comment": null
   },
   {
-   "code": "PL 4.27",
+   "code": "PL 04.27",
    "account": "Cleaning cost ",
    "debit_cy": 432922,
    "credit_cy": 0,
@@ -346,7 +346,7 @@
    "comment": null
   },
   {
-   "code": "PL 4.16",
+   "code": "PL 04.16",
    "account": "Utilities and Gaz-Office",
    "debit_cy": 1383152,
    "credit_cy": 0,
@@ -355,7 +355,7 @@
    "comment": null
   },
   {
-   "code": "PL 5.10",
+   "code": "PL 05.08.02",
    "account": "Fines&Penality-PAYE",
    "debit_cy": 784392,
    "credit_cy": 0,
@@ -364,7 +364,7 @@
    "comment": null
   },
   {
-   "code": "PL 6.08",
+   "code": "PL 06.06",
    "account": "General insurance",
    "debit_cy": 433202,
    "credit_cy": 0,
@@ -373,7 +373,7 @@
    "comment": null
   },
   {
-   "code": "PL 4.27",
+   "code": "PL 04.27",
    "account": "other Office expenses",
    "debit_cy": 2297752,
    "credit_cy": 0,
@@ -382,7 +382,7 @@
    "comment": null
   },
   {
-   "code": "PL 7.02",
+   "code": "PL 07.02",
    "account": "Bank charges ",
    "debit_cy": 349322,
    "credit_cy": 0,
@@ -391,7 +391,7 @@
    "comment": null
   },
   {
-   "code": "BS 6.1.4",
+   "code": "BS 06.01.04",
    "account": "SHAREHOLDERS ACCOUNT",
    "debit_cy": 0,
    "credit_cy": 0,
@@ -400,7 +400,7 @@
    "comment": "Calculated to make TB balancing"
   },
   {
-   "code": "BS 3.1.4",
+   "code": "BS 03.01.04",
    "account": "Other Current Assets",
    "debit_cy": 189686300.0543841,
    "credit_cy": 0,

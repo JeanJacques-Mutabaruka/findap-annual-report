@@ -1,6 +1,6 @@
 # Annual Report Generator — Testers' guide
 
-**Version under test: V1-0i** (shown at the bottom of the left menu) · about **60 minutes** for the 14 scenarios.
+**Version under test: V2026-09-28 0153** (shown at the bottom of the left menu) · about **110 minutes** for the 23 scenarios.
 
 Thank you for testing. The tool turns a company's **trial balance** into its audited **annual report**
 (Word and PDF): it checks the figures, asks for what is missing, then generates the files.
@@ -41,7 +41,7 @@ Tab **👯 Duplicates** → rename the 4 lines using the "Line above" hint (e.g.
 Page **Trial Balance** → tab **📄 TB template** → 3 years → download. In Excel: on an empty line choose
 *Balance sheet* › *Current Assets* › *Cash and Cash equivalents* › *Bank balances*.
 **Expected:** each list shows only the choices of the previous one; the CIT-code list then offers only
-*BS 3.1.3.2*; typing the same account description twice turns the cell red. *Tell us if a list misbehaves
+*BS 03.01.03.02*; typing the same account description twice turns the cell red. *Tell us if a list misbehaves
 (and your Excel version).*
 
 ### 5. Upload a trial balance — 5 min
@@ -94,6 +94,68 @@ Statements Preview → switch **Detailed / Summarised / Condensed**, then genera
 Report options → Comparative year → **Current Year only**, generate again.
 **Expected:** the balance sheet and P&L follow the level chosen (preview and Word); in CY-only mode every table
 has a single year column.
+
+### 15. Map a TB without CIT codes — 6 min
+Take a TB with **no CIT codes** (or delete the CIT-code column of the demo TB).
+a) Upload it as it is → **2 · Checks & Corrections → 🏷️ CIT codes**: look at the confidence 🟢/🟡/🔴, the *Why* and
+*Alternative* columns; switch on **Pre-tick CONFIRM on 🟢 High**, check a few 🟡 lines, APPLY.
+b) **1 · Trial Balance → 📄 TB template & AI prompt** → download the AI mapping prompt; in an AI assistant you are
+allowed to use, attach the TB and the prompt, ask it to follow the prompt; upload the file it returns.
+**Expected:** a) codes applied only on confirmed lines, doubts written in the Comments column; b) the returned file
+is read directly, codes and comments filled, doubtful lines explained. Tell us which AI you used and how many codes
+you had to change.
+
+### 16. Delete lines — 2 min
+**1 · Trial Balance → 🗑️ Delete lines**: delete the lines with 0 in every year (untick one to keep it), then
+**UNDO**; delete one line with amounts.
+**Expected:** zero lines go without changing the balance; UNDO restores them; deleting a line with amounts warns
+that the totals change and asks for confirmation.
+
+### 17. New CIT codes — 4 min
+Upload a TB that still has **old codes** (e.g. the demo TB of a previous version, or type `BS 1.09` on a line).
+**Expected:** a message lists the conversion (e.g. BS 1.09 → BS 01.10, accumulated depreciation) and the renumbered
+lines; page **7 · Tax & CIT → 🔗 CIT codes ↔ RRA** shows every code with its RRA Serial No; sub-codes are yellow, the
+three codes still without RRA line are red.
+
+### 18. Taxable income and RRA annex — 6 min
+Load the demo → **7 · Tax & CIT**. Open the brown "How it is calculated" boxes. Download the two Excel files and change
+an input (e.g. a coefficient, the CIT rate, a TB amount).
+**Expected:** every step is explained; Excel recalculates (formulas, not flat figures); the check columns show ✓ before
+your change; the RRA annex shows the same total assets / profit before tax / income tax as the report and BS 10 = 0.
+Optional: upload an RRA annexure file in the last tab — identical file → "nothing to update".
+
+### 19. Tax corrections — 6 min
+On **3 · Company & Report Data → Period & tax**, enter tax losses for two old years (one older than 5 years) and save.
+Then open **7 · Tax & CIT → 🧮 Taxable income**.
+**Expected:** the loss older than 5 years is not used (unless you tick the extension); losses are used oldest first,
+never more than the taxable income; management fees are added back only above 2% of turnover; dividends and farming
+income (up to 12,000,000) are deducted; the grant row is 0; when losses are deducted, a red note explains the
+difference with RRA line 15.
+
+### 20. Unbalanced TB and negative amounts — 3 min
+Upload a TB with a negative debit and a difference between debits and credits.
+**Expected:** a red message "NOT BALANCED" with the difference per year, an amber message listing the negative
+amounts (accepted); **2 · Checks & Corrections → 🛠️ Quick fixes** moves them to the other side without changing any
+balance.
+
+### 21. Fixed assets — 8 min
+**8 · Long-term Assets Check**: download the template, enter 4–5 assets (one computer, one vehicle sold during a year, one building,
+one piece of furniture), upload it. Check the filters, the life schedule of one asset, the summary by category, the
+reconciliation with the TB and the RRA Depreciation Table; download the Excel and change a rate in the sheet "Rates".
+**Expected:** straight-line per asset, full year when bought, nothing in the year of sale (option), gain/loss on sale;
+tax pools reducing balance, 100% when a category is worth less than 500,001; red lines where the TB differs; the Excel
+recalculates.
+
+### 22. Stock — 6 min
+**9 · Stock Control**: download the form of the year, fill 3 items (opening, purchases, sales at cost, one theft with a police
+report number, closing count), upload it.
+**Expected:** movement by item and category, count differences flagged, losses listed (red when the date or the document
+is missing), reconciliation with the TB inventories and purchases; note 12 from the form when it matches the TB.
+
+### 23. Assessment — 4 min
+**10 · Global Assessment**: read the status per area, the missing elements and the key events; download the Word summary and
+detailed reports (and the PDFs where available).
+**Expected:** every area has a status; the reports carry the date and time of generation.
 
 ## Final questions (in the feedback form)
 

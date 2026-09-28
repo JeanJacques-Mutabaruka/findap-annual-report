@@ -9,6 +9,7 @@ Files (all prefixed with the same stem  <Company>_Annual_Report_FS__V<yyyy-mm-dd
 """
 from __future__ import annotations
 
+from engine import VERSION
 import io
 import json
 import re
@@ -108,7 +109,7 @@ def statements_workbook(model: dict, tb: pd.DataFrame | None = None) -> bytes:
                             c.font = Font(bold=True)
         info = pd.DataFrame({"Field": ["Generated at", "Company", "Period end", "Tool"],
                              "Value": [datetime.now().strftime("%d-%b-%Y %H:%M"), model["meta"].get("company_name"),
-                                       model["meta"].get("period_end"), "Annual Report Generator V1-0i"]})
+                                       model["meta"].get("period_end"), f"Annual Report Generator {VERSION}"]})
         info.to_excel(xl, sheet_name="_INFO", index=False)
     return buf.getvalue()
 
@@ -282,11 +283,11 @@ def _tb_sheet(ws, ys, catalogue, company, rows, n_rows, n_codes):
     col = {h: get_column_letter(i + 1) for i, h in enumerate(header)}
     A, B, C, D, E = (col[h] for h in TPL_FIXED[:5])
     chk, hlp = col["Check (statement line of the CIT code)"], col["_codes"]
-    examples = [("BS 3.1.3.2", "BANK OF KIGALI - RWF"), ("BS 3.1.3.1", "PETTY CASH"), ("BS 3.1.2.1", "ACCOUNTS RECEIVABLE"),
-                ("BS 1.08", "COMPUTERS AND OFFICE EQUIPMENT"), ("BS 1.09", "ACCUMULATED DEPRECIATION (credit)"),
-                ("BS 8.1.1", "ACCOUNTS PAYABLE"), ("BS 5.01", "SHARE CAPITAL"), ("BS 5.07", "RETAINED EARNINGS (opening)"),
-                ("PL 1.1", "SALES"), ("PL 2.2.1", "COST OF SALES - LOCAL PURCHASES"), ("PL 6.01", "STAFF SALARIES"),
-                ("PL 5.01", "DEPRECIATION"), ("PL 7.02", "BANK CHARGES")]
+    examples = [("BS 03.01.03.02", "BANK OF KIGALI - RWF"), ("BS 03.01.03.01", "PETTY CASH"), ("BS 03.01.02.01", "ACCOUNTS RECEIVABLE"),
+                ("BS 01.07", "COMPUTERS AND ACCESSORIES"), ("BS 01.10", "ACCUMULATED DEPRECIATION (credit)"),
+                ("BS 08.01.01", "ACCOUNTS PAYABLE"), ("BS 05.01", "SHARE CAPITAL"), ("BS 05.07", "RETAINED EARNINGS (opening)"),
+                ("PL 01.01", "SALES"), ("PL 02.02.01", "COST OF SALES - LOCAL PURCHASES"), ("PL 06.01", "STAFF SALARIES"),
+                ("PL 05.01", "DEPRECIATION"), ("PL 07.02", "BANK CHARGES")]
     cat = catalogue.set_index("code")
     if rows is None:
         rows = [{"code": c, "account": a, "comment": "example line — replace or delete", "amounts": {}} for c, a in examples]
@@ -376,12 +377,15 @@ def _tb_tail(wb, ys, catalogue, tb_sheets, extra_sheets):
         "   b) direct: pick the CIT code (all codes are offered when nothing is chosen on the left).",
         "   The grey 'Check' column shows the statement line of the code entered and warns if it contradicts your choice.",
         "   Searching by keyword: sheet 'CIT codes' has a filter on every column (Data > Filter).",
+        "   Code format: BS / PL + the RRA annexure 'Serial No' with every level on 2 digits (RRA 1.10 = BS 01.10,",
+        "   RRA 4.1 = PL 04.01). Codes with one more level (e.g. PL 05.08.02) are detailed lines of the RRA line above.",
+        "   Old one-digit codes (e.g. BS 1.09) are converted by the app on upload.",
         "4. One CIT code can be used on several lines (e.g. two bank accounts), but EACH LINE NEEDS ITS OWN",
         "   DESCRIPTION: a description used twice turns red — merge the lines or make the descriptions distinct",
         "   (e.g. 'ACCUMULATED DEPRECIATION - VEHICLES' / '… - COMPUTERS').",
         "5. Amounts: positive numbers. Debit balances in 'Debit', credit balances in 'Credit'. Never negative debits.",
-        "6. Accumulated depreciation (code BS 1.09) is a CREDIT balance.",
-        "7. Retained earnings (BS 5.07) = balance at the START of the year, before the profit of the year.",
+        "6. Accumulated depreciation (code BS 01.10) is a CREDIT balance.",
+        "7. Retained earnings (BS 05.07) = balance at the START of the year, before the profit of the year.",
         "8. Do not include the income tax charge of the year nor the profit of the year — the generator computes them.",
         "9. No code at all? Leave it empty: the app suggests one from the account name and asks you to confirm.",
         "10. Delete the example lines. The TOTAL line at the bottom must show Debit = Credit for every year.",

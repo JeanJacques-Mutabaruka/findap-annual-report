@@ -14,7 +14,7 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from app import state  # noqa: E402
-from app.style import cy_py_note, info_banner, ok_banner, section, warn_banner  # noqa: E402
+from app.style import cy_py_note, explain_box, info_banner, ok_banner, section, warn_banner  # noqa: E402
 from engine import company_data, multiyear, package, render_report, templates  # noqa: E402
 from app.downloads import download_button  # noqa: E402
 
@@ -164,10 +164,59 @@ with tabs[1]:
     else:
         st.caption("Rwanda CIT: 30% up to 2023, 28% from 2024 (Law 051/2023) — pre-filled; change only for an "
                    "incentive rate. The report of CY uses the CY line and the PY line (CY − 1).")
-        tf = ["cit_rate", "prepayments", "wht", "grants", "loss_brought_forward"]
+        tf = ["cit_rate", "prepayments", "wht"]
         ted = year_grid(tf, "arg_tax_grid", pct=("cit_rate",))
         if st.button("💾 SAVE TAX DATA", type="primary"):
             save_grid(ted, tf, pct=("cit_rate",))
+        st.caption("Grants: kept at 0 in the tax computation for the moment — their treatment is to be designed.")
+
+        section("Tax losses carried forward")
+        chart_ = state.chart()
+        ls = multiyear.loss_settings(d, chart_)
+        default_n = int(chart_["income_tax"].get("loss_carry_forward_years") or 5)
+        explain_box("How tax losses are used", f"""
+A tax loss can be deducted from the taxable income of the <b>{default_n} following years</b> (older losses first). If the
+client has an <b>extension</b>, tick it and enter the maximum number of years allowed.<br>
+Enter the <b>tax loss of each year</b> (the loss of the tax return, not the accounting loss) for the years before the
+trial balance, and the part <b>already used</b> in tax returns before the first year of the TB. For the years of the TB,
+the app computes the loss from the TB (taxable income before losses &lt; 0) unless you enter it.<br>
+Each year, the losses available are deducted up to the taxable income before losses; what cannot be used within the
+period is lost.""")
+        c1, c2 = st.columns([1, 2])
+        ext = c1.toggle("The client has an extension of the carry-forward period", value=bool(ls["extension"]),
+                        key="arg_loss_ext")
+        nyrs = c2.number_input("Maximum number of years allowed", min_value=1, max_value=20, step=1,
+                               value=int(ls["carry_forward_years"]), disabled=not ext, key="arg_loss_n")
+        sched = multiyear.loss_schedule({**d, "tax_losses": {**ls, "extension": ext, "carry_forward_years": nyrs}},
+                                        state.tb(), chart_)
+        n_ = int(nyrs if ext else default_n)
+        first_y, last_y = min(YS), max(YS)
+        entered = {int(r["year"]): r for r in ls["losses"] if str(r.get("year", "")).isdigit()}
+        rows = []
+        for yy in range(first_y - n_ - 1, last_y):
+            e = entered.get(yy, {})
+            comp = sched["by_year"].get(yy, {}).get("before_losses")
+            rows.append({"Year of origin": str(yy), "Tax loss entered": float(e.get("loss") or 0),
+                         "Loss computed from the TB": (-comp if comp is not None and comp < 0 else None),
+                         "Already used before " + str(first_y): float(e.get("used_before") or 0)})
+        led = st.data_editor(pd.DataFrame(rows), hide_index=True, width="stretch", key=f"arg_loss_grid_{n_}",
+                             disabled=["Year of origin", "Loss computed from the TB"],
+                             column_config={c_: st.column_config.NumberColumn(c_, format="localized")
+                                            for c_ in rows[0] if c_ != "Year of origin"})
+        if st.button("💾 SAVE TAX LOSSES", type="primary"):
+            used_col = "Already used before " + str(first_y)
+            d["tax_losses"] = {"extension": bool(ext), "carry_forward_years": int(nyrs) if ext else None,
+                               "losses": [{"year": int(r["Year of origin"]), "loss": float(r["Tax loss entered"] or 0),
+                                           "used_before": float(r[used_col] or 0)}
+                                          for r in led.to_dict("records") if float(r["Tax loss entered"] or 0) > 0]}
+            saved()
+        sv = pd.DataFrame([{"Year": str(yy), "Taxable income before losses": v["before_losses"],
+                            "Losses available": v["available"], "Losses deducted": v["used"],
+                            "Losses lost (older than the period)": v["expired"]}
+                           for yy, v in sorted(sched["by_year"].items(), reverse=True) if yy in YS])
+        st.caption("Use of the losses, year by year (after saving):")
+        st.dataframe(sv, hide_index=True, width="stretch",
+                     column_config={c_: st.column_config.NumberColumn(format="localized") for c_ in sv.columns if c_ != "Year"})
 
 # ========================================================== stock / PPE =====
 with tabs[2]:

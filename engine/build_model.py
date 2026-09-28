@@ -18,6 +18,14 @@ from datetime import date
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
+try:                                   # inside the app; the stand-alone skill script ships codes.py next to it
+    from engine.codes import to_new
+except ImportError:  # pragma: no cover
+    try:
+        from codes import to_new
+    except ImportError:
+        def to_new(c):
+            return c
 TOL = 1.0  # Rwf tolerance for equality checks
 
 
@@ -43,7 +51,7 @@ def norm_code(c):
     c = re.sub(r"\s+", " ", str(c).strip().upper())
     # "BS3.1.2" -> "BS 3.1.2"
     c = re.sub(r"^(BS|PL)\s*", lambda m: m.group(1) + " ", c)
-    return c
+    return to_new(c)          # old V11 codes -> RRA-based format
 
 
 def zero(v):
@@ -217,9 +225,9 @@ def build(inp, chart, notes_cfg):
         for g in sec["groups"]:
             lines = []
             for l in g["lines"]:
-                if l["code"] == "BS 5.08":
+                if l["code"] == "BS 05.08":
                     cy, py = net_profit["cy"], net_profit["py"]
-                elif l["code"] == "BS 8.2.1":
+                elif l["code"] == "BS 08.02.01":
                     cy, py = tax["charge"]["cy"], tax["charge"]["py"]
                 else:
                     cy, py = amt(l["code"], g["sign"], "cy"), amt(l["code"], g["sign"], "py")
@@ -244,16 +252,16 @@ def build(inp, chart, notes_cfg):
 
     # accumulated depreciation sign
     for y, _ in YRS:
-        ad = amt("BS 1.09", "DR", y)
+        ad = amt("BS 01.10", "DR", y)
         if ad > TOL:
-            ctl.add("BLOCKING", "ACCDEP_DEBIT", f"Accumulated depreciation (BS 1.09) has a DEBIT balance {ad:,.0f} ({y_cy if y=='cy' else y_py}) — it is ADDED to fixed assets. It must be a credit balance.")
-    dep_pl = -amt("PL 5.01", "CR", "cy")
-    dacc = -(amt("BS 1.09", "DR", "cy") - amt("BS 1.09", "DR", "py"))
+            ctl.add("BLOCKING", "ACCDEP_DEBIT", f"Accumulated depreciation (BS 01.10) has a DEBIT balance {ad:,.0f} ({y_cy if y=='cy' else y_py}) — it is ADDED to fixed assets. It must be a credit balance.")
+    dep_pl = -amt("PL 05.01", "CR", "cy")
+    dacc = -(amt("BS 01.10", "DR", "cy") - amt("BS 01.10", "DR", "py"))
     if abs(dep_pl - dacc) > TOL:
-        ctl.add("WARNING", "DEP_MISMATCH", f"Depreciation charge in P&L (PL 5.01) {dep_pl:,.0f} differs from the movement of accumulated depreciation (BS 1.09) {dacc:,.0f} (disposals?).")
+        ctl.add("WARNING", "DEP_MISMATCH", f"Depreciation charge in P&L (PL 05.01) {dep_pl:,.0f} differs from the movement of accumulated depreciation (BS 01.10) {dacc:,.0f} (disposals?).")
 
     # retained earnings roll-forward
-    re_cy, re_py = amt("BS 5.07", "CR", "cy"), amt("BS 5.07", "CR", "py")
+    re_cy, re_py = amt("BS 05.07", "CR", "cy"), amt("BS 05.07", "CR", "py")
     drawings = inp.get("equity_movements", {}).get("cy", {})
     exp_re = re_py + net_profit["py"] + num(drawings.get("dividends_paid")) * -1 + num(drawings.get("adjustments"))
     if not single and abs(re_cy - exp_re) > TOL:
@@ -284,7 +292,7 @@ def build(inp, chart, notes_cfg):
     if meta.get("company_type", "CORPORATE") == "CORPORATE":
         for y, yr in YRS:
             r_ = num(rate.get(y, 0))
-            std = 0.28 if yr >= 2024 else 0.30
+            std = standard_cit_rate(chart, yr)
             if abs(r_ - std) > 1e-4:
                 ctl.add("WARNING", "CIT_RATE", f"CIT rate used for {yr} is {r_:.2%}; Rwanda standard rate is {std:.0%} for {yr} (Law 051/2023: 28% from 2024; 2023 prorated). Confirm any reduced/incentive rate.")
 
@@ -320,62 +328,131 @@ def assign_levels(rows, statement):
     return rows
 
 
+def standard_cit_rate(chart, year):
+    """Standard CIT rate of a year from chart.income_tax.cit_standard_rates [[from_year, rate], ...]."""
+    tab = sorted(chart.get("income_tax", {}).get("cit_standard_rates") or [[0, 0.30], [2024, 0.28]], reverse=True)
+    return next((r for fy, r in tab if year >= fy), tab[-1][1])
+
+
+def progressive_tax(base, brackets):
+    """brackets [[upper_limit, rate], ..., [None, rate]] — rate applies to the slice up to the limit."""
+    tax, lower = 0.0, 0.0
+    for upper, rate in brackets:
+        top = base if upper is None else min(base, upper)
+        if top > lower:
+            tax += (top - lower) * rate
+        if upper is None or base <= upper:
+            break
+        lower = upper
+    return tax
+
+
+def pre_loss_taxable(tb, y, chart, pbt=None):
+    """Taxable income BEFORE tax losses for year tag y ('cy'/'py'): profit before tax + grant (0) + add-backs
+    (incl. management fees above the limit) − non-taxable income (RRA P&L lines 12 and 13).
+    Every rate, limit and code comes from chart['income_tax'] (one place)."""
+    it = chart["income_tax"]
+    if pbt is None:   # all P&L codes of the chart, credit − debit
+        pbt = sum(tb.net(l["code"], y, "CR") for sec in chart["pnl"] for g in sec.get("groups", []) for l in g["lines"])
+    grant = 0.0       # treatment of grants to be designed — row kept at 0 (decision 28-09-2026)
+    adds, add_detail = [], []
+    for code, lab, coef in it["add_backs"]:
+        base_amt = tb.net(code, y, "DR")
+        adds.append((lab, coef * base_amt))
+        add_detail.append({"code": code, "label": lab, "coef": coef, "base": base_amt, "amount": coef * base_amt, "kind": "coef"})
+    mf = it.get("management_fee")
+    mgmt = None
+    if mf:
+        fees = tb.net(mf["code"], y, "DR")
+        prefixes = tuple(mf.get("turnover_prefixes") or [mf.get("turnover_prefix", "PL 01")])
+        turnover = sum(tb.net(l["code"], y, "CR") for sec in chart["pnl"] for g in sec.get("groups", []) for l in g["lines"]
+                       if l["code"].startswith(prefixes))
+        excess = max(0.0, fees - mf["limit_rate"] * turnover)
+        lab = f"Management fees in excess of {mf['limit_rate']:.0%} of turnover"
+        adds.append((lab, excess))
+        mgmt = {"code": mf["code"], "label": lab, "fees": fees, "turnover": turnover, "limit_rate": mf["limit_rate"],
+                "limit": mf["limit_rate"] * turnover, "amount": excess, "kind": "mgmt_fee",
+                "turnover_prefixes": list(prefixes)}
+        add_detail.append(mgmt)
+    tot_add = sum(a for _, a in adds)
+    pn = pbt + grant
+    adj = pn + tot_add
+    ded = []
+    for code, lab, cap, rra_line in it.get("non_taxable_income", []):
+        inc = max(0.0, tb.net(code, y, "CR"))
+        amt_ = inc if cap is None else min(inc, cap)
+        ded.append({"code": code, "label": lab, "income": inc, "cap": cap, "amount": amt_, "rra_line": rra_line})
+    tot_ded = sum(d_["amount"] for d_ in ded)
+    return dict(pbt=pbt, grant=grant, pn=pn, adds=adds, add_detail=add_detail, mgmt=mgmt, tot_add=tot_add, adj=adj,
+                deductions=ded, tot_ded=tot_ded, before_losses=adj - tot_ded)
+
+
 def income_tax(inp, chart, tb, pbt, ctl, meta):
     it = chart["income_tax"]
     t = inp.get("tax", {})
     ctype = meta.get("company_type", "CORPORATE").upper()
     rates = meta.get("cit_rate", {"cy": 0.28, "py": 0.30})
     res = {"rows": [], "charge": {}, "base": {}, "payable": {}}
-    lines = {"cy": [], "py": []}
     out = {}
     for y in ("cy", "py"):
-        grant = num(t.get("grants", {}).get(y))
-        pn = pbt[y] + grant
-        adds = []
-        for code, lab, coef in it["add_backs"]:
-            adds.append((lab, coef * tb.net(code, y, "DR")))
-        tot_add = sum(a for _, a in adds)
-        adj = pn + tot_add
-        lb = t.get("loss_brought_forward", {}).get(y)
-        if lb is None:
-            lb = 0.0
-            if y == "py":
-                lb = min(0.0, tb.net("BS 5.07", "py", "DR") * -1) if tb.net("BS 5.07", "py", "DR") > 0 else 0.0
-        lb = -abs(num(lb))
-        base = adj + lb
-        if ctype == "CORPORATE" and base > 0:
-            charge = num(rates.get(y)) * base
+        c = pre_loss_taxable(tb, y, chart, pbt[y])
+        # tax losses: pool AVAILABLE at the start of the year (computed by the app from the losses per year of origin,
+        # max carry-forward years); older inputs gave the deduction directly (loss_brought_forward)
+        avail = (t.get("loss_available") or {}).get(y)
+        src = (t.get("loss_source") or {}).get(y) or ""
+        if avail is None and (t.get("loss_brought_forward") or {}).get(y) is not None:
+            avail = abs(num(t["loss_brought_forward"][y]))
+            src = src or "entered (loss brought forward)"
+        avail = abs(num(avail)) if avail is not None else 0.0
+        if not src:
+            src = "no tax losses entered"
+        used = min(avail, max(0.0, c["before_losses"]))
+        lb = -used
+        base = c["before_losses"] + lb
+        if ctype == "CORPORATE":
+            charge = num(rates.get(y)) * base if base > 0 else 0.0
         else:
-            charge = 0.0
-            if base > 360000:
-                charge = 0.2 * (min(base, 1200000) - 360000) + (0.3 * (base - 1200000) if base > 1200000 else 0)
+            charge = progressive_tax(base, it["individual_brackets_annual"]) if base > 0 else 0.0
         prepay = num(t.get("prepayments", {}).get(y)); wht = num(t.get("wht", {}).get(y))
-        out[y] = dict(pbt=pbt[y], grant=grant, pn=pn, adds=adds, tot_add=tot_add, adj=adj, lb=lb, base=base,
-                      charge=charge, prepay=prepay, wht=wht, payable=charge - prepay - wht)
+        out[y] = dict(**c, loss_available=avail, lb=lb, lb_source=src, base=base,
+                      rate=num(rates.get(y)) if ctype == "CORPORATE" else None, company_type=ctype, charge=charge,
+                      prepay=prepay, wht=wht, payable=charge - prepay - wht)
         res["charge"][y] = charge; res["base"][y] = base; res["payable"][y] = charge - prepay - wht
     c, p = out["cy"], out["py"]
     R = res["rows"]
+
     def r(typ, lab, k=None, cy=None, py=None):
         R.append({"type": typ, "label": lab, "cy": round(cy if cy is not None else c[k], 2), "py": round(py if py is not None else p[k], 2)})
     r("line", "Profit before tax", "pbt"); r("line", "Grant received", "grant"); r("total", "Profit net of grant received", "pn")
     R.append({"type": "group", "label": "Non-admissible expenses", "cy": None, "py": None})
     for i, (lab, _) in enumerate(c["adds"]):
+        if c["add_detail"][i].get("kind") == "mgmt_fee" and abs(c["adds"][i][1]) <= TOL and abs(p["adds"][i][1]) <= TOL:
+            continue                       # no excess management fee in either year: no line in the report
         r("line", lab, cy=c["adds"][i][1], py=p["adds"][i][1])
     r("total", "Total expenses to add back", "tot_add"); r("line_bold", "Adjusted profit", "adj")
-    r("line", "Loss from previous periods", "lb"); r("total", "Tax base", "base")
-    r("sectiontotal", f"Tax charge for the period", "charge")
+    if any(abs(d_["amount"]) > TOL for d_ in c["deductions"] + p["deductions"]):
+        R.append({"type": "group", "label": "Non-taxable income", "cy": None, "py": None})
+        for i, d_ in enumerate(c["deductions"]):
+            r("line", d_["label"], cy=-d_["amount"], py=-p["deductions"][i]["amount"])
+        r("total", "Taxable income before losses", "before_losses")
+    r("line", "Tax losses brought forward (deducted)", "lb"); r("total", "Tax base", "base")
+    r("sectiontotal", "Tax charge for the period", "charge")
     r("line", "Quarterly prepayments", "prepay"); r("line", "Withholding tax (3% & 15%)", "wht")
     r("grandtotal", "Income tax payable", "payable")
     res["detail"] = out
     if c["base"] > 0 and ctype == "CORPORATE":
         ctl.add("INFO", "CIT", f"CIT {meta.get('period_end')}: base {c['base']:,.0f} × {num(rates.get('cy')):.2%} = {c['charge']:,.0f}.")
+    if c["lb"] < 0:
+        ctl.add("WARNING", "RRA_LINE15", f"Tax losses of {-c['lb']:,.0f} are deducted: RRA P&L line 15 (10 + 11 − 12 − 13) "
+                "does NOT deduct them (line 14) — RRA 15 exceeds the tax base of the report by that amount; income tax "
+                "(line 16) is computed on the base after losses.")
     return res
 
 
 def cash_flow(inp, val, bsval, amt, ctl, y_cy):
     pbt = val["pbt"]["cy"]
-    dep = -amt("PL 5.01", "CR", "cy")
-    intr = -amt("PL 7.01", "CR", "cy")
+    dep = -amt("PL 05.01", "CR", "cy")
+    intr = -amt("PL 07.01", "CR", "cy")
     d = lambda k: bsval[k]["cy"] - bsval[k]["py"]
     inv = -d("stock")
     rec = -(d("ar") + d("loans") + d("taxrec"))
@@ -435,9 +512,9 @@ def cash_flow(inp, val, bsval, amt, ctl, y_cy):
 
 
 def equity_statement(inp, amt, np_, bsval, ctl, pend, single=False):
-    cols = [("Share Capital", ["BS 5.01", "BS 5.02"]), ("Retained earnings", ["BS 5.07"]),
-            ("Revaluation reserves", ["BS 5.03"]), ("General reserves", ["BS 5.04", "BS 5.05", "BS 5.06"]),
-            ("Grants", ["BS 5.09"])]
+    cols = [("Share Capital", ["BS 05.01", "BS 05.02"]), ("Retained earnings", ["BS 05.07"]),
+            ("Revaluation reserves", ["BS 05.03"]), ("General reserves", ["BS 05.04", "BS 05.05", "BS 05.06"]),
+            ("Grants", ["BS 05.06.01"])]
     mv = inp.get("equity_movements", {})
     blocks = []
     for y, lab in ((("cy", pend.year),) if single else (("cy", pend.year), ("py", pend.year - 1))):
@@ -460,9 +537,9 @@ def equity_statement(inp, amt, np_, bsval, ctl, pend, single=False):
     return {"columns": [c for c, _ in cols] + ["Total"], "blocks": blocks}
 
 
-DEFAULT_PPE = [("Land", ["BS 1.01", "BS 1.10"], 0.0), ("Buildings", ["BS 1.02"], 0.05), ("Motor vehicles", ["BS 1.03"], 0.25),
-               ("Machinery", ["BS 1.04", "BS 1.05"], 0.25), ("Intangible", ["BS 1.06"], 0.10),
-               ("Furniture", ["BS 1.07"], 0.25), ("Computers & other", ["BS 1.08"], 0.50)]
+DEFAULT_PPE = [("Land", ["BS 01.01", "BS 01.11"], 0.0), ("Buildings", ["BS 01.02"], 0.05), ("Motor vehicles", ["BS 01.03"], 0.25),
+               ("Machinery", ["BS 01.04", "BS 01.05"], 0.25), ("Intangible", ["BS 01.06"], 0.10),
+               ("Computers & IT", ["BS 01.07"], 0.50), ("Furniture", ["BS 01.08"], 0.25), ("Other assets", ["BS 01.09"], 0.25)]
 
 
 def ppe_schedule(inp, amt, dep_pl, ctl, pend):
@@ -473,7 +550,7 @@ def ppe_schedule(inp, amt, dep_pl, ctl, pend):
         get = lambda k: [num(c.get(k)) for c in cats]
         cost_o, add, disp = get("cost_opening"), get("additions"), get("disposals")
         dep_o, chg, depdisp = get("dep_opening"), get("charge"), get("dep_on_disposals")
-        source = "fixed asset register (input)"
+        source = fa.get("source_note") or "fixed asset register (input)"
     else:
         cats = [c for c in DEFAULT_PPE if any(abs(amt(k, "DR", y)) > TOL for k in c[1] for y in ("cy", "py"))]
         cols = [c[0] for c in cats]
@@ -481,8 +558,8 @@ def ppe_schedule(inp, amt, dep_pl, ctl, pend):
         cost_c = [sum(amt(k, "DR", "cy") for k in c[1]) for c in cats]
         add = [max(0.0, cost_c[i] - cost_o[i]) for i in range(len(cats))]
         disp = [min(0.0, cost_c[i] - cost_o[i]) for i in range(len(cats))]
-        # accumulated depreciation is only known in total (BS 1.09) -> allocate pro rata to cost
-        acc_o = -amt("BS 1.09", "DR", "py")  # credit balance positive
+        # accumulated depreciation is only known in total (BS 01.10) -> allocate pro rata to cost
+        acc_o = -amt("BS 01.10", "DR", "py")  # credit balance positive
         tc = sum(cost_o) or 1.0
         dep_o = [acc_o * c / tc for c in cost_o]
         tcc = sum(cost_c) or 1.0
@@ -537,7 +614,7 @@ def build_notes(inp, notes_cfg, chart, tb, known, tax, ppe, inv, bsval, val, ctl
     by_note = defaultdict(list)
     for r in tb.rows:
         n = r["note"] or code_note.get(r["code"])
-        if r["code"] in ("BS 5.08", "BS 8.2.1"):
+        if r["code"] in ("BS 05.08", "BS 08.02.01"):
             continue
         if n:
             by_note[str(n).zfill(2)].append(r)
@@ -552,7 +629,7 @@ def build_notes(inp, notes_cfg, chart, tb, known, tax, ppe, inv, bsval, val, ctl
                 rows = [r for r in by_note.get(nid, []) if not (zero(r["dr_cy"] - r["cr_cy"]) and zero(r["dr_py"] - r["cr_py"]))]
                 used.add(nid)
                 extra = []
-                if nid == str(code_note.get("BS 8.2.1") or "").zfill(2):
+                if nid == str(code_note.get("BS 08.02.01") or "").zfill(2):
                     extra = [{"type": "line", "label": "Provision for income tax (note 10)", "cy": round(tax["charge"]["cy"], 2), "py": round(tax["charge"]["py"], 2)}]
                 if rows or extra:
                     tr = extra + [{"type": "line", "label": r["account"], "cy": round((r["dr_cy"] - r["cr_cy"]) * way, 2),

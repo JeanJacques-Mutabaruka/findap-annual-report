@@ -14,11 +14,11 @@ ROOT = Path(__file__).resolve().parent.parent.parent
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from app import state  # noqa: E402
+from app import line_tools, state  # noqa: E402
 from app.downloads import download_button  # noqa: E402
 from app.formatting import fmt  # noqa: E402
 from app.style import cy_py_note, info_banner, ok_banner, red_alert, section, warn_banner  # noqa: E402
-from engine import company_data, package, tb_io, xlsm_import  # noqa: E402
+from engine import ai_prompt, company_data, package, tb_io, xlsm_import  # noqa: E402
 
 state.init_state()
 state.page_setup("🧾 Trial Balance")
@@ -36,15 +36,29 @@ def balance_summary() -> None:
                   "<b>✏️ Edit TB</b> tab or re-export it, then go to <b>2 · Checks & Corrections</b>.")
 
 
-tabs = st.tabs(["📤 Upload TB", "📄 TB template", "📂 Resume / Excel generator", "🔎 Find a code", "✏️ Edit lines",
-               "📅 Years"])
+def ai_prompt_block(key: str) -> None:
+    st.markdown("Your TB has no CIT codes? Download this prompt, then in **any AI assistant** attach **your TB (Excel)** "
+                "and **the prompt file**, and ask it to *follow the prompt*. You get back the same TB with a **CIT code** "
+                "for every line, a **confidence** level and, where there is a doubt, a proposal and an explanation in "
+                "the **Comments** column. Upload that file here (📤 Upload TB) and review the Medium / Low lines.")
+    warn_banner("<b>Confidentiality</b> — the trial balance is sent to the AI provider you choose. Check that your firm "
+                "and your client allow it.")
+    st.caption("Without an AI: upload the TB as it is — page 2 · Checks & Corrections → 🏷️ CIT codes suggests a code "
+               "for every line from its name and balance, with a confidence level.")
+    download_button("⬇️ Download the AI mapping prompt (.md)", ai_prompt.build_bytes(state.code_catalogue()),
+                    ai_prompt.FILE_NAME, key=key)
+
+
+tabs = st.tabs(["📤 Upload TB", "📄 TB template & AI prompt", "📂 Resume / Excel generator", "🔎 Find a code",
+               "✏️ Edit lines", "🗑️ Delete lines", "📅 Years"])
 
 # ================================================================== upload ==
 with tabs[0]:
     section("Upload the trial balance")
     st.caption("Excel (.xlsx / .xls / .xlsm) or CSV. One line per account, all years on the same line — "
                "Debit/Credit columns per year, or one signed balance column per year. Any number of years "
-               "(e.g. 5). No file yet? Download the template in the 📄 TB template tab.")
+               "(e.g. 5). No file yet? Download the template in the 📄 TB template tab. No CIT codes in your TB? "
+               "The app suggests them on page 2 — or map the TB first with any AI using the prompt of the 📄 tab.")
     f = st.file_uploader("Trial balance file", type=["xlsx", "xls", "xlsm", "csv"], key="arg_tb_file")
     raw = None
     if f is not None:
@@ -158,7 +172,7 @@ with tabs[0]:
                     st.session_state["arg_pending_company"] = {"part": company_part, "source": name}
                 state.set_tb(tb, f"{name} [{sheet}]")
                 st.session_state["arg_demo"] = False
-                st.session_state["arg_import_notes"] = notes
+                st.session_state["arg_import_notes"] = notes + tb_io.tb_notices(state.tb())
                 st.session_state["arg_active_year"] = None
                 st.rerun()
 
@@ -167,7 +181,12 @@ with tabs[0]:
         st.caption(f"Source: {st.session_state.get('arg_tb_source')} — {len(state.tb())} lines — "
                    f"years {', '.join(map(str, state.years()))}")
         for msg in st.session_state.get("arg_import_notes", []):
-            info_banner(msg)
+            if msg.startswith("NOT BALANCED"):
+                red_alert(msg)
+            elif msg.startswith("NEGATIVE"):
+                warn_banner(msg)
+            else:
+                info_banner(msg)
         balance_summary()
         issues = tb_io.line_issues(state.tb(), state.valid_codes())
         nb = int((issues["Level"] == "BLOCKING").sum()) if not issues.empty else 0
@@ -183,7 +202,7 @@ with tabs[1]:
                 "line** cascading drop-downs that narrow the **CIT-code** list, the account description, a **Debit** and "
                 "a **Credit** column per year (most recent first), the list of codes and the instructions. Uploaded "
                 "back on this page, it is recognised automatically.")
-    info_banner("<b>Several lines with the same CIT code</b> are allowed (e.g. two bank accounts under BS 3.1.3.2) — "
+    info_banner("<b>Several lines with the same CIT code</b> are allowed (e.g. two bank accounts under BS 03.01.03.02) — "
                 "but <b>each line needs its own description</b>. Duplicated descriptions are highlighted in red in the "
                 "template, and the app asks to merge or rename them (2 · Checks & Corrections → 👯 Duplicates).")
     c1, c2, c3 = st.columns(3)
@@ -203,6 +222,9 @@ with tabs[1]:
                                         extra_sheets=company_data.frames(state.project(), yrs)[0] if with_cd else None),
                     f"{package.company_slug(comp or 'Company')}_TB_template_{min(yrs)}-{max(yrs)}.xlsx",
                     key="arg_dl_template", primary=True)
+
+    section("🤖 Map a TB without CIT codes with any AI")
+    ai_prompt_block("arg_dl_prompt_p1")
 
 # ================================================================== resume ==
 with tabs[2]:
@@ -310,7 +332,8 @@ with tabs[3]:
 with tabs[4]:
     if state.require_tb():
         # ------------------------------------------------------------ editor --
-        st.caption("Change codes, names or amounts, add or delete lines, then press APPLY. In the CIT-code cell you can "
+        st.caption("Change codes, names or amounts, add or delete lines, then press APPLY (to delete lines with 0 "
+                   "everywhere in one click, use the 🗑️ Delete lines tab). In the CIT-code cell you can "
                    "type part of the statement line to search the list. Statement line, group and section are shown "
                    "for information (they follow the code). Columns: most recent year first.")
         lab = {r.code: f"{r.code} — {r.line}" for r in cat.itertuples()}
@@ -370,6 +393,14 @@ with tabs[4]:
                                                        f"(diff {fmt(tot[f'debit_{y}'] - tot[f'credit_{y}'])})" for y in ys))
 
 with tabs[5]:
+    if state.require_tb():
+        line_tools.undo_box("arg_del_p1")
+        section("Lines with 0 in every year")
+        line_tools.zero_lines_panel("arg_del_p1")
+        section("Delete other lines")
+        line_tools.any_lines_panel("arg_del_p1")
+
+with tabs[6]:
     if state.require_tb():
         st.caption("Years of the trial balance. Each year except the earliest can be reported as CY (Current Year); "
                    "the year before is its PY (Previous Year).")

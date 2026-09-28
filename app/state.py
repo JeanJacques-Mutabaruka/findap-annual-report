@@ -23,7 +23,7 @@ ROOT = Path(__file__).resolve().parent.parent
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from engine import CHART, DEMO, NOTES, VERSION, build_model, multiyear, tb_io, templates  # noqa: E402
+from engine import codes, CHART, DEMO, NOTES, VERSION, build_model, multiyear, tb_io, templates  # noqa: E402
 
 EMPTY_PROJECT = {
     "format": multiyear.FORMAT,
@@ -35,6 +35,7 @@ EMPTY_PROJECT = {
                 "accounting_framework": "International Financial Reporting Standard", "proposed_dividend": 0,
                 "signature_date": "", "company_representative": "", "fs_signing_date": "", "company_director": ""},
     "years_data": {},
+    "tax_losses": {"extension": False, "carry_forward_years": None, "losses": []},
     "notes": None,
     "bookmark_overrides": {},
 }
@@ -182,7 +183,10 @@ def load_project(d: dict, source: str, demo: bool = False) -> None:
         else:
             base[k] = v
     st.session_state["arg_project"] = base
+    old = [c for c in tbm["code"] if codes.to_new(tb_io.norm_code(c, convert=False)) != tb_io.norm_code(c, convert=False)]
+    note = codes.conversion_note([(o, codes.to_new(o)) for o in (tb_io.norm_code(c, convert=False) for c in old)])
     set_tb(tbm, source)
+    st.session_state["arg_import_notes"] = ([note] if note else []) + tb_io.tb_notices(tb())
     st.session_state["arg_demo"] = demo
     st.session_state["arg_active_year"] = None
 
@@ -202,7 +206,7 @@ def full_project() -> dict:
 
 
 def pair_input(year: int) -> dict:
-    return multiyear.pair_input(project(), tb(), year)
+    return multiyear.pair_input(project(), tb(), year, chart())
 
 
 # ------------------------------------------------------------------ models --

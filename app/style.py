@@ -244,3 +244,21 @@ def cy_py_note(cy: int | None = None, all_years: bool = False) -> None:
     else:
         info_banner("<b>CY</b> = <b>Current Year</b> (the year reported) · <b>PY</b> = <b>Previous Year</b> "
                     "(the comparative year before it).", icon="\U0001F4C5")
+
+
+# --- "How it is calculated" boxes ---------------------------------------------
+EXPLAIN_FONT = "Georgia, 'Palatino Linotype', 'Book Antiqua', serif"
+
+
+def explain_box(title: str, body_html: str, warnings: list[str] | None = None, expanded: bool = False) -> None:
+    """Expandable explanation of a calculation, visually distinct from the rest of the page (serif font, parchment
+    background, brown left border). `warnings` are shown in RED inside the box — e.g. inputs that are missing for a
+    complete calculation."""
+    warns = warnings or []
+    label = f"📘 {title}" + (f"  —  ⚠️ {len(warns)} missing element(s)" if warns else "")
+    with st.expander(label, expanded=expanded or bool(warns)):
+        w = "".join(f'<div style="color:#C00000;font-weight:700;margin:6px 0;">⚠️ {x}</div>' for x in warns)
+        st.markdown(
+            f'<div style="font-family:{EXPLAIN_FONT};font-size:0.95rem;line-height:1.55;background:#FBF6EC;'
+            f'border-left:5px solid #8B5E34;border-radius:6px;padding:14px 18px;color:#3B2F2F;">{w}{body_html}</div>',
+            unsafe_allow_html=True)
